@@ -4,6 +4,7 @@ import { Inter, Poppins } from "next/font/google"
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "@/components/ui/toaster"
+import AppShell from "@/components/AppShell"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -84,7 +85,7 @@ export default function RootLayout({
     <html lang="en" className={`${inter.variable} ${poppins.variable} antialiased`} suppressHydrationWarning>
       <body className="font-sans" suppressHydrationWarning>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
-          {children}
+          <AppShell>{children}</AppShell>
           <Toaster />
         </ThemeProvider>
       </body>

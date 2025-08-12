@@ -3,7 +3,7 @@
     "short_name": "UniConnect",
     "description": "A platform to connect university students, share resources, and collaborate on projects.",
     "version": "1.0.0",
-    "start_url": ".",
+    "start_url": "/",
     "display": "standalone",
     "background_color": "#ffffff",
     "theme_color": "#1976d2",
