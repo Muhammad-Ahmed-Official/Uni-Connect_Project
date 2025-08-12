@@ -21,7 +21,7 @@ const poppins = Poppins({
 
 const APP_NAME = "Uni Connect";
 const APP_DEFAULT_TITLE = "Uni-Connect - University Social & Educational Platform";
-const APP_TITLE_TEMPLATE = "%s - Uni-Connect";
+const APP_TITLE_TEMPLATE = "%s | Uni Connect";
 const APP_DESCRIPTION = "Connect, collaborate, and excel in your academic journey with fellow students.";
 const APP_KEYWORDS = [
   "university",
@@ -49,6 +49,7 @@ export const metadata: Metadata = {
     title: APP_NAME,
     statusBarStyle: "default",
   },
+  metadataBase: new URL("https://deploy-uni-connect.vercel.app/"),
   openGraph: {
     type: "website",
     siteName: APP_NAME,
