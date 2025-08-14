@@ -10,6 +10,11 @@ import { Mail, Lock, Eye, EyeOff, User, AlertCircle } from "lucide-react"
 import { useRouter } from 'next/navigation'
 import { useToast } from '@/hooks/use-toast'
 import Link from 'next/link'
+import { z } from 'zod'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import axios from "axios"
+import { signIn } from 'next-auth/react'
 
 const departments = [
     "Computer Science",
@@ -24,101 +29,58 @@ const departments = [
     "Architecture",
 ]
 
+const schema = z.object({
+    firstName: z.string().min(1, "First name is required"),
+    lastName: z.string().min(1, "Last name is required"),
+    email: z.string().email(),
+    password: z.string().min(8, "Password must be at least 8 characters").regex(/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, "Password must contain uppercase, lowercase, and number"),
+    confirmPassword: z.string(),
+    department: z.string().min(1, "Please select your department"),
+    studentId: z.string().min(1, "Student ID is required"),
+    agreeToTerms: z.boolean().refine(v => v === true, "You must agree to the terms and conditions"),
+}).refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+})
+type FormData = z.infer<typeof schema>
+
 const RegistrationForm = () => {
-    const [formData, setFormData] = useState({
-        firstName: "",
-        lastName: "",
-        email: "",
-        password: "",
-        confirmPassword: "",
-        department: "",
-        studentId: "",
-        agreeToTerms: false,
+    const { register, handleSubmit, formState: { errors }, setValue, watch } = useForm<FormData>({
+        resolver: zodResolver(schema),
+        defaultValues: {
+            firstName: "",
+            lastName: "",
+            email: "",
+            password: "",
+            confirmPassword: "",
+            department: "",
+            studentId: "",
+            agreeToTerms: false,
+        }
     })
     const [showPassword, setShowPassword] = useState<boolean>(false)
     const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false)
     const [isLoading, setIsLoading] = useState<boolean>(false)
-    const [errors, setErrors] = useState<Record<string, string>>({})
 
     const router = useRouter()
-    const { toast } = useToast()
+    const { toast } = useToast();
 
-    const validateForm = () => {
-        const newErrors: Record<string, string> = {}
 
-        if (!formData.firstName.trim()) {
-            newErrors.firstName = "First name is required"
-        }
-
-        if (!formData.lastName.trim()) {
-            newErrors.lastName = "Last name is required"
-        }
-
-        if (!formData.email) {
-            newErrors.email = "Email is required"
-        } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-            newErrors.email = "Please enter a valid email address"
-        }
-
-        if (!formData.password) {
-            newErrors.password = "Password is required"
-        } else if (formData.password.length < 8) {
-            newErrors.password = "Password must be at least 8 characters"
-        } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(formData.password)) {
-            newErrors.password = "Password must contain uppercase, lowercase, and number"
-        }
-
-        if (!formData.confirmPassword) {
-            newErrors.confirmPassword = "Please confirm your password"
-        } else if (formData.password !== formData.confirmPassword) {
-            newErrors.confirmPassword = "Passwords do not match"
-        }
-
-        if (!formData.department) {
-            newErrors.department = "Please select your department"
-        }
-
-        if (!formData.studentId.trim()) {
-            newErrors.studentId = "Student ID is required"
-        }
-
-        if (!formData.agreeToTerms) {
-            newErrors.agreeToTerms = "You must agree to the terms and conditions"
-        }
-
-        setErrors(newErrors)
-        return Object.keys(newErrors).length === 0
-    }
-
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault()
-
-        if (!validateForm()) return
-
+    const onSubmit = async (data: FormData) => {
         setIsLoading(true)
-
         try {
-            // Simulate API call
-            await new Promise((resolve) => setTimeout(resolve, 2000))
-
-            toast({
-                title: "Account created successfully!",
-                description: "Welcome to Uni-Connect. Please check your email to verify your account.",
-            })
-
-            router.push("/login")
+            await axios.post('/api/users', data);
+            toast({ title: 'Account created successfully!', description: 'Welcome to Uni-Connect.' })
+            router.push('/login')
         } catch (error) {
-            toast({
-                title: "Registration failed",
-                description: "Unable to create account. Please try again.",
-                variant: "destructive",
-            })
+            toast({ title: 'Registration failed', description: 'Unable to create account.', variant: 'destructive' })
         } finally {
             setIsLoading(false)
         }
     }
+
     return (
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             {/* Name Fields */}
             <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-2">
@@ -128,15 +90,15 @@ const RegistrationForm = () => {
                         <Input
                             id="firstName"
                             placeholder="First name"
-                            value={formData.firstName}
-                            onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
                             className={`pl-10 ${errors.firstName ? "border-red-500" : ""}`}
+                            {...register('firstName')}
                         />
+
                     </div>
                     {errors.firstName && (
                         <p className="text-xs text-red-500 flex items-center gap-1">
                             <AlertCircle className="w-3 h-3" />
-                            {errors.firstName}
+                            {errors.firstName.message as string}
                         </p>
                     )}
                 </div>
@@ -146,14 +108,13 @@ const RegistrationForm = () => {
                     <Input
                         id="lastName"
                         placeholder="Last name"
-                        value={formData.lastName}
-                        onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
                         className={errors.lastName ? "border-red-500" : ""}
+                        {...register('lastName')}
                     />
                     {errors.lastName && (
                         <p className="text-xs text-red-500 flex items-center gap-1">
                             <AlertCircle className="w-3 h-3" />
-                            {errors.lastName}
+                            {errors.lastName.message as string}
                         </p>
                     )}
                 </div>
@@ -168,15 +129,15 @@ const RegistrationForm = () => {
                         id="email"
                         type="email"
                         placeholder="your.email@university.edu"
-                        value={formData.email}
-                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                         className={`pl-10 ${errors.email ? "border-red-500" : ""}`}
+                        {...register('email')}
                     />
+
                 </div>
                 {errors.email && (
                     <p className="text-sm text-red-500 flex items-center gap-1">
                         <AlertCircle className="w-3 h-3" />
-                        {errors.email}
+                        {errors.email.message as string}
                     </p>
                 )}
             </div>
@@ -186,8 +147,8 @@ const RegistrationForm = () => {
                 <div className="space-y-2">
                     <Label htmlFor="department">Department</Label>
                     <Select
-                        value={formData.department}
-                        onValueChange={(value) => setFormData({ ...formData, department: value })}
+                        value={watch('department')}
+                        onValueChange={(value) => setValue('department', value, { shouldValidate: true })}
                     >
                         <SelectTrigger className={errors.department ? "border-red-500" : ""}>
                             <SelectValue placeholder="Select department" />
@@ -203,24 +164,18 @@ const RegistrationForm = () => {
                     {errors.department && (
                         <p className="text-xs text-red-500 flex items-center gap-1">
                             <AlertCircle className="w-3 h-3" />
-                            {errors.department}
+                            {errors.department.message as string}
                         </p>
                     )}
                 </div>
 
                 <div className="space-y-2">
                     <Label htmlFor="studentId">Student ID</Label>
-                    <Input
-                        id="studentId"
-                        placeholder="Student ID"
-                        value={formData.studentId}
-                        onChange={(e) => setFormData({ ...formData, studentId: e.target.value })}
-                        className={errors.studentId ? "border-red-500" : ""}
-                    />
+                    <Input id="studentId" placeholder="Student ID" className={errors.studentId ? "border-red-500" : ""} {...register('studentId')} />
                     {errors.studentId && (
                         <p className="text-xs text-red-500 flex items-center gap-1">
                             <AlertCircle className="w-3 h-3" />
-                            {errors.studentId}
+                            {errors.studentId.message as string}
                         </p>
                     )}
                 </div>
@@ -235,10 +190,10 @@ const RegistrationForm = () => {
                         id="password"
                         type={showPassword ? "text" : "password"}
                         placeholder="Create a strong password"
-                        value={formData.password}
-                        onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                         className={`pl-10 pr-10 ${errors.password ? "border-red-500" : ""}`}
+                        {...register('password')}
                     />
+
                     <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
@@ -250,7 +205,7 @@ const RegistrationForm = () => {
                 {errors.password && (
                     <p className="text-sm text-red-500 flex items-center gap-1">
                         <AlertCircle className="w-3 h-3" />
-                        {errors.password}
+                        {errors.password.message as string}
                     </p>
                 )}
             </div>
@@ -263,9 +218,8 @@ const RegistrationForm = () => {
                         id="confirmPassword"
                         type={showConfirmPassword ? "text" : "password"}
                         placeholder="Confirm your password"
-                        value={formData.confirmPassword}
-                        onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
                         className={`pl-10 pr-10 ${errors.confirmPassword ? "border-red-500" : ""}`}
+                        {...register('confirmPassword')}
                     />
                     <button
                         type="button"
@@ -278,7 +232,7 @@ const RegistrationForm = () => {
                 {errors.confirmPassword && (
                     <p className="text-sm text-red-500 flex items-center gap-1">
                         <AlertCircle className="w-3 h-3" />
-                        {errors.confirmPassword}
+                        {errors.confirmPassword.message as string}
                     </p>
                 )}
             </div>
@@ -287,8 +241,8 @@ const RegistrationForm = () => {
             <div className="flex items-center space-x-2">
                 <Checkbox
                     id="terms"
-                    checked={formData.agreeToTerms}
-                    onCheckedChange={(checked) => setFormData({ ...formData, agreeToTerms: checked as boolean })}
+                    checked={watch('agreeToTerms')}
+                    onCheckedChange={(checked) => setValue('agreeToTerms', Boolean(checked), { shouldValidate: true })}
                 />
                 <Label htmlFor="terms" className="text-sm text-gray-600 leading-relaxed">
                     I agree to the{" "}
@@ -304,7 +258,7 @@ const RegistrationForm = () => {
             {errors.agreeToTerms && (
                 <p className="text-sm text-red-500 flex items-center gap-1">
                     <AlertCircle className="w-3 h-3" />
-                    {errors.agreeToTerms}
+                    {errors.agreeToTerms.message as string}
                 </p>
             )}
 

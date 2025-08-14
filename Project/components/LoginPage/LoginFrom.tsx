@@ -15,12 +15,32 @@ import { Mail, Lock, Eye, EyeOff, AlertCircle } from "lucide-react"
 import { useRouter } from 'next/navigation'
 import { useToast } from '@/hooks/use-toast'
 import { Button } from '../ui/button'
+import { z } from 'zod'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { signIn } from 'next-auth/react'
+
+const schema = z.object({
+    email: z.string().email(),
+    password: z.string().min(6),
+})
+
+type FormData = z.infer<typeof schema>
 
 const LoginFrom = () => {
-    const [formData, setFormData] = useState({
-        email: "",
-        password: "",
+    const { register, handleSubmit, formState: {
+        errors: rhfErrors
+    } } = useForm<FormData>({
+        resolver: zodResolver(schema),
+        defaultValues: {
+            email: "",
+            password: "",
+        }
     })
+    // const [formData, setFormData] = useState({
+    //     email: "",
+    //     password: "",
+    // })
     const [showPassword, setShowPassword] = useState<boolean>(false)
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [errors, setErrors] = useState<Record<string, string>>({})
@@ -30,50 +50,36 @@ const LoginFrom = () => {
     const router = useRouter()
     const { toast } = useToast()
 
-    const validateForm = () => {
-        const newErrors: Record<string, string> = {}
-
-        if (!formData.email) {
-            newErrors.email = "Email is required"
-        } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-            newErrors.email = "Please enter a valid email address"
-        }
-
-        if (!formData.password) {
-            newErrors.password = "Password is required"
-        } else if (formData.password.length < 6) {
-            newErrors.password = "Password must be at least 6 characters"
-        }
-
-        setErrors(newErrors)
-        return Object.keys(newErrors).length === 0
-    }
-
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault()
-
-        if (!validateForm()) return
-
-        setIsLoading(true)
-
+    const onSubmit = async (data: FormData) => {
         try {
-            // Simulate API call
-            await new Promise((resolve) => setTimeout(resolve, 1500))
-
-            toast({
-                title: "Login successful!",
-                description: "Welcome back to Uni-Connect.",
-            })
-
-            router.push("/dashboard")
+            setIsLoading(true);
+            const res = await signIn("credentials", {
+                redirect: false,
+                email: data.email,
+                password: data.password,
+            });
+            if (res?.error) {
+                toast({
+                    title: "Login failed",
+                    description: res?.error || "Invalid email or password. Please try again.",
+                    variant: "destructive",
+                });
+            } else {
+                toast({
+                    title: "Login successful!",
+                    description: "Welcome back to Uni-Connect.",
+                });
+                router.push("/dashboard");
+            }
+            setIsLoading(false);
         } catch (error) {
             toast({
                 title: "Login failed",
                 description: "Invalid email or password. Please try again.",
                 variant: "destructive",
-            })
+            });
         } finally {
-            setIsLoading(false)
+            setIsLoading(false);
         }
     }
 
@@ -113,7 +119,7 @@ const LoginFrom = () => {
     }
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div className="space-y-2">
                 <Label htmlFor="email">Email Address</Label>
                 <div className="relative">
@@ -121,16 +127,13 @@ const LoginFrom = () => {
                     <Input
                         id="email"
                         type="email"
-                        placeholder="Enter your university email"
-                        value={formData.email}
-                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        className={`pl-10 ${errors.email ? "border-red-500" : ""}`}
+                        placeholder="Enter your university email" className={`pl-10 ${rhfErrors.email ? "border-red-500" : ""}`} {...register('email')}
                     />
                 </div>
-                {errors.email && (
+                {rhfErrors.email && (
                     <p className="text-sm text-red-500 flex items-center gap-1">
                         <AlertCircle className="w-3 h-3" />
-                        {errors.email}
+                        {rhfErrors.email.message as string}
                     </p>
                 )}
             </div>
@@ -142,10 +145,8 @@ const LoginFrom = () => {
                     <Input
                         id="password"
                         type={showPassword ? "text" : "password"}
-                        placeholder="Enter your password"
-                        value={formData.password}
-                        onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                        className={`pl-10 pr-10 ${errors.password ? "border-red-500" : ""}`}
+                        placeholder="Enter your password" className={`pl-10 pr-10 ${rhfErrors.password ? "border-red-500" : ""}`}
+                        {...register('password')}
                     />
                     <button
                         type="button"
@@ -155,10 +156,10 @@ const LoginFrom = () => {
                         {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
                 </div>
-                {errors.password && (
+                {rhfErrors.password && (
                     <p className="text-sm text-red-500 flex items-center gap-1">
                         <AlertCircle className="w-3 h-3" />
-                        {errors.password}
+                        {rhfErrors.password.message as string}
                     </p>
                 )}
             </div>

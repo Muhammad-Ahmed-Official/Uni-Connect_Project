@@ -6,13 +6,18 @@ import Link from "next/link"
 import LoginFrom from "@/components/LoginPage/LoginFrom"
 import SocialLoginButtons from "@/components/LoginPage/SocialLoginButtons"
 import { Metadata } from "next"
+import { getServerSession } from "next-auth"
+import { redirect } from "next/navigation"
 
 export const metadata: Metadata = {
   title: "Login",
   description: "Sign in to your Uni-Connect account to access academic resources, event notifications, and more.",
 }
 
-export default function LoginPage() {
+export default async function LoginPage() {
+  const session = await getServerSession();
+  if (session) redirect('/dashboard');
+  
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center p-4">
       <div className="w-full max-w-md">

@@ -5,6 +5,7 @@ import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "@/components/ui/toaster"
 import AppShell from "@/components/AppShell"
+import AuthProvider from "@/components/AuthProvider"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -86,8 +87,10 @@ export default function RootLayout({
     <html lang="en" className={`${inter.variable} ${poppins.variable} antialiased`} suppressHydrationWarning>
       <body className="font-sans" suppressHydrationWarning>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
-          <AppShell>{children}</AppShell>
-          <Toaster />
+          <AuthProvider>
+            <AppShell>{children}</AppShell>
+            <Toaster />
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>
