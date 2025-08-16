@@ -49,7 +49,7 @@ export const authOptions: NextAuthOptions = {
                 if (!user._id) {
                     throw new Error("User ID is missing");
                 }
-
+                
                 return {
                     id: user._id.toString(),
                     email: user.email,
@@ -61,18 +61,25 @@ export const authOptions: NextAuthOptions = {
         })
     ],
     callbacks: {
+/*************  ✨ Windsurf Command ⭐  *************/
+        /**
+
+/*******  89feedd5-dad4-48af-8438-039dcbdb7994  *******/
         async jwt({ token, user }) {
             if (user) {
                 token.role = (user as any).role || "user";
                 token.id = user.id;
+                token.firstName = (user as any).firstName;
+                token.lastName = (user as any).lastName;
             }
             return token;
         },
         async session({ session, token }) {
             if (token) {
-                ; (session as any).user.role = (token as any).role || "user";
+                (session as any).user.role = token.role || "user";
                 session.user.id = token.id as string;
-
+                (session as any).user.firstName = token.firstName;
+                (session as any).user.lastName = token.lastName;
             }
             return session;
         }

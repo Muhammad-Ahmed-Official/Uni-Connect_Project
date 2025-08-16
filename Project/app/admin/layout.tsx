@@ -34,6 +34,7 @@ import {
   Shield,
 } from "lucide-react"
 import { Suspense } from "react"
+import { signOut } from "next-auth/react"
 
 const navigation = [
   { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
@@ -52,7 +53,11 @@ export default function AdminLayout({
   children: React.ReactNode
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
-  const pathname = usePathname()
+  const pathname = usePathname();
+
+  const handleLogout = () => {
+    signOut()
+  }
 
   const SidebarContent = () => (
     <div className="flex h-full flex-col">
@@ -74,9 +79,8 @@ export default function AdminLayout({
             <Link
               key={item.name}
               href={item.href}
-              className={`group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
-                isActive ? "bg-blue-100 text-blue-700" : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-              }`}
+              className={`group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors ${isActive ? "bg-blue-100 text-blue-700" : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                }`}
               onClick={() => setSidebarOpen(false)}
             >
               <item.icon
@@ -129,8 +133,8 @@ export default function AdminLayout({
               <SheetTrigger asChild>
                 <Button
                   variant="ghost"
-                  size="sm"
-                  className="lg:hidden px-4 border-r border-gray-200 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
+                  size="default"
+                  className="lg:hidden px-4 border-r border-gray-200 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500 h-full"
                   onClick={() => setSidebarOpen(true)}
                 >
                   <Menu className="h-6 w-6" />
@@ -192,7 +196,7 @@ export default function AdminLayout({
                       <span>Settings</span>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem>
+                    <DropdownMenuItem onClick={handleLogout}>
                       <LogOut className="mr-2 h-4 w-4" />
                       <span>Log out</span>
                     </DropdownMenuItem>

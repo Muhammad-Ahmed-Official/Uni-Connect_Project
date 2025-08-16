@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -35,6 +35,8 @@ import {
   ChevronRight,
 } from "lucide-react"
 import Link from "next/link"
+import { signOut, useSession } from "next-auth/react"
+import { redirect } from "next/navigation"
 
 const sidebarItems = [
   { icon: Home, label: "Home", href: "/dashboard", active: true },
@@ -124,9 +126,8 @@ function Sidebar({ className }: { className?: string }) {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex items-center space-x-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
-                  item.active ? "bg-blue-100 text-blue-700" : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
-                }`}
+                className={`flex items-center space-x-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${item.active ? "bg-blue-100 text-blue-700" : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                  }`}
               >
                 <item.icon className="h-4 w-4" />
                 <span>{item.label}</span>
@@ -140,7 +141,16 @@ function Sidebar({ className }: { className?: string }) {
 }
 
 export default function DashboardPage() {
-  const [searchQuery, setSearchQuery] = useState("")
+  const [searchQuery, setSearchQuery] = useState("");
+  const session = useSession();
+  const role = session?.data?.user?.role;
+
+  if (!session) redirect("/login");
+  if (role === "admin") redirect("/admin");
+  
+  const handleLogout = () => {
+    signOut()
+  }
 
   return (
     <div className="flex h-screen bg-gray-50">
@@ -240,7 +250,7 @@ export default function DashboardPage() {
                     <span>Settings</span>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleLogout}>
                     <LogOut className="mr-2 h-4 w-4" />
                     <span>Log out</span>
                   </DropdownMenuItem>

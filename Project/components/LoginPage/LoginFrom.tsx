@@ -37,10 +37,6 @@ const LoginFrom = () => {
             password: "",
         }
     })
-    // const [formData, setFormData] = useState({
-    //     email: "",
-    //     password: "",
-    // })
     const [showPassword, setShowPassword] = useState<boolean>(false)
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [errors, setErrors] = useState<Record<string, string>>({})

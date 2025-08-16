@@ -5,7 +5,20 @@ if (!configs.redisUrl) {
     throw new Error("Redis URL is not defined in the configuration.");
 }
 
-export const redis = new Redis(configs.redisUrl);
+let redis: Redis;
+
+if (process.env.NODE_ENV === "development") {
+    redis = new Redis(configs.redisUrl);
+} else {
+    redis = new Redis({
+        username: "default",
+        password: configs.redisPassword,
+        host: configs.redisUrl,
+        port: Number(configs.redisPort),
+    });
+}
+
+export { redis };
 
 export async function getOrSetCache<T>(
     key: string,

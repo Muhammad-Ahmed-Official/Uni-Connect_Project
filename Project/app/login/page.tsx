@@ -8,6 +8,7 @@ import SocialLoginButtons from "@/components/LoginPage/SocialLoginButtons"
 import { Metadata } from "next"
 import { getServerSession } from "next-auth"
 import { redirect } from "next/navigation"
+import { authOptions } from "@/utils/authOptions.util"
 
 export const metadata: Metadata = {
   title: "Login",
@@ -15,9 +16,12 @@ export const metadata: Metadata = {
 }
 
 export default async function LoginPage() {
-  const session = await getServerSession();
-  if (session) redirect('/dashboard');
-  
+  const session = await getServerSession(authOptions);
+  const role = session?.user?.role;
+
+  if (role === "admin") redirect("/admin");
+  if (role === "user") redirect("/dashboard");
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
