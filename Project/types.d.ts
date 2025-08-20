@@ -32,6 +32,19 @@ declare global {
         icon: React.ComponentType<React.SVGProps<SVGSVGElement>>
         color: string
     }
+
+    interface User {
+        id: number
+        name: string
+        email: string
+        role: string
+        department: string
+        status: string
+        status: string
+        joinDate: string
+        lastActive: string
+        avatar: string
+    }
 }
 
 export { };
