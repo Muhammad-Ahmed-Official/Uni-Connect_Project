@@ -96,7 +96,7 @@ export default function AdminLayout({
       <div className="border-t p-4">
         <div className="flex items-center space-x-3">
           <Avatar className="h-8 w-8">
-            <AvatarImage src="/admin-avatar.png" />
+            <AvatarImage src="/placeholder-user.jpg" />
             <AvatarFallback>AD</AvatarFallback>
           </Avatar>
           <div className="flex-1 min-w-0">
@@ -126,7 +126,7 @@ export default function AdminLayout({
         </Sheet>
 
         {/* Main Content */}
-        <div className="lg:pl-64 flex flex-col flex-1 min-h-0">
+        <div className="lg:pl-64 flex flex-col flex-1 min-h-0 w-full">
           {/* Top Header */}
           <div className="sticky top-0 z-10 flex-shrink-0 flex h-16 bg-white border-b border-gray-200">
             <Sheet>
@@ -174,7 +174,7 @@ export default function AdminLayout({
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                       <Avatar className="h-8 w-8">
-                        <AvatarImage src="/admin-avatar.png" />
+                        <AvatarImage src="/placeholder-user.jpg" />
                         <AvatarFallback>AD</AvatarFallback>
                       </Avatar>
                     </Button>
@@ -207,7 +207,7 @@ export default function AdminLayout({
           </div>
 
           {/* Page Content */}
-          <main className="flex-1 relative overflow-y-auto focus:outline-none">{children}</main>
+          <main className="flex-1 relative focus:outline-none">{children}</main>
         </div>
       </div>
     </Suspense>
