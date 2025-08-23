@@ -11,6 +11,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import { useToast } from '@/hooks/use-toast'
 import ViewAdvisorDialog from "./ViewAdvisorDialog"
 import AssignDepartmentDialog from "./AssignDepartmentDialog"
+import DeleteAdvisorDialog from "./DeleteAdvisorDialog"
 
 const AdvisorTable = (
     { advisorsData, filteredAdvisors, departments }:
@@ -22,13 +23,15 @@ const AdvisorTable = (
     const [currentPage] = useState(1)
     const [advisors, setAdvisors] = useState(advisorsData)
     const [isDropdownOpen, setIsDropdownOpen] = useState<number | null>(null);
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+    const [advisorToDelete, setAdvisorToDelete] = useState<Advisor | null>(null)
     const { toast } = useToast()
 
     const advisorsPerPage = 10
 
     // Pagination
     const startIndex = (currentPage - 1) * advisorsPerPage;
-    const paginatedAdvisors = filteredAdvisors.slice(startIndex, startIndex + advisorsPerPage)
+    const paginatedAdvisors = advisors.slice(startIndex, startIndex + advisorsPerPage)
 
 
     const getPerformanceColor = (resolved: number, total: number) => {
@@ -52,11 +55,11 @@ const AdvisorTable = (
         })
     }
 
-    const handleRemoveAdvisor = (advisorId: number) => {
+    const handleDeleteUser = (advisorId: number) => {
         setAdvisors(advisors.filter((advisor) => advisor.id !== advisorId))
         toast({
-            title: "Advisor Removed",
-            description: "Advisor has been successfully removed from the system.",
+            title: "Advisor Deleted",
+            description: "Advisor has been successfully deleted from the system.",
             variant: "destructive",
         })
     }
@@ -184,37 +187,16 @@ const AdvisorTable = (
                                             <UserX className="mr-2 h-4 w-4" />
                                             {advisor.status === "suspended" ? "Activate" : "Suspend"} Advisor
                                         </DropdownMenuItem>
-                                        <AlertDialog>
-                                            <AlertDialogTrigger asChild>
-                                                <DropdownMenuItem
-                                                    onSelect={(e) => {
-                                                        e.preventDefault();
-                                                        setIsDropdownOpen(null);
-                                                    }}
-                                                >
-                                                    <Trash2 className="mr-2 h-4 w-4" />
-                                                    Remove Advisor
-                                                </DropdownMenuItem>
-                                            </AlertDialogTrigger>
-                                            <AlertDialogContent>
-                                                <AlertDialogHeader>
-                                                    <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                                                    <AlertDialogDescription>
-                                                        This action cannot be undone. This will permanently remove the advisor and reassign
-                                                        their escalations to other advisors.
-                                                    </AlertDialogDescription>
-                                                </AlertDialogHeader>
-                                                <AlertDialogFooter>
-                                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                                    <AlertDialogAction
-                                                        onClick={() => handleRemoveAdvisor(advisor.id)}
-                                                        className="bg-red-600 hover:bg-red-700"
-                                                    >
-                                                        Remove
-                                                    </AlertDialogAction>
-                                                </AlertDialogFooter>
-                                            </AlertDialogContent>
-                                        </AlertDialog>
+                                        <DropdownMenuItem
+                                            onClick={() => {
+                                                setAdvisorToDelete(advisor)
+                                                setDeleteDialogOpen(true)
+                                                setIsDropdownOpen(null)
+                                            }}
+                                        >
+                                            <Trash2 className="mr-2 h-4 w-4" />
+                                            Delete Advisor
+                                        </DropdownMenuItem>
                                     </DropdownMenuContent>
                                 </DropdownMenu>
                             </TableCell>
@@ -228,6 +210,16 @@ const AdvisorTable = (
 
             {/* Assign Department Dialog */}
             <AssignDepartmentDialog isAssignDialogOpen={isAssignDialogOpen} setIsAssignDialogOpen={setIsAssignDialogOpen} selectedAdvisor={selectedAdvisor} departments={departments} />
+
+            {/* Delete Dialog */}
+            <DeleteAdvisorDialog isOpen={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}
+                onConfirm={() => {
+                    if (advisorToDelete) {
+                        handleDeleteUser(advisorToDelete.id)
+                    }
+                    setDeleteDialogOpen(false)
+                }}
+            />
         </div>
     )
 }

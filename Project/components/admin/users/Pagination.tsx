@@ -12,7 +12,7 @@ interface PaginationProps {
 
 const Pagination = ({ filteredUsers, currentPage, setCurrentPage, usersPerPage, totalPages, startIndex }: PaginationProps) => {
     return (
-        <div className="flex items-center justify-between mt-6">
+        <div className="flex items-center justify-between mt-6 flex-wrap gap-2">
             <div className="text-sm text-gray-600">
                 Showing {startIndex + 1} to {Math.min(startIndex + usersPerPage, filteredUsers.length)} of{" "}
                 {filteredUsers.length} users

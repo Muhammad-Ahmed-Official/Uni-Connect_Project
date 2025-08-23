@@ -1,17 +1,12 @@
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { Edit, Eye, MoreHorizontal, Shield, Trash2, UserCheck, Users, UserX } from 'lucide-react'
+import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import {  Shield, UserCheck, Users} from 'lucide-react'
 import React, { useState } from 'react'
 import ViewUserDialog from './ViewUserDialog'
 import { useToast } from '@/hooks/use-toast'
 import Pagination from './Pagination'
 import EditUserDialog from './EditUserDialog'
-
-
+import DeleteUserDialog from './DeleteUserDialog'
+import UserTableRow from './UserTableRow'
 
 const roleColors: Record<string, string> = {
     student: "bg-blue-100 text-blue-700",
@@ -48,6 +43,8 @@ const UsersTable = ({ usersData }: { usersData: User[] }) => {
     const [selectedUser, setSelectedUser] = useState<User | null>(null)
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
     const [isViewDialogOpen, setIsViewDialogOpen] = useState(false)
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+    const [userToDelete, setUserToDelete] = useState<User | null>(null)
     const { toast } = useToast()
 
     const usersPerPage = 10
@@ -115,115 +112,19 @@ const UsersTable = ({ usersData }: { usersData: User[] }) => {
                     </TableHeader>
                     <TableBody>
                         {paginatedUsers.map((user) => (
-                            <TableRow key={user.id}>
-                                <TableCell>
-                                    <div className="flex items-center space-x-3">
-                                        <Avatar className="h-8 w-8">
-                                            <AvatarImage src={user.avatar || "/placeholder.svg"} />
-                                            <AvatarFallback>
-                                                {user.name
-                                                    .split(" ")
-                                                    .map((n) => n[0])
-                                                    .join("")}
-                                            </AvatarFallback>
-                                        </Avatar>
-                                        <div>
-                                            <div className="font-medium text-gray-900">{user.name}</div>
-                                            <div className="text-sm text-gray-500">{user.email}</div>
-                                        </div>
-                                    </div>
-                                </TableCell>
-                                <TableCell>
-                                    <Badge className={`${roleColors[user.role]} border-0`}>
-                                        {getRoleIcon(user.role)}
-                                        <span className="ml-1 capitalize">{user.role}</span>
-                                    </Badge>
-                                </TableCell>
-                                <TableCell className="text-gray-600">{user.department}</TableCell>
-                                <TableCell>
-                                    <Badge className={`${statusColors[user.status]} border-0`}>
-                                        {user.status === "active" ? "●" : user.status === "suspended" ? "⏸" : "○"}
-                                        <span className="ml-1 capitalize">{user.status}</span>
-                                    </Badge>
-                                </TableCell>
-                                <TableCell className="text-gray-600">{user.lastActive}</TableCell>
-                                <TableCell className="text-right">
-                                    <DropdownMenu
-                                        open={isDropdownOpen === user.id}
-                                        onOpenChange={(open) => setIsDropdownOpen(open ? user.id : null)}
-                                    >
-                                        <DropdownMenuTrigger asChild>
-                                            <Button variant="ghost" className="h-8 w-8 p-0">
-                                                <MoreHorizontal className="h-4 w-4" />
-                                            </Button>
-                                        </DropdownMenuTrigger>
-                                        <DropdownMenuContent align="end">
-                                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                            <DropdownMenuItem
-                                                onClick={() => {
-                                                    handleViewUser(user);
-                                                    setIsDropdownOpen(null);
-                                                }}
-                                            >
-                                                <Eye className="mr-2 h-4 w-4" />
-                                                View Details
-                                            </DropdownMenuItem>
-                                            <DropdownMenuItem
-                                                onClick={() => {
-                                                    handleEditUser(user);
-                                                    setIsDropdownOpen(null);
-                                                }}
-                                            >
-                                                <Edit className="mr-2 h-4 w-4" />
-                                                Edit User
-                                            </DropdownMenuItem>
-                                            <DropdownMenuSeparator />
-                                            <DropdownMenuItem
-                                                onClick={() => {
-                                                    handleSuspendUser(user.id);
-                                                    setIsDropdownOpen(null);
-                                                }}
-                                            >
-                                                <UserX className="mr-2 h-4 w-4" />
-                                                {user.status === "suspended" ? "Activate" : "Suspend"} User
-                                            </DropdownMenuItem>
-                                            <AlertDialog>
-                                                <AlertDialogTrigger asChild>
-                                                    <DropdownMenuItem
-                                                        onSelect={(e) => {
-                                                            e.preventDefault();
-                                                        }}
-                                                    >
-                                                        <Trash2 className="mr-2 h-4 w-4" />
-                                                        Delete User
-                                                    </DropdownMenuItem>
-                                                </AlertDialogTrigger>
-                                                <AlertDialogContent>
-                                                    <AlertDialogHeader>
-                                                        <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                                                        <AlertDialogDescription>
-                                                            This action cannot be undone. This will permanently delete the user account and remove
-                                                            all associated data.
-                                                        </AlertDialogDescription>
-                                                    </AlertDialogHeader>
-                                                    <AlertDialogFooter>
-                                                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                                        <AlertDialogAction
-                                                            onClick={() => {
-                                                                handleDeleteUser(user.id);
-                                                                setIsDropdownOpen(null);
-                                                            }}
-                                                            className="bg-red-600 hover:bg-red-700"
-                                                        >
-                                                            Delete
-                                                        </AlertDialogAction>
-                                                    </AlertDialogFooter>
-                                                </AlertDialogContent>
-                                            </AlertDialog>
-                                        </DropdownMenuContent>
-                                    </DropdownMenu>
-                                </TableCell>
-                            </TableRow>
+                            <UserTableRow
+                                key={user.id}
+                                user={user}
+                                isDropdownOpen={isDropdownOpen}
+                                roleColors={roleColors}
+                                statusColors={statusColors}
+                                setIsDropdownOpen={setIsDropdownOpen}
+                                handleViewUser={handleViewUser}
+                                handleEditUser={handleEditUser}
+                                handleSuspendUser={handleSuspendUser}
+                                setUserToDelete={setUserToDelete}
+                                setDeleteDialogOpen={setDeleteDialogOpen}
+                            />
                         ))}
                     </TableBody>
                 </Table>
@@ -237,6 +138,16 @@ const UsersTable = ({ usersData }: { usersData: User[] }) => {
 
             {/* Edit User Dialog */}
             <EditUserDialog isEditDialogOpen={isEditDialogOpen} setIsEditDialogOpen={setIsEditDialogOpen} selectedUser={selectedUser} />
+
+            {/* Delete Dialog */}
+            <DeleteUserDialog isOpen={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}
+                onConfirm={() => {
+                    if (userToDelete) {
+                        handleDeleteUser(userToDelete.id)
+                    }
+                    setDeleteDialogOpen(false)
+                }}
+            />
         </div>
     )
 }

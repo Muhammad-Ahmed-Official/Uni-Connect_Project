@@ -45,6 +45,40 @@ declare global {
         lastActive: string
         avatar: string
     }
+
+    interface Department {
+        id: string
+        name: string
+        description: string
+        memberCount: number
+        activeDiscussions: number
+        recentActivity: string
+        color: string
+        icon: string
+        tags: string[]
+    }
+
+    interface AdminDepartment {
+        id: number
+        name: string
+        description: string
+        code: string
+        head: string
+        headAvatar: string
+        totalStudents: number
+        totalAdvisors: number
+        activeEscalations: number
+        totalEvents: number
+        established: string
+        building: string
+        phone: string
+        email: string
+        advisors: {
+            name: string
+            avatar: string
+            specialization: string
+        }[]
+    }
 }
 
 export { };

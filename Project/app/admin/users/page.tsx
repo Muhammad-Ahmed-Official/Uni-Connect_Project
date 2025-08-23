@@ -73,7 +73,7 @@ const mockUsers: User[] = [
 
 export default function UserManagement() {
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-2 sm:p-6 space-y-6">
       {/* Header */}
       <Header />
 
