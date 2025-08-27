@@ -98,7 +98,6 @@ const DepartmentsTable = ({ filteredDepartments, setDepartments }: DepartmentsTa
             {/* Edit Department Dialog */}
             <EditDeparmentDialog isEditDialogOpen={isEditDialogOpen} setIsEditDialogOpen={setIsEditDialogOpen} editForm={editForm} setEditForm={setEditForm} handleSaveDepartment={handleSaveDepartment} />
 
-
             {/* Delete Department Dialog */}
             <DeleteDepartmentDialog isOpen={deleteDialogOpen} onClose={() => { setDeleteDialogOpen(false) }} onConfirm={() => { if (departmentToDelete) { handleDeleteDepartment(departmentToDelete.id); } setDeleteDialogOpen(false) }} />
         </div>

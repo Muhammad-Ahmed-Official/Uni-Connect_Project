@@ -79,6 +79,21 @@ declare global {
             specialization: string
         }[]
     }
+
+    interface AdminEvent {
+        id: number
+        title: string
+        description: string
+        date: string
+        time: string
+        location: string
+        category: string
+        status: string
+        rsvps: number
+        capacity: number
+        organizer: string
+        image: string
+    }
 }
 
 export { };
