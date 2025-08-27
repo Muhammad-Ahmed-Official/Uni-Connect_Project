@@ -37,28 +37,34 @@ const DepartmentTableCard = ({ department, isDropdownOpen, setIsDropdownOpen, ha
                         onOpenChange={(open) => { setIsDropdownOpen(open ? department.id : null) }}
                     >
                         <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="h-8 w-8 p-0">
+                            <Button variant="ghost" className="h-8 w-8 p-0 cursor-pointer">
                                 <MoreHorizontal className="h-4 w-4" />
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                            <DropdownMenuItem onClick={() => {
-                                handleViewDepartment(department)
-                                setIsDropdownOpen(null);
-                            }}>
+                            <DropdownMenuItem
+                                className='cursor-pointer'
+                                onClick={() => {
+                                    handleViewDepartment(department)
+                                    setIsDropdownOpen(null);
+                                }}>
                                 <Eye className="mr-2 h-4 w-4" />
                                 View Details
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => {
-                                handleEditDepartment(department)
-                                setIsDropdownOpen(null);
-                            }}>
+                            <DropdownMenuItem
+                                className='cursor-pointer'
+                                onClick={() => {
+                                    handleEditDepartment(department)
+                                    setIsDropdownOpen(null);
+                                }}>
                                 <Edit className="mr-2 h-4 w-4" />
                                 Edit Department
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem
+                                className='cursor-pointer'
+
                                 onClick={() => {
                                     setDepartmentToDelete(department)
                                     setDeleteDialogOpen(true)
@@ -113,7 +119,7 @@ const DepartmentTableCard = ({ department, isDropdownOpen, setIsDropdownOpen, ha
 
                 <Button
                     variant="outline"
-                    className="w-full bg-transparent"
+                    className="w-full bg-transparent cursor-pointer"
                     onClick={() => handleViewDepartment(department)}
                 >
                     View Details

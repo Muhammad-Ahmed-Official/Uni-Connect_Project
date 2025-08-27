@@ -24,7 +24,7 @@ const EditDeparmentDialog = ({ isEditDialogOpen, setIsEditDialogOpen, editForm, 
                 <div className="space-y-4">
                     <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <Label htmlFor="name">Department Name</Label>
+                            <Label className="mb-2" htmlFor="name">Department Name</Label>
                             <Input
                                 id="name"
                                 value={editForm.name}
@@ -32,7 +32,7 @@ const EditDeparmentDialog = ({ isEditDialogOpen, setIsEditDialogOpen, editForm, 
                             />
                         </div>
                         <div>
-                            <Label htmlFor="code">Department Code</Label>
+                            <Label className="mb-2" htmlFor="code">Department Code</Label>
                             <Input
                                 id="code"
                                 value={editForm.code}
@@ -41,7 +41,7 @@ const EditDeparmentDialog = ({ isEditDialogOpen, setIsEditDialogOpen, editForm, 
                         </div>
                     </div>
                     <div>
-                        <Label htmlFor="description">Description</Label>
+                        <Label className="mb-2" htmlFor="description">Description</Label>
                         <Textarea
                             id="description"
                             value={editForm.description}
@@ -50,7 +50,7 @@ const EditDeparmentDialog = ({ isEditDialogOpen, setIsEditDialogOpen, editForm, 
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <Label htmlFor="head">Department Head</Label>
+                            <Label className="mb-2" htmlFor="head">Department Head</Label>
                             <Input
                                 id="head"
                                 value={editForm.head}
@@ -58,7 +58,7 @@ const EditDeparmentDialog = ({ isEditDialogOpen, setIsEditDialogOpen, editForm, 
                             />
                         </div>
                         <div>
-                            <Label htmlFor="building">Building</Label>
+                            <Label className="mb-2" htmlFor="building">Building</Label>
                             <Input
                                 id="building"
                                 value={editForm.building}
@@ -68,7 +68,7 @@ const EditDeparmentDialog = ({ isEditDialogOpen, setIsEditDialogOpen, editForm, 
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <Label htmlFor="phone">Phone</Label>
+                            <Label className="mb-2" htmlFor="phone">Phone</Label>
                             <Input
                                 id="phone"
                                 value={editForm.phone}
@@ -76,7 +76,7 @@ const EditDeparmentDialog = ({ isEditDialogOpen, setIsEditDialogOpen, editForm, 
                             />
                         </div>
                         <div>
-                            <Label htmlFor="email">Email</Label>
+                            <Label className="mb-2" htmlFor="email">Email</Label>
                             <Input
                                 id="email"
                                 type="email"
@@ -90,7 +90,7 @@ const EditDeparmentDialog = ({ isEditDialogOpen, setIsEditDialogOpen, editForm, 
                     <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>
                         Cancel
                     </Button>
-                    <Button onClick={handleSaveDepartment}>Save Changes</Button>
+                    <Button className="cursor-pointer" onClick={handleSaveDepartment}>Save Changes</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>

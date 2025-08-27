@@ -15,7 +15,8 @@ interface ViewDeparmentDialogProps {
 const ViewDeparmentDialog = ({ isViewDialogOpen, setIsViewDialogOpen, selectedDepartment }: ViewDeparmentDialogProps) => {
     return (
         <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
-            <DialogContent className="max-w-4xl">
+            <DialogContent className="max-w-4xl max-h-[90vh]"
+            >
                 <DialogHeader>
                     <DialogTitle>Department Details</DialogTitle>
                     <DialogDescription>Complete information and statistics for the department</DialogDescription>

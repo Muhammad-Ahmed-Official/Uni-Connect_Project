@@ -87,7 +87,7 @@ const DepartmentsTable = ({ filteredDepartments, setDepartments }: DepartmentsTa
 
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
             {filteredDepartments.map((department) => (
                 <DepartmentTableCard key={department.id} department={department} isDropdownOpen={isDropdownOpen} setIsDropdownOpen={setIsDropdownOpen} handleViewDepartment={handleViewDepartment} handleEditDepartment={handleEditDepartment} setDeleteDialogOpen={setDeleteDialogOpen} setDepartmentToDelete={setDepartmentToDelete} />
             ))}

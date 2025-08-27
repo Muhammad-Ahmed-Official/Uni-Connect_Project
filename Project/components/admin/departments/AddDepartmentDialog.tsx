@@ -25,7 +25,7 @@ const AddDepartmentDialog = ({ isAddDialogOpen, setIsAddDialogOpen, editForm, se
                 <div className="space-y-4">
                     <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <Label htmlFor="new-name">Department Name</Label>
+                            <Label className='mb-2' htmlFor="new-name">Department Name</Label>
                             <Input
                                 id="new-name"
                                 value={editForm.name}
@@ -34,7 +34,7 @@ const AddDepartmentDialog = ({ isAddDialogOpen, setIsAddDialogOpen, editForm, se
                             />
                         </div>
                         <div>
-                            <Label htmlFor="new-code">Department Code</Label>
+                            <Label className='mb-2' htmlFor="new-code">Department Code</Label>
                             <Input
                                 id="new-code"
                                 value={editForm.code}
@@ -44,7 +44,7 @@ const AddDepartmentDialog = ({ isAddDialogOpen, setIsAddDialogOpen, editForm, se
                         </div>
                     </div>
                     <div>
-                        <Label htmlFor="new-description">Description</Label>
+                        <Label className='mb-2' htmlFor="new-description">Description</Label>
                         <Textarea
                             id="new-description"
                             value={editForm.description}
@@ -54,7 +54,7 @@ const AddDepartmentDialog = ({ isAddDialogOpen, setIsAddDialogOpen, editForm, se
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <Label htmlFor="new-head">Department Head</Label>
+                            <Label className='mb-2' htmlFor="new-head">Department Head</Label>
                             <Input
                                 id="new-head"
                                 value={editForm.head}
@@ -63,7 +63,7 @@ const AddDepartmentDialog = ({ isAddDialogOpen, setIsAddDialogOpen, editForm, se
                             />
                         </div>
                         <div>
-                            <Label htmlFor="new-building">Building</Label>
+                            <Label className='mb-2' htmlFor="new-building">Building</Label>
                             <Input
                                 id="new-building"
                                 value={editForm.building}
@@ -74,7 +74,7 @@ const AddDepartmentDialog = ({ isAddDialogOpen, setIsAddDialogOpen, editForm, se
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <Label htmlFor="new-phone">Phone</Label>
+                            <Label className='mb-2' htmlFor="new-phone">Phone</Label>
                             <Input
                                 id="new-phone"
                                 value={editForm.phone}
@@ -83,7 +83,7 @@ const AddDepartmentDialog = ({ isAddDialogOpen, setIsAddDialogOpen, editForm, se
                             />
                         </div>
                         <div>
-                            <Label htmlFor="new-email">Email</Label>
+                            <Label className='mb-2' htmlFor="new-email">Email</Label>
                             <Input
                                 id="new-email"
                                 type="email"
@@ -98,7 +98,7 @@ const AddDepartmentDialog = ({ isAddDialogOpen, setIsAddDialogOpen, editForm, se
                     <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>
                         Cancel
                     </Button>
-                    <Button onClick={handleSaveDepartment}>Create Department</Button>
+                    <Button className='cursor-pointer' onClick={handleSaveDepartment}>Create Department</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
