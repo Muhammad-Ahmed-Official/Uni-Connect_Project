@@ -142,11 +142,11 @@ function Sidebar({ className }: { className?: string }) {
 
 export default function DashboardPage() {
   const [searchQuery, setSearchQuery] = useState("");
-  const session = useSession();
-  const role = session?.data?.user?.role;
+  // const session = useSession();
+  // const role = session?.data?.user?.role;
 
-  if (!session) redirect("/login");
-  if (role === "admin") redirect("/admin");
+  // if (!session) redirect("/login");
+  // if (role === "admin") redirect("/admin");
   
   const handleLogout = () => {
     signOut()
