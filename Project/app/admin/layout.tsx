@@ -34,6 +34,7 @@ import {
   Shield,
 } from "lucide-react"
 import { Suspense } from "react"
+import { signOut } from "next-auth/react"
 
 const navigation = [
   { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
@@ -52,7 +53,11 @@ export default function AdminLayout({
   children: React.ReactNode
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
-  const pathname = usePathname()
+  const pathname = usePathname();
+
+  const handleLogout = () => {
+    signOut()
+  }
 
   const SidebarContent = () => (
     <div className="flex h-full flex-col">
@@ -74,9 +79,8 @@ export default function AdminLayout({
             <Link
               key={item.name}
               href={item.href}
-              className={`group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
-                isActive ? "bg-blue-100 text-blue-700" : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-              }`}
+              className={`group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors ${isActive ? "bg-blue-100 text-blue-700" : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                }`}
               onClick={() => setSidebarOpen(false)}
             >
               <item.icon
@@ -92,7 +96,7 @@ export default function AdminLayout({
       <div className="border-t p-4">
         <div className="flex items-center space-x-3">
           <Avatar className="h-8 w-8">
-            <AvatarImage src="/admin-avatar.png" />
+            <AvatarImage src="/placeholder-user.jpg" />
             <AvatarFallback>AD</AvatarFallback>
           </Avatar>
           <div className="flex-1 min-w-0">
@@ -122,15 +126,15 @@ export default function AdminLayout({
         </Sheet>
 
         {/* Main Content */}
-        <div className="lg:pl-64 flex flex-col flex-1 min-h-0">
+        <div className="lg:pl-64 flex flex-col flex-1 min-h-0 w-full">
           {/* Top Header */}
           <div className="sticky top-0 z-10 flex-shrink-0 flex h-16 bg-white border-b border-gray-200">
             <Sheet>
               <SheetTrigger asChild>
                 <Button
                   variant="ghost"
-                  size="sm"
-                  className="lg:hidden px-4 border-r border-gray-200 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
+                  size="default"
+                  className="lg:hidden px-4 border-r border-gray-200 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500 h-full cursor-pointer"
                   onClick={() => setSidebarOpen(true)}
                 >
                   <Menu className="h-6 w-6" />
@@ -158,7 +162,7 @@ export default function AdminLayout({
               {/* Right side */}
               <div className="ml-4 flex items-center md:ml-6 space-x-4">
                 {/* Notifications */}
-                <Button variant="ghost" size="sm" className="relative">
+                <Button variant="ghost" size="sm" className="relative cursor-pointer">
                   <Bell className="h-5 w-5" />
                   <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs bg-red-500">
                     3
@@ -168,9 +172,9 @@ export default function AdminLayout({
                 {/* Profile dropdown */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                    <Button variant="ghost" className="relative h-8 w-8 rounded-full cursor-pointer">
                       <Avatar className="h-8 w-8">
-                        <AvatarImage src="/admin-avatar.png" />
+                        <AvatarImage src="/placeholder-user.jpg" />
                         <AvatarFallback>AD</AvatarFallback>
                       </Avatar>
                     </Button>
@@ -183,16 +187,16 @@ export default function AdminLayout({
                       </div>
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem>
+                    <DropdownMenuItem className="cursor-pointer">
                       <User className="mr-2 h-4 w-4" />
                       <span>Profile</span>
                     </DropdownMenuItem>
-                    <DropdownMenuItem>
+                    <DropdownMenuItem className="cursor-pointer">
                       <Settings className="mr-2 h-4 w-4" />
                       <span>Settings</span>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem>
+                    <DropdownMenuItem className="cursor-pointer" onClick={handleLogout}>
                       <LogOut className="mr-2 h-4 w-4" />
                       <span>Log out</span>
                     </DropdownMenuItem>
@@ -203,7 +207,7 @@ export default function AdminLayout({
           </div>
 
           {/* Page Content */}
-          <main className="flex-1 relative overflow-y-auto focus:outline-none">{children}</main>
+          <main className="flex-1 relative focus:outline-none">{children}</main>
         </div>
       </div>
     </Suspense>

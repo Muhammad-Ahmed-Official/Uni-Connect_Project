@@ -44,7 +44,7 @@ const sidebarItems = [
   { icon: Settings, label: "Settings", href: "/settings" },
 ]
 
-const departments = [
+const departments: Department[] = [
   {
     id: "computer-science",
     name: "Computer Science",
