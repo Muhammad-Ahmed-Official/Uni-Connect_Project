@@ -1,4 +1,3 @@
-import { connectDB } from "./mongodb";
 import type { Collection, Document } from "mongoose";
 // Create models
 export interface BaseEntity {
@@ -7,7 +6,7 @@ export interface BaseEntity {
     updatedAt?: Date;
 }
 
-export interface UserEntity extends BaseEntity {
+export interface IUser extends BaseEntity {
     firstName: string
     lastName: string
     email: string

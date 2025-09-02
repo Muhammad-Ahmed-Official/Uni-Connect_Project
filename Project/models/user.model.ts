@@ -1,0 +1,92 @@
+import { IAdvisorDetails, INotificationPreferences, IPrivacySettings, ISocialLink, IUser } from "@/types/user";
+import { Schema, model, Types, models } from "mongoose";
+
+//* SOCIAL LINKS SCHEMA
+
+const SocialLinkSchema = new Schema<ISocialLink>({
+    name: { type: String, required: true },
+    url: { type: String, required: true },
+});
+
+//* PRIVACY SETTING SCHEMA
+
+const PrivacySettingsSchema = new Schema<IPrivacySettings>({
+    profile_visibility: {
+        type: String,
+        enum: ["university_only", "public", "department_only", "private"],
+        default: "public",
+    },
+    show_email: { type: Boolean, default: false },
+    show_phone: { type: Boolean, default: false },
+    allow_direct_messages: { type: Boolean, default: true },
+    show_online_status: { type: Boolean, default: true },
+});
+
+//* ADVISOR DETAIL SCHEMA 
+
+const AdvisorDetailsSchema = new Schema<IAdvisorDetails>({
+    officeLocation: { type: String },
+    officeTiming: { type: String },
+    specialties: [{ type: String }],
+});
+
+//* NOTIFICATION PREFERENCE SCHEMA
+
+const NotificationPreferencesSchema = new Schema<INotificationPreferences>({
+    email_notifications: { type: Boolean, default: true },
+    push_notifications: { type: Boolean, default: true },
+    forum_updates: { type: Boolean, default: true },
+    event_reminders: { type: Boolean, default: true },
+    advisor_messages: { type: Boolean, default: true },
+    system_updates: { type: Boolean, default: true },
+    weekly_digest: { type: Boolean, default: false },
+});
+
+//* USER SCHEMA
+
+const UserSchema = new Schema<IUser>(
+    {
+        username: { type: String, unique: true, required: true, index: true },
+        email: { type: String, unique: true, required: true },
+        password: { type: String, required: true },
+        firstName: { type: String, required: true },
+        lastName: { type: String, required: true },
+        bio: { type: String },
+        profilePic: { type: String },
+        idCard: { type: String, required: true },
+        social_links: { type: [SocialLinkSchema], default: [] },
+        studentId: { type: String, required: true, index: true },
+        department_id: { type: Schema.Types.ObjectId, ref: "Department" },
+        role: {
+            type: String,
+            enum: ["student", "admin", "department_Student_Advisor", "University_Student_Advisor"],
+            default: "student",
+        },
+        privacy_settings: {
+            type: PrivacySettingsSchema, default: {
+                profile_visibility: "university_only",
+                show_email: false,
+                show_phone: false,
+                allow_direct_messages: true,
+                show_online_status: true,
+            },
+        },
+        advisor_details: { type: AdvisorDetailsSchema },
+        notification_preferences: {
+            type: NotificationPreferencesSchema,
+            default: {
+                email_notifications: true,
+                push_notifications: true,
+                forum_updates: true,
+                event_reminders: true,
+                advisor_messages: true,
+                system_updates: true,
+                weekly_digest: false,
+            },
+        },
+    },
+    { timestamps: true }
+);
+
+const UserModel =models?.User || model<IUser>("User", UserSchema);
+export default UserModel

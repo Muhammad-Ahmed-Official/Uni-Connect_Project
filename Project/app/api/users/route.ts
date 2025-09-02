@@ -1,7 +1,7 @@
 import { UserEntity } from "@/lib/db";
 import { connectDB } from "@/lib/mongodb";
 import { clearCache, getOrSetCache } from "@/lib/redis";
-import User from "@/schemas/user.schema";
+import User from "@/models/user.model";
 import { hash } from "bcryptjs";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";

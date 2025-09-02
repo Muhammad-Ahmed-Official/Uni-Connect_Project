@@ -1,15 +1,12 @@
 import { NextAuthOptions } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
-import { z } from "zod"
 import { compare } from "bcryptjs"
 import { configs } from "@/configs/configs"
 import { connectDB } from "@/lib/mongodb"
-import User from "@/schemas/user.schema"
+import User from "@/models/user.model"
+import { loginSchema } from "@/schemas/login.schema"
 
-const credentialsSchema = z.object({
-    email: z.string().email(),
-    password: z.string().min(6, "Password must be at least 6 characters long")
-})
+
 
 export const authOptions: NextAuthOptions = {
     providers: [
@@ -20,7 +17,8 @@ export const authOptions: NextAuthOptions = {
                 password: { label: "Password", type: "password" }
             },
             authorize: async (credentials) => {
-                const parsedCredentials = credentialsSchema.safeParse(credentials);
+                const parsedCredentials = loginSchema.safeParse(credentials);
+                console.log(parsedCredentials)
 
                 if (!parsedCredentials.success) {
                     throw new Error(parsedCredentials.error.errors[0].message);
@@ -61,10 +59,6 @@ export const authOptions: NextAuthOptions = {
         })
     ],
     callbacks: {
-/*************  ✨ Windsurf Command ⭐  *************/
-        /**
-
-/*******  89feedd5-dad4-48af-8438-039dcbdb7994  *******/
         async jwt({ token, user }) {
             if (user) {
                 token.role = (user as any).role || "user";
