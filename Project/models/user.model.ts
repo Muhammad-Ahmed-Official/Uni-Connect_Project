@@ -1,5 +1,5 @@
 import { IAdvisorDetails, INotificationPreferences, IPrivacySettings, ISocialLink, IUser } from "@/types/user";
-import { Schema, model, Types, models } from "mongoose";
+import { Schema, model, models } from "mongoose";
 
 //* SOCIAL LINKS SCHEMA
 
