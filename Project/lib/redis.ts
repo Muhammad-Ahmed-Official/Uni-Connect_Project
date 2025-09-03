@@ -14,7 +14,7 @@ if (process.env.NODE_ENV === "development") {
         username: "default",
         password: configs.redisPassword,
         host: configs.redisUrl,
-        port: Number(configs.redisPort),
+        port: parseInt(configs.redisPort || "6379", 10),
     });
 }
 
