@@ -51,7 +51,6 @@ export async function POST(req: NextRequest) {
             }, { status: 400 })
         }
 
-
         const { firstName, lastName, email, password, department, studentId } = parsedBody.data;
         await connectDB();
         const existingUser = await User.findOne({ email });

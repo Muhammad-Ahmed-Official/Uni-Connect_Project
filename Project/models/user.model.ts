@@ -1,5 +1,6 @@
 import { IAdvisorDetails, INotificationPreferences, IPrivacySettings, ISocialLink, IUser } from "@/types/user";
 import { Schema, model, models } from "mongoose";
+import bcrypt from "bcryptjs";
 
 //* SOCIAL LINKS SCHEMA
 
@@ -44,22 +45,48 @@ const NotificationPreferencesSchema = new Schema<INotificationPreferences>({
 
 //* USER SCHEMA
 
-const UserSchema = new Schema<IUser>(
-    {
+const UserSchema = new Schema<IUser>({
         username: { type: String, unique: true, required: true, index: true },
-        email: { type: String, unique: true, required: true },
-        password: { type: String, required: true },
+        email: {
+            type: String,
+            required: [true, "Email is required"],
+            unique: true,
+            lowercase: true,
+            trim: true,
+            match: [/.+\@.+\..+/, "please use a valid email address"]
+        },
+        password: {
+            type: String,
+            required: [true, "Password is reqired"],
+            unique: true,
+        },
+        studentId: { 
+            type: String, 
+            required: true, 
+            index: true 
+        },
         firstName: { type: String, required: true },
         lastName: { type: String, required: true },
         bio: { type: String },
         profilePic: { type: String },
         idCard: { type: String, required: true },
         social_links: { type: [SocialLinkSchema], default: [] },
-        studentId: { type: String, required: true, index: true },
         department_id: { type: Schema.Types.ObjectId, ref: "Department" },
+        isVerified: {
+            type: Boolean,
+            default: false,
+        },
+        verifyCode: {
+            type: String,
+            required: [true, "Verify code is reqired"],
+        },
+        verifyCodeExpiry: {
+            type: Date,
+            required: [true, "Verify code Expiry is reqired"],
+        },
         role: {
             type: String,
-            enum: ["student", "admin", "department_Student_Advisor", "University_Student_Advisor"],
+            enum: ["student", "admin", "department_Student_Advisor", "university_Student_Advisor"],
             default: "student",
         },
         privacy_settings: {
@@ -88,5 +115,11 @@ const UserSchema = new Schema<IUser>(
     { timestamps: true }
 );
 
-const UserModel =models?.User || model<IUser>("User", UserSchema);
-export default UserModel
+UserSchema.pre("save", async function (next) {
+    if(this.isModified("password")){
+        this.password = await bcrypt.hash(this.password, 10)
+    };
+    next();
+});
+
+export const User = models?.User || model<IUser>("User", UserSchema);

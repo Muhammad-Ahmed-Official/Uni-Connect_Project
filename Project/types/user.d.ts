@@ -46,4 +46,7 @@ export interface IUser extends Document,BaseEntity {
   privacy_settings?: PrivacySettings;
   advisor_details?: AdvisorDetails;
   notification_preferences?: NotificationPreferences;
+  isVerified: boolean,
+  verifyCodeExpiry: Date;
+  verifyCode: string;
 }
