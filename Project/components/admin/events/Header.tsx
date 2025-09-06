@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog'
+import FileInput from '@/components/ui/FileInput'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -14,6 +15,11 @@ interface HeaderProps {
 }
 
 const Header = ({ isCreateDialogOpen, setIsCreateDialogOpen }: HeaderProps) => {
+    const handleFileUpload = (files: File[]) => {
+        console.log('Files uploaded:', files);
+        // Handle the upload logic here
+    };
+
     return (
         <div className="flex justify-between items-center flex-wrap gap-2">
             <div>
@@ -22,12 +28,12 @@ const Header = ({ isCreateDialogOpen, setIsCreateDialogOpen }: HeaderProps) => {
             </div>
             <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
                 <DialogTrigger asChild>
-                    <Button className="bg-blue-600 hover:bg-blue-700">
+                    <Button className="bg-blue-600 hover:bg-blue-700 cursor-pointer">
                         <Plus className="w-4 h-4 mr-2" />
                         Create Event
                     </Button>
                 </DialogTrigger>
-                <DialogContent className="max-w-2xl">
+                <DialogContent className="max-w-2xl max-h-[90vh]">
                     <DialogHeader>
                         <DialogTitle>Create New Event</DialogTitle>
                         <DialogDescription>Add a new event to the university calendar</DialogDescription>
@@ -74,7 +80,12 @@ const Header = ({ isCreateDialogOpen, setIsCreateDialogOpen }: HeaderProps) => {
                             <Label htmlFor="location">Location</Label>
                             <Input id="location" placeholder="Enter event location" />
                         </div>
-                    </div>1
+                        <div className="space-y-2">
+                            <Label htmlFor="Image">Image</Label>
+                            <FileInput onUpload={handleFileUpload} />
+                            {/* <Input id="location" placeholder="Enter event location" /> */}
+                        </div>
+                    </div>
                     <DialogFooter >
                         <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)}>
                             Cancel

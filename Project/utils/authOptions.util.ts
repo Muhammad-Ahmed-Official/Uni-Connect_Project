@@ -6,8 +6,6 @@ import { connectDB } from "@/lib/mongodb"
 import User from "@/models/user.model"
 import { loginSchema } from "@/schemas/login.schema"
 
-
-
 export const authOptions: NextAuthOptions = {
     providers: [
         CredentialsProvider({

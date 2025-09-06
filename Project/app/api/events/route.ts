@@ -1,7 +1,7 @@
 import { EventEntity } from "@/lib/db";
 import { connectDB } from "@/lib/mongodb";
 import { clearCache, getOrSetCache } from "@/lib/redis";
-import Event from "@/schemas/event.schema";
+import Event from "@/models/event.model";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 

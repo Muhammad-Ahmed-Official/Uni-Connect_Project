@@ -28,3 +28,5 @@ const EventSchema: Schema<IEvent & Document> = new Schema(
 );
 
 const Event = models?.Event ||  model<IEvent>("Event", EventSchema);
+
+export default Event;

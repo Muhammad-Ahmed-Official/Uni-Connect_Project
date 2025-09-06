@@ -4,9 +4,9 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Calendar, Plus } from "lucide-react"
 import { DataTable } from "@/components/ui/data-table"
-// import { columns } from "./columns"
 import EventForm from "@/components/university/EventForm"
 import { useUniversityEvents } from "@/hooks/useUniversity"
+import { columns } from "../posts/columns"
 
 export default function EventManagement() {
   const { events, createEvent } = useUniversityEvents()
