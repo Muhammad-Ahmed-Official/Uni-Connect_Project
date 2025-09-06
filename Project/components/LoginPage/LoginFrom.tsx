@@ -39,7 +39,6 @@ const LoginFrom = () => {
     })
     const [showPassword, setShowPassword] = useState<boolean>(false)
     const [isLoading, setIsLoading] = useState<boolean>(false)
-    const [errors, setErrors] = useState<Record<string, string>>({})
     const [resetEmail, setResetEmail] = useState<string>("")
     const [isResetLoading, setIsResetLoading] = useState<boolean>(false)
 
