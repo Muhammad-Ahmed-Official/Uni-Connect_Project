@@ -1,6 +1,7 @@
 import { IAdvisorDetails, INotificationPreferences, IPrivacySettings, ISocialLink, IUser } from "@/types/user";
 import { Schema, model, models } from "mongoose";
 import bcrypt from "bcryptjs";
+import { deflate } from "zlib";
 
 //* SOCIAL LINKS SCHEMA
 
@@ -131,4 +132,5 @@ UserSchema.pre("save", async function (next) {
     next();
 });
 
-export const User = models?.User || model<IUser>("User", UserSchema);
+const User = models?.User || model<IUser>("User", UserSchema);
+export default User;

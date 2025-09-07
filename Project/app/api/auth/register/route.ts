@@ -2,11 +2,10 @@ import { connectDB } from "@/lib/mongodb";
 import { asyncHandler } from "@/utils/asyncHandler";
 import { nextError, nextResponse } from "@/utils/Response";
 import { NextRequest } from "next/server";
-import { User } from "@/models/user.model";
+import User  from "@/models/user.model";
 import { sendEmailOTP } from "@/lib/nodemailer";
 import { generateOTP } from "@/helpers/generateOTP";
-import { otpExpiry } from "@/helpers/otpExpiry";
-import { redis, safeSet } from "@/lib/redis";
+import { safeSet } from "@/lib/redis";
 
 
 const handleStudentRegistration = async (data: any, department_id: string) => {
