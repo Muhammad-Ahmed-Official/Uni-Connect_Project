@@ -35,6 +35,7 @@ import {
 } from "lucide-react"
 import { Suspense } from "react"
 import { signOut } from "next-auth/react"
+import { Input } from "@/components/ui/input"
 
 const navigation = [
   { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
@@ -47,11 +48,43 @@ const navigation = [
   { name: "Settings", href: "/admin/settings", icon: Settings },
 ]
 
+const recentActivity = [
+  {
+    type: "forum",
+    title: "New post in Computer Science",
+    description: "Help needed with Data Structures assignment",
+    time: "2 hours ago",
+    unread: true,
+  },
+  {
+    type: "event",
+    title: "Tech Talk: AI in Healthcare",
+    description: "Tomorrow at 3:00 PM in Main Auditorium",
+    time: "5 hours ago",
+    unread: true,
+  },
+  {
+    type: "advisor",
+    title: "Response from Dr. Smith",
+    description: "Your course selection query has been answered",
+    time: "1 day ago",
+    unread: false,
+  },
+  {
+    type: "paper",
+    title: "New past papers uploaded",
+    description: "Database Systems - Fall 2023 papers available",
+    time: "2 days ago",
+    unread: false,
+  },
+]
+
 export default function AdminLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const [searchQuery, setSearchQuery] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const pathname = usePathname();
 
@@ -128,7 +161,7 @@ export default function AdminLayout({
         {/* Main Content */}
         <div className="lg:pl-64 flex flex-col flex-1 min-h-0 w-full">
           {/* Top Header */}
-          <div className="sticky top-0 z-10 flex-shrink-0 flex h-16 bg-white border-b border-gray-200">
+          <div className="fixed left-0 right-0 lg:left-64 top-0 z-10 flex-shrink-0 flex h-16 bg-white border-b border-gray-200">
             <Sheet>
               <SheetTrigger asChild>
                 <Button
@@ -142,39 +175,57 @@ export default function AdminLayout({
               </SheetTrigger>
             </Sheet>
 
-            <div className="flex-1 px-4 flex justify-between items-center">
-              {/* Search */}
-              <div className="flex-1 flex">
-                <div className="w-full flex md:ml-0">
-                  <div className="relative w-full text-gray-400 focus-within:text-gray-600">
-                    <div className="absolute inset-y-0 left-0 flex items-center pointer-events-none">
-                      <Search className="h-5 w-5" />
-                    </div>
-                    <input
-                      className="block w-full h-full pl-8 pr-3 py-2 border-transparent text-gray-900 placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-0 focus:border-transparent sm:text-sm"
-                      placeholder="Search users, events, documents..."
-                      type="search"
-                    />
-                  </div>
-                </div>
+            <div className="px-4 flex justify-between items-center w-full">
+              {/* Search Bar */}
+              <div className="relative flex-1 max-w-md">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <Input
+                  type="search"
+                  placeholder="Search departments, events, papers..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-10 pr-4 py-2 w-full"
+                />
               </div>
 
               {/* Right side */}
               <div className="ml-4 flex items-center md:ml-6 space-x-4">
                 {/* Notifications */}
-                <Button variant="ghost" size="sm" className="relative cursor-pointer">
-                  <Bell className="h-5 w-5" />
-                  <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs bg-red-500">
-                    3
-                  </Badge>
-                </Button>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="sm" className="relative">
+                      <Bell className="h-5 w-5" />
+                      <span className="absolute -top-1 -right-1 h-5 w-5 bg-red-500 rounded-full text-xs text-white flex items-center justify-center">
+                        3
+                      </span>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-80">
+                    <DropdownMenuLabel>Notifications</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <div className="max-h-64 overflow-y-auto">
+                      {recentActivity.slice(0, 3).map((activity, index) => (
+                        <DropdownMenuItem key={index} className="flex flex-col items-start p-3">
+                          <div className="flex items-center justify-between w-full">
+                            <span className="font-medium text-sm">{activity.title}</span>
+                            {activity.unread && <div className="w-2 h-2 bg-blue-500 rounded-full" />}
+                          </div>
+                          <span className="text-xs text-gray-500 mt-1">{activity.description}</span>
+                          <span className="text-xs text-gray-400 mt-1">{activity.time}</span>
+                        </DropdownMenuItem>
+                      ))}
+                    </div>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem className="text-center text-blue-600">View all notifications</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
 
                 {/* Profile dropdown */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className="relative h-8 w-8 rounded-full cursor-pointer">
                       <Avatar className="h-8 w-8">
-                        <AvatarImage src="/placeholder-user.jpg" />
+                        <AvatarImage src="/student-avatar.png" alt="Profile" />
                         <AvatarFallback>AD</AvatarFallback>
                       </Avatar>
                     </Button>
@@ -207,7 +258,7 @@ export default function AdminLayout({
           </div>
 
           {/* Page Content */}
-          <main className="flex-1 relative focus:outline-none">{children}</main>
+          <main className="flex-1 relative focus:outline-none pt-14">{children}</main>
         </div>
       </div>
     </Suspense>

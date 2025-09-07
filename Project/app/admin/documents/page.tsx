@@ -212,7 +212,7 @@ export default function AdminDocumentsPage() {
   const pendingApprovals = [...pastPapers, ...policyDocs].filter((item) => item.status === "pending").length
 
   return (
-    <div className="space-y-6">
+    <div className="p-2 sm:p-6 space-y-6">
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>

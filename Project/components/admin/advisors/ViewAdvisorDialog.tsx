@@ -18,7 +18,7 @@ const ViewAdvisorDialog = ({ isViewDialogOpen, setIsViewDialogOpen, selectedAdvi
                 }
             }}
         >
-            <DialogContent className="max-w-3xl">
+            <DialogContent className="max-w-3xl max-h-[90vh]">
                 <DialogHeader>
                     <DialogTitle>Advisor Profile</DialogTitle>
                     <DialogDescription>Complete information and performance metrics</DialogDescription>
