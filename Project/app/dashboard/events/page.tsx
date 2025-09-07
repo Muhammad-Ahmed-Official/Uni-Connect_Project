@@ -183,9 +183,8 @@ function Sidebar({ className }: { className?: string }) {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex items-center space-x-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
-                  item.active ? "bg-blue-100 text-blue-700" : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
-                }`}
+                className={`flex items-center space-x-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${item.active ? "bg-blue-100 text-blue-700" : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                  }`}
               >
                 <item.icon className="h-4 w-4" />
                 <span>{item.label}</span>
@@ -425,254 +424,153 @@ export default function EventsPage() {
   }
 
   return (
-    <div className="flex h-screen bg-gray-50">
-      {/* Desktop Sidebar */}
-      <div className="hidden md:flex md:w-64 md:flex-col">
-        <div className="flex flex-col flex-grow pt-5 bg-white border-r border-gray-200 overflow-y-auto">
-          <Sidebar />
+    <div className="p-2 sm:p-6 space-y-6">
+      {/* Header */}
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">University Events</h1>
+        <p className="text-gray-600">Discover and join events happening across campus</p>
+      </div>
+
+      {/* Filters and View Toggle */}
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center space-x-4">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm">
+                <Filter className="h-4 w-4 mr-2" />
+                {categoryFilter === "All" ? "All Categories" : categoryFilter}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem onClick={() => setCategoryFilter("All")}>All Categories</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setCategoryFilter("University")}>University-wide</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setCategoryFilter("Department")}>Department</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setCategoryFilter("Club")}>Club Events</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <div className="text-sm text-gray-500">{upcomingEvents.length} upcoming events</div>
+        </div>
+
+        <div className="flex items-center space-x-2">
+          <Button
+            variant={viewMode === "list" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setViewMode("list")}
+          >
+            <List className="h-4 w-4 mr-2" />
+            List
+          </Button>
+          <Button
+            variant={viewMode === "calendar" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setViewMode("calendar")}
+          >
+            <CalendarDays className="h-4 w-4 mr-2" />
+            Calendar
+          </Button>
         </div>
       </div>
 
-      {/* Main Content */}
-      <div className="flex flex-col flex-1 overflow-hidden">
-        {/* Top Navigation */}
-        <header className="bg-white border-b border-gray-200 px-4 py-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              {/* Mobile Menu Button */}
-              <Sheet>
-                <SheetTrigger asChild>
-                  <Button variant="ghost" size="sm" className="md:hidden">
-                    <Menu className="h-5 w-5" />
-                  </Button>
-                </SheetTrigger>
-                <SheetContent side="left" className="p-0 w-64">
-                  <Sidebar className="w-full" />
-                </SheetContent>
-              </Sheet>
-
-              {/* Search Bar */}
-              <div className="relative flex-1 max-w-md">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                <Input
-                  type="search"
-                  placeholder="Search events..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 pr-4 py-2 w-full"
-                />
-              </div>
-            </div>
-
-            <div className="flex items-center space-x-4">
-              {/* Notifications */}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="sm" className="relative">
-                    <Bell className="h-5 w-5" />
-                    <span className="absolute -top-1 -right-1 h-4 w-4 bg-red-500 rounded-full text-xs text-white flex items-center justify-center">
-                      3
-                    </span>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-80">
-                  <DropdownMenuLabel>Notifications</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem>New event: Tech Talk tomorrow</DropdownMenuItem>
-                  <DropdownMenuItem>Reminder: Career Fair in 2 days</DropdownMenuItem>
-                  <DropdownMenuItem>Event update: Location changed</DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-
-              {/* User Profile */}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                    <Avatar className="h-8 w-8">
-                      <AvatarImage src="/student-avatar.png" alt="Profile" />
-                      <AvatarFallback>SC</AvatarFallback>
-                    </Avatar>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56" align="end" forceMount>
-                  <DropdownMenuLabel className="font-normal">
-                    <div className="flex flex-col space-y-1">
-                      <p className="text-sm font-medium leading-none">Sarah Chen</p>
-                      <p className="text-xs leading-none text-muted-foreground">sarah.chen@university.edu</p>
-                    </div>
-                  </DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem>
-                    <User className="mr-2 h-4 w-4" />
-                    <span>Profile</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <Settings className="mr-2 h-4 w-4" />
-                    <span>Settings</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem>
-                    <LogOut className="mr-2 h-4 w-4" />
-                    <span>Log out</span>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-          </div>
-        </header>
-
-        {/* Main Content */}
-        <main className="flex-1 overflow-y-auto p-6">
-          <div className="max-w-7xl mx-auto">
-            {/* Header */}
-            <div className="mb-8">
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">University Events</h1>
-              <p className="text-gray-600">Discover and join events happening across campus</p>
-            </div>
-
-            {/* Filters and View Toggle */}
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center space-x-4">
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="outline" size="sm">
-                      <Filter className="h-4 w-4 mr-2" />
-                      {categoryFilter === "All" ? "All Categories" : categoryFilter}
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent>
-                    <DropdownMenuItem onClick={() => setCategoryFilter("All")}>All Categories</DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setCategoryFilter("University")}>University-wide</DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setCategoryFilter("Department")}>Department</DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setCategoryFilter("Club")}>Club Events</DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-
-                <div className="text-sm text-gray-500">{upcomingEvents.length} upcoming events</div>
-              </div>
-
-              <div className="flex items-center space-x-2">
-                <Button
-                  variant={viewMode === "list" ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setViewMode("list")}
-                >
-                  <List className="h-4 w-4 mr-2" />
-                  List
-                </Button>
-                <Button
-                  variant={viewMode === "calendar" ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setViewMode("calendar")}
-                >
-                  <CalendarDays className="h-4 w-4 mr-2" />
-                  Calendar
-                </Button>
-              </div>
-            </div>
-
-            {/* Content */}
-            {viewMode === "calendar" ? (
-              <CalendarView events={filteredEvents} onEventClick={setSelectedEvent} />
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {upcomingEvents.map((event) => (
-                  <div key={event.id}>
-                    <Dialog>
-                      <DialogTrigger asChild>
-                        <div className="cursor-pointer">
-                          <EventCard event={event} onRSVP={handleRSVP} />
-                        </div>
-                      </DialogTrigger>
-                      <DialogContent className="max-w-2xl">
-                        <DialogHeader>
-                          <DialogTitle className="text-2xl">{event.title}</DialogTitle>
-                          <DialogDescription>Organized by {event.organizer}</DialogDescription>
-                        </DialogHeader>
-                        <div className="space-y-4">
-                          <img
-                            src={event.image || "/placeholder.svg"}
-                            alt={event.title}
-                            className="w-full h-48 object-cover rounded-lg"
-                          />
-                          <p className="text-gray-700 leading-relaxed">{event.description}</p>
-                          <div className="grid grid-cols-2 gap-4">
-                            <div className="space-y-2">
-                              <div className="flex items-center space-x-2 text-sm">
-                                <Calendar className="h-4 w-4 text-gray-500" />
-                                <span>
-                                  {new Date(event.date).toLocaleDateString("en-US", {
-                                    weekday: "long",
-                                    year: "numeric",
-                                    month: "long",
-                                    day: "numeric",
-                                  })}
-                                </span>
-                              </div>
-                              <div className="flex items-center space-x-2 text-sm">
-                                <Clock className="h-4 w-4 text-gray-500" />
-                                <span>
-                                  {event.time} - {event.endTime}
-                                </span>
-                              </div>
-                            </div>
-                            <div className="space-y-2">
-                              <div className="flex items-center space-x-2 text-sm">
-                                <MapPin className="h-4 w-4 text-gray-500" />
-                                <span>{event.location}</span>
-                              </div>
-                              <div className="flex items-center space-x-2 text-sm">
-                                <Users className="h-4 w-4 text-gray-500" />
-                                <span>
-                                  {event.attendees}/{event.maxAttendees} attending
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="flex flex-wrap gap-2">
-                            {event.tags.map((tag: string) => (
-                              <Badge key={tag} variant="outline">
-                                {tag}
-                              </Badge>
-                            ))}
-                          </div>
-                          <div className="flex justify-end space-x-2">
-                            <Button variant="outline">Share Event</Button>
-                            <Button
-                              onClick={() => handleRSVP(event.id)}
-                              className={event.isRSVPed ? "bg-green-600 hover:bg-green-700" : ""}
-                            >
-                              {event.isRSVPed ? (
-                                <>
-                                  <Check className="h-4 w-4 mr-2" />
-                                  RSVP'd
-                                </>
-                              ) : (
-                                "RSVP Now"
-                              )}
-                            </Button>
-                          </div>
-                        </div>
-                      </DialogContent>
-                    </Dialog>
+      {/* Content */}
+      {viewMode === "calendar" ? (
+        <CalendarView events={filteredEvents} onEventClick={setSelectedEvent} />
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {upcomingEvents.map((event) => (
+            <div key={event.id}>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <div className="cursor-pointer">
+                    <EventCard event={event} onRSVP={handleRSVP} />
                   </div>
-                ))}
-              </div>
-            )}
+                </DialogTrigger>
+                <DialogContent className="max-w-2xl">
+                  <DialogHeader>
+                    <DialogTitle className="text-2xl">{event.title}</DialogTitle>
+                    <DialogDescription>Organized by {event.organizer}</DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-4">
+                    <img
+                      src={event.image || "/placeholder.svg"}
+                      alt={event.title}
+                      className="w-full h-48 object-cover rounded-lg"
+                    />
+                    <p className="text-gray-700 leading-relaxed">{event.description}</p>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <div className="flex items-center space-x-2 text-sm">
+                          <Calendar className="h-4 w-4 text-gray-500" />
+                          <span>
+                            {new Date(event.date).toLocaleDateString("en-US", {
+                              weekday: "long",
+                              year: "numeric",
+                              month: "long",
+                              day: "numeric",
+                            })}
+                          </span>
+                        </div>
+                        <div className="flex items-center space-x-2 text-sm">
+                          <Clock className="h-4 w-4 text-gray-500" />
+                          <span>
+                            {event.time} - {event.endTime}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <div className="flex items-center space-x-2 text-sm">
+                          <MapPin className="h-4 w-4 text-gray-500" />
+                          <span>{event.location}</span>
+                        </div>
+                        <div className="flex items-center space-x-2 text-sm">
+                          <Users className="h-4 w-4 text-gray-500" />
+                          <span>
+                            {event.attendees}/{event.maxAttendees} attending
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {event.tags.map((tag: string) => (
+                        <Badge key={tag} variant="outline">
+                          {tag}
+                        </Badge>
+                      ))}
+                    </div>
+                    <div className="flex justify-end space-x-2">
+                      <Button variant="outline">Share Event</Button>
+                      <Button
+                        onClick={() => handleRSVP(event.id)}
+                        className={event.isRSVPed ? "bg-green-600 hover:bg-green-700" : ""}
+                      >
+                        {event.isRSVPed ? (
+                          <>
+                            <Check className="h-4 w-4 mr-2" />
+                            RSVP'd
+                          </>
+                        ) : (
+                          "RSVP Now"
+                        )}
+                      </Button>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
+            </div>
+          ))}
+        </div>
+      )}
 
-            {/* Empty State */}
-            {upcomingEvents.length === 0 && (
-              <div className="text-center py-12">
-                <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Calendar className="h-12 w-12 text-gray-400" />
-                </div>
-                <h3 className="text-lg font-medium text-gray-900 mb-2">No events found</h3>
-                <p className="text-gray-500">Try adjusting your search terms or filters</p>
-              </div>
-            )}
+      {/* Empty State */}
+      {upcomingEvents.length === 0 && (
+        <div className="text-center py-12">
+          <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <Calendar className="h-12 w-12 text-gray-400" />
           </div>
-        </main>
-      </div>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">No events found</h3>
+          <p className="text-gray-500">Try adjusting your search terms or filters</p>
+        </div>
+      )}
 
       {/* Event Detail Modal for Calendar View */}
       {selectedEvent && (

@@ -134,7 +134,7 @@ export default function UniversityLayout({
         {/* Main Content */}
         <div className="lg:pl-64 flex flex-col flex-1 min-h-0 w-full">
           {/* Top Header */}
-          <div className="sticky top-0 z-10 flex-shrink-0 flex h-16 bg-white border-b border-gray-200">
+          <div className="fixed left-0 right-0 lg:left-64 top-0 z-10 flex-shrink-0 flex h-16 bg-white border-b border-gray-200">
             <Sheet>
               <SheetTrigger asChild>
                 <Button
@@ -213,7 +213,7 @@ export default function UniversityLayout({
           </div>
 
           {/* Page Content */}
-          <main className="flex-1 relative focus:outline-none">{children}</main>
+          <main className="flex-1 relative focus:outline-none pt-14">{children}</main>
         </div>
       </div>
     </Suspense>

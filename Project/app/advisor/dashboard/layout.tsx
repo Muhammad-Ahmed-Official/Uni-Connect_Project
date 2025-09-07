@@ -72,24 +72,24 @@ export default function AdvisorLayout({
       {/* Navigation */}
       <nav className="flex-1 space-y-1 px-4 py-6">
         {navigation.map((item) => {
-          const isActive = pathname === item.href
+          const isActive = item.href === "/advisor"
+            ? pathname === "/advisor" || pathname === "/advisor/dashboard"
+            : pathname === item.href || pathname.startsWith(item.href + "/");
           return (
             <Link
               key={item.name}
               href={item.href}
-              className={`group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
-                isActive 
-                  ? "bg-green-100 text-green-700" 
-                  : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-              }`}
+              className={`group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors ${isActive
+                ? "bg-green-100 text-green-700"
+                : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                }`}
               onClick={() => setSidebarOpen(false)}
             >
               <item.icon
-                className={`mr-3 h-5 w-5 ${
-                  isActive 
-                    ? "text-green-700" 
-                    : "text-gray-400 group-hover:text-gray-500"
-                }`}
+                className={`mr-3 h-5 w-5 ${isActive
+                  ? "text-green-700"
+                  : "text-gray-400 group-hover:text-gray-500"
+                  }`}
               />
               {item.name}
             </Link>
@@ -133,7 +133,7 @@ export default function AdvisorLayout({
         {/* Main Content */}
         <div className="lg:pl-64 flex flex-col flex-1 min-h-0 w-full">
           {/* Top Header */}
-          <div className="sticky top-0 z-10 flex-shrink-0 flex h-16 bg-white border-b border-gray-200">
+          <div className="fixed left-0 right-0 lg:left-64 top-0 z-10 flex-shrink-0 flex h-16 bg-white border-b border-gray-200">
             <Sheet>
               <SheetTrigger asChild>
                 <Button
@@ -212,7 +212,7 @@ export default function AdvisorLayout({
           </div>
 
           {/* Page Content */}
-          <main className="flex-1 relative focus:outline-none">{children}</main>
+          <main className="flex-1 relative focus:outline-none pt-14">{children}</main>
         </div>
       </div>
     </Suspense>
