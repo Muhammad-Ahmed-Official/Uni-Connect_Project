@@ -39,15 +39,22 @@ async function sendEmailLink(mail:string, link:string) {
     const mailOptions = {
         from: process.env.PORTAL_EMAIL,
         to: mail, 
-        subject: "RESET PASSWORD",
+        subject: "For Advisor SignUp",
         html: SEND_EMAIL_LINK(link), // html body 
     };
 
     try {
         await transporter.sendMail(mailOptions);
-        return `OTP sent to ${mail} via email`;
+        return {
+            success: true,
+            message:""
+        };
     } catch (error) {
-        throw `Error sending OTP to ${mail} via email: ${error}`;
+        // throw `Error sending OTP to ${mail} via email: ${error}`;
+        return {
+            success:false,
+            message: `Error sending Link to ${mail} via email: ${error}`,
+        }
     }
 }
 

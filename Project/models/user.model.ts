@@ -62,27 +62,25 @@ const UserSchema = new Schema<IUser>({
     },
     studentId: {
         type: String,
-        required: true,
+        required: function () {
+            return this.role === "student"
+        },
         index: true
     },
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
-    bio: { type: String },
+    bio: { type: String, default: null },
     profilePic: { type: String },
-    idCard: { type: String, required: true },
+    idCard: {
+        type: String, required: function () {
+            return this.role === "student"
+        },
+    },
     social_links: { type: [SocialLinkSchema], default: [] },
     department_id: { type: Schema.Types.ObjectId, ref: "Department" },
     isVerified: {
         type: Boolean,
         default: false,
-    },
-    verifyCode: {
-        type: String,
-        required: [true, "Verify code is reqired"],
-    },
-    verifyCodeExpiry: {
-        type: Date,
-        required: [true, "Verify code Expiry is reqired"],
     },
     role: {
         type: String,
@@ -98,7 +96,18 @@ const UserSchema = new Schema<IUser>({
             show_online_status: true,
         },
     },
-    advisor_details: { type: AdvisorDetailsSchema },
+    advisor_details: {
+        type: AdvisorDetailsSchema, required: function () {
+            return ["department_Student_Advisor","university_Student_Advisor"].includes(this.role);
+        }
+    },
+    employeeId: {
+        type: String,
+        required: function (this: IUser) {
+            return ["department_Student_Advisor", "university_Student_Advisor"].includes(this.role);
+        },
+        index: true
+    },
     notification_preferences: {
         type: NotificationPreferencesSchema,
         default: {
