@@ -41,12 +41,11 @@ export interface IUser extends Document,BaseEntity {
   idCard: string;
   social_links?: SocialLink[];
   studentId: string;
+  employeeId:string;
   department_id: Types.ObjectId;
   role: "student" | "admin" | "department_Student_Advisor" | "University_Student_Advisor";
   privacy_settings?: PrivacySettings;
   advisor_details?: AdvisorDetails;
   notification_preferences?: NotificationPreferences;
   isVerified: boolean,
-  verifyCodeExpiry: Date;
-  verifyCode: string;
 }

@@ -20,6 +20,35 @@ if (process.env.NODE_ENV === "development") {
 
 export { redis };
 
+//* ✅ SAFE SET FOR OTP
+export async function safeSet(
+    key: string,
+    value: string,
+    ttlSeconds: number
+): Promise<{ success: boolean; error?: any }> {
+    try {
+        await redis.set(key, value, "EX", ttlSeconds);
+        return {success:true};
+    } catch (err) {
+        console.error(`Redis SET failed for key: ${key}`, err);
+        return {success:false, error:err|| "Redis set failed" };
+    }
+}
+
+//* SAFE GET FOR OTP
+
+export async function safeGet<T=string>(
+    key: string
+): Promise<T | null> {
+    try {
+        const data = await redis.get(key);
+        return data ? (JSON.parse(data) as T) : null;
+    } catch (error) {
+        console.log(`Redis Get failed for key: ${key}`, error)
+        return null;
+    }
+}
+
 export async function getOrSetCache<T>(
     key: string,
     ttl: number,

@@ -46,77 +46,86 @@ const NotificationPreferencesSchema = new Schema<INotificationPreferences>({
 //* USER SCHEMA
 
 const UserSchema = new Schema<IUser>({
-        username: { type: String, unique: true, required: true, index: true },
-        email: {
-            type: String,
-            required: [true, "Email is required"],
-            unique: true,
-            lowercase: true,
-            trim: true,
-            match: [/.+\@.+\..+/, "please use a valid email address"]
+    username: { type: String, unique: true, required: true, index: true },
+    email: {
+        type: String,
+        required: [true, "Email is required"],
+        unique: true,
+        lowercase: true,
+        trim: true,
+        match: [/.+\@.+\..+/, "please use a valid email address"]
+    },
+    password: {
+        type: String,
+        required: [true, "Password is reqired"],
+        unique: true,
+    },
+    studentId: {
+        type: String,
+        required: function () {
+            return this.role === "student"
         },
-        password: {
-            type: String,
-            required: [true, "Password is reqired"],
-            unique: true,
-        },
-        studentId: { 
-            type: String, 
-            required: true, 
-            index: true 
-        },
-        firstName: { type: String, required: true },
-        lastName: { type: String, required: true },
-        bio: { type: String },
-        profilePic: { type: String },
-        idCard: { type: String, required: true },
-        social_links: { type: [SocialLinkSchema], default: [] },
-        department_id: { type: Schema.Types.ObjectId, ref: "Department" },
-        isVerified: {
-            type: Boolean,
-            default: false,
-        },
-        verifyCode: {
-            type: String,
-            required: [true, "Verify code is reqired"],
-        },
-        verifyCodeExpiry: {
-            type: Date,
-            required: [true, "Verify code Expiry is reqired"],
-        },
-        role: {
-            type: String,
-            enum: ["student", "admin", "department_Student_Advisor", "university_Student_Advisor"],
-            default: "student",
-        },
-        privacy_settings: {
-            type: PrivacySettingsSchema, default: {
-                profile_visibility: "university_only",
-                show_email: false,
-                show_phone: false,
-                allow_direct_messages: true,
-                show_online_status: true,
-            },
-        },
-        advisor_details: { type: AdvisorDetailsSchema },
-        notification_preferences: {
-            type: NotificationPreferencesSchema,
-            default: {
-                email_notifications: true,
-                push_notifications: true,
-                forum_updates: true,
-                event_reminders: true,
-                advisor_messages: true,
-                system_updates: true,
-                weekly_digest: false,
-            },
+        index: true
+    },
+    firstName: { type: String, required: true },
+    lastName: { type: String, required: true },
+    bio: { type: String, default: null },
+    profilePic: { type: String },
+    idCard: {
+        type: String, required: function () {
+            return this.role === "student"
         },
     },
+    social_links: { type: [SocialLinkSchema], default: [] },
+    department_id: { type: Schema.Types.ObjectId, ref: "Department" },
+    isVerified: {
+        type: Boolean,
+        default: false,
+    },
+    role: {
+        type: String,
+        enum: ["student", "admin", "department_Student_Advisor", "university_Student_Advisor"],
+        default: "student",
+    },
+    privacy_settings: {
+        type: PrivacySettingsSchema, default: {
+            profile_visibility: "university_only",
+            show_email: false,
+            show_phone: false,
+            allow_direct_messages: true,
+            show_online_status: true,
+        },
+    },
+    advisor_details: {
+        type: AdvisorDetailsSchema, required: function () {
+            return ["department_Student_Advisor","university_Student_Advisor"].includes(this.role);
+        }
+    },
+    employeeId: {
+        type: String,
+        required: function (this: IUser) {
+            return ["department_Student_Advisor", "university_Student_Advisor"].includes(this.role);
+        },
+        index: true
+    },
+    notification_preferences: {
+        type: NotificationPreferencesSchema,
+        default: {
+            email_notifications: true,
+            push_notifications: true,
+            forum_updates: true,
+            event_reminders: true,
+            advisor_messages: true,
+            system_updates: true,
+            weekly_digest: false,
+        },
+    },
+},
     { timestamps: true }
 );
 
 UserSchema.pre("save", async function (next) {
-    if(this.isModified("password")){
+    if (this.isModified("password")) {
         this.password = await bcrypt.hash(this.password, 10)
     };
     next();
