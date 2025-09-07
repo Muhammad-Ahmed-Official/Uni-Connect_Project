@@ -1,5 +1,5 @@
 import { connectDB } from "@/lib/mongodb";
-import { User } from "@/models/user.model";
+import User from "@/models/user.model";
 import { asyncHandler } from "@/utils/asyncHandler";
 import { nextError, nextResponse } from "@/utils/Response";
 import { NextRequest } from "next/server";
