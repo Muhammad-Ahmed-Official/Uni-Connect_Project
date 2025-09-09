@@ -28,16 +28,16 @@ export async function safeSet(
 ): Promise<{ success: boolean; error?: any }> {
     try {
         await redis.set(key, value, "EX", ttlSeconds);
-        return {success:true};
+        return { success: true };
     } catch (err) {
         console.error(`Redis SET failed for key: ${key}`, err);
-        return {success:false, error:err|| "Redis set failed" };
+        return { success: false, error: err || "Redis set failed" };
     }
 }
 
 //* SAFE GET FOR OTP
 
-export async function safeGet<T=string>(
+export async function safeGet<T = string>(
     key: string
 ): Promise<T | null> {
     try {
@@ -48,6 +48,21 @@ export async function safeGet<T=string>(
         return null;
     }
 }
+
+//* DELETE REDISKEY :
+
+export async function redisDeleteKey(
+    key: string
+): Promise<boolean> {
+    try {
+        await redis.del(key);
+        return true
+    } catch (error) {
+        console.log(`Redis Get failed for key: ${key}`, error)
+        return false;
+    }
+}
+
 
 export async function getOrSetCache<T>(
     key: string,
