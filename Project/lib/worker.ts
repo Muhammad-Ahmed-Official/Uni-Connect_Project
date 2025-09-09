@@ -5,7 +5,7 @@ import { sendEmailLink } from "@/lib/nodemailer";
 const connection = new IORedis(process.env.REDIS_URL!);
 
 export const emailWorker = new Worker("email-queue",
-  async (job) => {
+  async (job:any) => {
    try {
       const { email, deptLink } = job.data;
       const result = await sendEmailLink(email, deptLink, "For Advisor SignUp");

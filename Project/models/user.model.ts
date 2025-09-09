@@ -47,14 +47,15 @@ const NotificationPreferencesSchema = new Schema<INotificationPreferences>({
 //* USER SCHEMA
 
 const UserSchema = new Schema<IUser>({
-    username: { type: String, unique: true, required: true, index: true },
+    username: { type: String, unique: true, required: true, index: true,immutable:true },
     email: {
         type: String,
         required: [true, "Email is required"],
         unique: true,
         lowercase: true,
         trim: true,
-        match: [/.+\@.+\..+/, "please use a valid email address"]
+        match: [/.+\@.+\..+/, "please use a valid email address"],
+        immutable:true
     },
     password: {
         type: String,
@@ -66,7 +67,8 @@ const UserSchema = new Schema<IUser>({
         required: function () {
             return this.role === "student"
         },
-        index: true
+        index: true,
+        immutable:true
     },
     firstName: { 
         type: String, 
@@ -118,7 +120,8 @@ const UserSchema = new Schema<IUser>({
         required: function (this: IUser) {
             return ["department_Student_Advisor", "university_Student_Advisor"].includes(this.role);
         },
-        index: true
+        index: true,
+        immutable:true
     },
     notification_preferences: {
         type: NotificationPreferencesSchema,

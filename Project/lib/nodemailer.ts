@@ -47,7 +47,7 @@ async function sendEmailLink(mail:string, link:string, subject:string) {
         await transporter.sendMail(mailOptions);
         return {
             success: true,
-            message:""
+            message:"send"
         };
     } catch (error) {
         // throw `Error sending OTP to ${mail} via email: ${error}`;
