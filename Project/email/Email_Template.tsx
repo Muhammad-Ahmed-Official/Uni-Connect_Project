@@ -63,7 +63,7 @@ export const Verification_Email_Template = ( code: string) => `
 
 
 
-export const SEND_EMAIL_LINK = (link:string) => `
+export const SEND_EMAIL_LINK = (link:string, subject:string) => `
   <!DOCTYPE html>
   <html lang="en">
   <head>
@@ -121,13 +121,13 @@ export const SEND_EMAIL_LINK = (link:string) => `
   <body>
       <div class="email-container">
           <div class="email-header">
-              <h2>Password Reset Request</h2>
-              <p>We're here to help you reset your password securely.</p>
+              <h2>Password Reset</h2>
+              <p>${subject === "Reset Password" ?  "We're here to help you reset your password securely." : "Create Your Account"}</p>
           </div>
           <div class="email-body">
               <p>Hello,</p>
               <p>
-                  We received a request to reset your password. To proceed, please click the button below. This link will expire in <strong>30 minutes</strong>.
+                  We received a request. To proceed, please click the button below. This link will expire in <strong>30 minutes</strong>.
               </p>
           </div>
           <div class="email-button">

@@ -34,13 +34,13 @@ async function sendEmailOTP(mail:string, otp: string) {
 
 
 
-async function sendEmailLink(mail:string, link:string) { 
+async function sendEmailLink(mail:string, link:string, subject:string) { 
     const transporter = nodemailer.createTransport(emailConfig);
     const mailOptions = {
         from: process.env.PORTAL_EMAIL,
         to: mail, 
-        subject: "For Advisor SignUp",
-        html: SEND_EMAIL_LINK(link), // html body 
+        subject,
+        html: SEND_EMAIL_LINK(link, subject), // html body 
     };
 
     try {

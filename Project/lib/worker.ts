@@ -8,7 +8,7 @@ export const emailWorker = new Worker("email-queue",
   async (job) => {
    try {
       const { email, deptLink } = job.data;
-      const result = await sendEmailLink(email, deptLink);
+      const result = await sendEmailLink(email, deptLink, "For Advisor SignUp");
       if (!result.success) throw new Error(result.message);
     } catch (err:any) {
       console.error("Email failed:", err.message);

@@ -68,10 +68,21 @@ const UserSchema = new Schema<IUser>({
         },
         index: true
     },
-    firstName: { type: String, required: true },
-    lastName: { type: String, required: true },
-    bio: { type: String, default: null },
-    profilePic: { type: String },
+    firstName: { 
+        type: String, 
+        required: true 
+    },
+    lastName: { 
+        type: String, 
+        required: true 
+    },
+    bio: { 
+        type: String, 
+        default: null 
+    },
+    profilePic: { 
+        type: String 
+    },
     idCard: {
         type: String, required: function () {
             return this.role === "student"
