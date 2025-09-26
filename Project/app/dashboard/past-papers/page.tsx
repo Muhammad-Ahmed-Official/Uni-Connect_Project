@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import Header from "@/components/dashboard/common/Header"
 
 const pastPapers = [
   {
@@ -116,10 +117,7 @@ export default function PastPapersPage() {
   return (
     <div className="p-2 sm:p-6 space-y-6">
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Past Papers Repository</h1>
-        <p className="text-gray-600">Access previous exam papers, assignments, and study materials</p>
-      </div>
+      <Header title="Past Papers Repository" description="Access previous exam papers, assignments, and study materials" />
 
       {/* Search and Filters */}
       <Card className="mb-6">

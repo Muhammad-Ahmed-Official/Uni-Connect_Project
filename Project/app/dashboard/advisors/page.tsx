@@ -50,6 +50,8 @@ import {
 } from "lucide-react"
 import Link from "next/link"
 import { useToast } from "@/hooks/use-toast"
+import Header from "@/components/dashboard/common/Header"
+import Filters from "@/components/dashboard/common/Filters"
 
 const sidebarItems = [
   { icon: Home, label: "Home", href: "/dashboard" },
@@ -563,7 +565,7 @@ export default function AdvisorsPage() {
   const [showEscalationForm, setShowEscalationForm] = useState(false)
   const [userEscalations, setUserEscalations] = useState(escalations)
 
-  const departments = ["All", ...Array.from(new Set(advisors.map((advisor) => advisor.department)))]
+  const departments = ["All Departments", ...Array.from(new Set(advisors.map((advisor) => advisor.department)))]
 
   const filteredAdvisors = advisors.filter((advisor) => {
     const matchesSearch =
@@ -594,10 +596,7 @@ export default function AdvisorsPage() {
   return (
     <div className="p-2 sm:p-6 space-y-6">
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Academic Advisors</h1>
-        <p className="text-gray-600">Get guidance and support from experienced academic advisors</p>
-      </div>
+      <Header title="Academic Advisors" description="Get guidance and support from experienced academic advisors" />
 
       <Tabs defaultValue="advisors" className="space-y-6">
         <TabsList>
@@ -607,27 +606,14 @@ export default function AdvisorsPage() {
 
         <TabsContent value="advisors" className="space-y-6">
           {/* Filters */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" size="sm">
-                    <Filter className="h-4 w-4 mr-2" />
-                    {departmentFilter === "All" ? "All Departments" : departmentFilter}
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  {departments.map((dept) => (
-                    <DropdownMenuItem key={dept} onClick={() => setDepartmentFilter(dept)}>
-                      {dept === "All" ? "All Departments" : dept}
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-
-            <div className="text-sm text-gray-500">{filteredAdvisors.length} advisors available</div>
-          </div>
+          <Filters 
+            options={departments}
+            currentFilter={departmentFilter}
+            setCurrentFilter={setDepartmentFilter}
+            label="Departments"
+            count={filteredAdvisors.length}
+            countLabel="advisors available"
+          />
 
           {/* Advisors Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

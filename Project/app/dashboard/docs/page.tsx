@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import Header from "@/components/dashboard/common/Header"
 
 const documents = [
   {
@@ -116,10 +117,7 @@ export default function DocsPage() {
   return (
     <div className="p-2 sm:p-6 space-y-6">
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Government & Policy Documents</h1>
-        <p className="text-gray-600">Access official university policies, guidelines, and government documents</p>
-      </div>
+      <Header title="Government & Policy Documents" description="Access official university policies, guidelines, and government documents" />
 
       {/* Search and Filters */}
       <Card className="mb-6">
