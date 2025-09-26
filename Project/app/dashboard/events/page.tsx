@@ -47,6 +47,8 @@ import {
   List,
 } from "lucide-react"
 import Link from "next/link"
+import Header from "@/components/dashboard/common/Header"
+import Filters from "@/components/dashboard/common/Filters"
 
 const sidebarItems = [
   { icon: Home, label: "Home", href: "/dashboard" },
@@ -426,31 +428,18 @@ export default function EventsPage() {
   return (
     <div className="p-2 sm:p-6 space-y-6">
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">University Events</h1>
-        <p className="text-gray-600">Discover and join events happening across campus</p>
-      </div>
+      <Header title="Upcoming Events" description="Discover and join events happening across campus" />
 
       {/* Filters and View Toggle */}
       <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center space-x-4">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm">
-                <Filter className="h-4 w-4 mr-2" />
-                {categoryFilter === "All" ? "All Categories" : categoryFilter}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuItem onClick={() => setCategoryFilter("All")}>All Categories</DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setCategoryFilter("University")}>University-wide</DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setCategoryFilter("Department")}>Department</DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setCategoryFilter("Club")}>Club Events</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          <div className="text-sm text-gray-500">{upcomingEvents.length} upcoming events</div>
-        </div>
+        <Filters
+          options={["All Categories", "University-wise", "Department", "Club Events"]}
+          currentFilter={categoryFilter}
+          setCurrentFilter={setCategoryFilter}
+          count={upcomingEvents.length}
+          countLabel="upcoming events"
+          label="Categories"
+        />
 
         <div className="flex items-center space-x-2">
           <Button

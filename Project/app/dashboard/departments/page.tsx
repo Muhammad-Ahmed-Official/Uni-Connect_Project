@@ -1,48 +1,21 @@
 "use client"
 
 import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import {
-  Home,
-  Users,
-  Calendar,
-  MessageSquare,
-  FileText,
-  BookOpen,
-  Settings,
-  Search,
-  Bell,
-  Menu,
-  GraduationCap,
-  User,
-  LogOut,
-  Clock,
-  Filter,
-} from "lucide-react"
-import Link from "next/link"
+import Header from "@/components/dashboard/common/Header"
+import Filters from "@/components/dashboard/common/Filters"
+import DepartmentCards from "@/components/dashboard/DepartmentsPage/DepartmentCards"
 
-const sidebarItems = [
-  { icon: Home, label: "Home", href: "/dashboard" },
-  { icon: Users, label: "Departments", href: "/departments", active: true },
-  { icon: Calendar, label: "Events", href: "/events" },
-  { icon: MessageSquare, label: "Advisors", href: "/advisors" },
-  { icon: FileText, label: "Past Papers", href: "/past-papers" },
-  { icon: BookOpen, label: "Docs", href: "/docs" },
-  { icon: Settings, label: "Settings", href: "/settings" },
-]
+type Department = {
+  id: string
+  name: string
+  description: string
+  memberCount: number
+  activeDiscussions: number
+  recentActivity: string
+  color: string
+  icon: string
+  tags: string[]
+}
 
 const departments: Department[] = [
   {
@@ -134,37 +107,6 @@ const departments: Department[] = [
     tags: ["Psychology", "Sociology", "Politics", "Anthropology"],
   },
 ]
-
-function Sidebar({ className }: { className?: string }) {
-  return (
-    <div className={`pb-12 ${className}`}>
-      <div className="space-y-4 py-4">
-        <div className="px-3 py-2">
-          <div className="flex items-center space-x-2 mb-6">
-            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-              <GraduationCap className="w-5 h-5 text-white" />
-            </div>
-            <span className="text-xl font-bold text-gray-900">Uni-Connect</span>
-          </div>
-          <div className="space-y-1">
-            {sidebarItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`flex items-center space-x-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${item.active ? "bg-blue-100 text-blue-700" : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
-                  }`}
-              >
-                <item.icon className="h-4 w-4" />
-                <span>{item.label}</span>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-}
-
 export default function DepartmentsPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [sortBy, setSortBy] = useState("members")
@@ -192,110 +134,20 @@ export default function DepartmentsPage() {
   return (
     <div className="p-2 sm:p-6 space-y-6">
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Department Forums</h1>
-        <p className="text-gray-600">Connect with students in your department and across the university</p>
-      </div>
+      <Header title="Departments" description="Connect with students in your department and across the university" />
 
       {/* Filters and Sort */}
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center space-x-4">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm">
-                <Filter className="h-4 w-4 mr-2" />
-                Sort by: {sortBy === "members" ? "Members" : sortBy === "activity" ? "Activity" : "Name"}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuItem onClick={() => setSortBy("members")}>Most Members</DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setSortBy("activity")}>Most Active</DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setSortBy("name")}>Alphabetical</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-
-        <div className="text-sm text-gray-500">{sortedDepartments.length} departments found</div>
-      </div>
+      <Filters
+        options={["members", "activity", "name"]}
+        currentFilter={sortBy}
+        setCurrentFilter={setSortBy}
+        label="Sort by"
+        count={sortedDepartments.length}
+        countLabel="departments found"
+      />
 
       {/* Department Cards Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {sortedDepartments.map((department) => (
-          <Link key={department.id} href={`/dashboard/departments/${department.id}`}>
-            <Card className="hover:shadow-lg transition-shadow duration-200 cursor-pointer h-full">
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <div
-                    className={`w-12 h-12 rounded-lg ${department.color} flex items-center justify-center text-2xl`}
-                  >
-                    {department.icon}
-                  </div>
-                  <Badge variant="secondary" className="text-xs">
-                    {department.activeDiscussions} active
-                  </Badge>
-                </div>
-                <CardTitle className="text-xl font-semibold">{department.name}</CardTitle>
-                <CardDescription className="text-sm text-gray-600 line-clamp-2">
-                  {department.description}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {/* Tags */}
-                  <div className="flex flex-wrap gap-1">
-                    {department.tags.slice(0, 3).map((tag) => (
-                      <Badge key={tag} variant="outline" className="text-xs">
-                        {tag}
-                      </Badge>
-                    ))}
-                    {department.tags.length > 3 && (
-                      <Badge variant="outline" className="text-xs">
-                        +{department.tags.length - 3}
-                      </Badge>
-                    )}
-                  </div>
-
-                  {/* Stats */}
-                  <div className="flex items-center justify-between text-sm text-gray-500">
-                    <div className="flex items-center space-x-1">
-                      <Users className="h-4 w-4" />
-                      <span>{department.memberCount.toLocaleString()} members</span>
-                    </div>
-                    <div className="flex items-center space-x-1">
-                      <Clock className="h-4 w-4" />
-                      <span>{department.recentActivity}</span>
-                    </div>
-                  </div>
-
-                  {/* Activity Indicator */}
-                  <div className="flex items-center space-x-2">
-                    <div className="flex-1 bg-gray-200 rounded-full h-2">
-                      <div
-                        className="bg-blue-600 h-2 rounded-full"
-                        style={{
-                          width: `${Math.min((department.activeDiscussions / 35) * 100, 100)}%`,
-                        }}
-                      />
-                    </div>
-                    <span className="text-xs text-gray-500">Activity</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </Link>
-        ))}
-      </div>
-
-      {/* Empty State */}
-      {sortedDepartments.length === 0 && (
-        <div className="text-center py-12">
-          <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Search className="h-12 w-12 text-gray-400" />
-          </div>
-          <h3 className="text-lg font-medium text-gray-900 mb-2">No departments found</h3>
-          <p className="text-gray-500">Try adjusting your search terms or filters</p>
-        </div>
-      )}
+      <DepartmentCards departmentsData={sortedDepartments} />
     </div>
   )
 }
