@@ -1,69 +1,16 @@
-"use client"
+"use client";
 
-import type React from "react"
+import { useState } from "react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import Header from "@/components/dashboard/common/Header";
+import Filters from "@/components/dashboard/common/Filters";
+import AdvisorsList from "@/components/dashboard/AdvisorsPage/AdvisorsList";
+import EscalationsList from "@/components/dashboard/AdvisorsPage/EscalationsList";
+import EscalationForm from "@/components/dashboard/AdvisorsPage/EscalationForm";
+import { Advisor, Escalation } from "@/types/advisor";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Textarea } from "@/components/ui/textarea"
-import { Label } from "@/components/ui/label"
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import {
-  Home,
-  Users,
-  Calendar,
-  MessageSquare,
-  FileText,
-  BookOpen,
-  Settings,
-  Search,
-  Bell,
-  Menu,
-  GraduationCap,
-  User,
-  LogOut,
-  Send,
-  Paperclip,
-  Clock,
-  CheckCircle,
-  AlertCircle,
-  Filter,
-  Star,
-  Mail,
-  Phone,
-  MapPin,
-  X,
-} from "lucide-react"
-import Link from "next/link"
-import { useToast } from "@/hooks/use-toast"
-import Header from "@/components/dashboard/common/Header"
-import Filters from "@/components/dashboard/common/Filters"
-
-const sidebarItems = [
-  { icon: Home, label: "Home", href: "/dashboard" },
-  { icon: Users, label: "Departments", href: "/departments" },
-  { icon: Calendar, label: "Events", href: "/events" },
-  { icon: MessageSquare, label: "Advisors", href: "/advisors", active: true },
-  { icon: FileText, label: "Past Papers", href: "/past-papers" },
-  { icon: BookOpen, label: "Docs", href: "/docs" },
-  { icon: Settings, label: "Settings", href: "/settings" },
-]
-
-const advisors = [
+const advisors: Advisor[] = [
   {
     id: 1,
     name: "Dr. Sarah Johnson",
@@ -156,7 +103,7 @@ const advisors = [
   },
 ]
 
-const escalations = [
+const escalations: Escalation[] = [
   {
     id: 1,
     title: "Course Registration Issue",
@@ -195,418 +142,58 @@ const escalations = [
   },
 ]
 
-function Sidebar({ className }: { className?: string }) {
-  return (
-    <div className={`pb-12 ${className}`}>
-      <div className="space-y-4 py-4">
-        <div className="px-3 py-2">
-          <div className="flex items-center space-x-2 mb-6">
-            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-              <GraduationCap className="w-5 h-5 text-white" />
-            </div>
-            <span className="text-xl font-bold text-gray-900">Uni-Connect</span>
-          </div>
-          <div className="space-y-1">
-            {sidebarItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`flex items-center space-x-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${item.active ? "bg-blue-100 text-blue-700" : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
-                  }`}
-              >
-                <item.icon className="h-4 w-4" />
-                <span>{item.label}</span>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-function AdvisorCard({ advisor, onContact }: { advisor: any; onContact: (advisor: any) => void }) {
-  return (
-    <Card className="hover:shadow-lg transition-shadow">
-      <CardHeader>
-        <div className="flex items-start space-x-4">
-          <Avatar className="w-16 h-16">
-            <AvatarImage src={advisor.image || "/placeholder.svg"} alt={advisor.name} />
-            <AvatarFallback>
-              {advisor.name
-                .split(" ")
-                .map((n: string) => n[0])
-                .join("")}
-            </AvatarFallback>
-          </Avatar>
-          <div className="flex-1">
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle className="text-lg">{advisor.name}</CardTitle>
-                <CardDescription className="text-sm">{advisor.title}</CardDescription>
-              </div>
-              <div className="flex items-center space-x-1">
-                <Star className="h-4 w-4 text-yellow-400 fill-current" />
-                <span className="text-sm font-medium">{advisor.rating}</span>
-              </div>
-            </div>
-            <Badge variant="secondary" className="mt-2">
-              {advisor.department}
-            </Badge>
-          </div>
-        </div>
-      </CardHeader>
-      <CardContent>
-        <p className="text-gray-600 text-sm mb-4 leading-relaxed">{advisor.bio}</p>
-
-        <div className="space-y-3 mb-4">
-          <div className="flex items-center space-x-2 text-sm text-gray-600">
-            <Mail className="h-4 w-4" />
-            <span>{advisor.email}</span>
-          </div>
-          <div className="flex items-center space-x-2 text-sm text-gray-600">
-            <Phone className="h-4 w-4" />
-            <span>{advisor.phone}</span>
-          </div>
-          <div className="flex items-center space-x-2 text-sm text-gray-600">
-            <MapPin className="h-4 w-4" />
-            <span>{advisor.office}</span>
-          </div>
-          <div className="flex items-center space-x-2 text-sm text-gray-600">
-            <Clock className="h-4 w-4" />
-            <span>{advisor.availability}</span>
-          </div>
-        </div>
-
-        <div className="mb-4">
-          <h4 className="text-sm font-medium text-gray-900 mb-2">Specialties</h4>
-          <div className="flex flex-wrap gap-1">
-            {advisor.specialties.map((specialty: string) => (
-              <Badge key={specialty} variant="outline" className="text-xs">
-                {specialty}
-              </Badge>
-            ))}
-          </div>
-        </div>
-
-        <div className="flex items-center justify-between">
-          <span className="text-xs text-gray-500">Response time: {advisor.responseTime}</span>
-          <Button size="sm" onClick={() => onContact(advisor)} className="bg-blue-600 hover:bg-blue-700">
-            <MessageSquare className="h-4 w-4 mr-2" />
-            Contact
-          </Button>
-        </div>
-      </CardContent>
-    </Card>
-  )
-}
-
-function EscalationForm({
-  advisor,
-  onSubmit,
-  onClose,
-}: { advisor: any; onSubmit: (data: any) => void; onClose: () => void }) {
-  const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    priority: "",
-    category: "",
-  })
-  const [attachments, setAttachments] = useState<File[]>([])
-  const { toast } = useToast()
-
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(event.target.files || [])
-    setAttachments([...attachments, ...files])
-  }
-
-  const removeAttachment = (index: number) => {
-    setAttachments(attachments.filter((_, i) => i !== index))
-  }
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!formData.title || !formData.description || !formData.priority) {
-      toast({
-        title: "Missing Information",
-        description: "Please fill in all required fields.",
-        variant: "destructive",
-      })
-      return
-    }
-
-    const escalationData = {
-      ...formData,
-      advisor: advisor.name,
-      department: advisor.department,
-      attachments: attachments.map((file) => file.name),
-      submittedDate: new Date().toISOString().split("T")[0],
-      status: "Pending",
-    }
-
-    onSubmit(escalationData)
-    toast({
-      title: "Escalation Submitted",
-      description: `Your request has been sent to ${advisor.name}. You'll receive a response within ${advisor.responseTime.toLowerCase()}.`,
-    })
-    onClose()
-  }
-
-  return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
-        <Avatar className="w-12 h-12">
-          <AvatarImage src={advisor.image || "/placeholder.svg"} alt={advisor.name} />
-          <AvatarFallback>
-            {advisor.name
-              .split(" ")
-              .map((n: string) => n[0])
-              .join("")}
-          </AvatarFallback>
-        </Avatar>
-        <div>
-          <h3 className="font-medium">{advisor.name}</h3>
-          <p className="text-sm text-gray-600">
-            {advisor.department} • {advisor.title}
-          </p>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label htmlFor="priority">Priority Level *</Label>
-          <Select value={formData.priority} onValueChange={(value) => setFormData({ ...formData, priority: value })}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select priority" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="Low">Low</SelectItem>
-              <SelectItem value="Medium">Medium</SelectItem>
-              <SelectItem value="High">High</SelectItem>
-              <SelectItem value="Urgent">Urgent</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="category">Category</Label>
-          <Select value={formData.category} onValueChange={(value) => setFormData({ ...formData, category: value })}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select category" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="Academic Planning">Academic Planning</SelectItem>
-              <SelectItem value="Course Registration">Course Registration</SelectItem>
-              <SelectItem value="Career Guidance">Career Guidance</SelectItem>
-              <SelectItem value="Graduate School">Graduate School</SelectItem>
-              <SelectItem value="Research Opportunities">Research Opportunities</SelectItem>
-              <SelectItem value="Other">Other</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="title">Issue Title *</Label>
-        <Input
-          id="title"
-          placeholder="Brief description of your issue"
-          value={formData.title}
-          onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-        />
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="description">Detailed Description *</Label>
-        <Textarea
-          id="description"
-          placeholder="Please provide detailed information about your issue, including any relevant context, deadlines, or specific questions you have."
-          rows={6}
-          value={formData.description}
-          onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-        />
-      </div>
-
-      <div className="space-y-2">
-        <Label>Attachments</Label>
-        <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
-          <input
-            type="file"
-            multiple
-            onChange={handleFileUpload}
-            className="hidden"
-            id="file-upload"
-            accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png"
-          />
-          <label htmlFor="file-upload" className="cursor-pointer">
-            <Paperclip className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-            <p className="text-sm text-gray-600">Click to upload files or drag and drop</p>
-            <p className="text-xs text-gray-500 mt-1">PDF, DOC, TXT, JPG, PNG (max 10MB each)</p>
-          </label>
-        </div>
-
-        {attachments.length > 0 && (
-          <div className="space-y-2">
-            <h4 className="text-sm font-medium">Attached Files:</h4>
-            {attachments.map((file, index) => (
-              <div key={index} className="flex items-center justify-between p-2 bg-gray-50 rounded">
-                <span className="text-sm">{file.name}</span>
-                <Button type="button" variant="ghost" size="sm" onClick={() => removeAttachment(index)}>
-                  <X className="h-4 w-4" />
-                </Button>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-
-      <div className="flex justify-end space-x-2">
-        <Button type="button" variant="outline" onClick={onClose}>
-          Cancel
-        </Button>
-        <Button type="submit" className="bg-blue-600 hover:bg-blue-700">
-          <Send className="h-4 w-4 mr-2" />
-          Submit Escalation
-        </Button>
-      </div>
-    </form>
-  )
-}
-
-function EscalationStatus({ escalation }: { escalation: any }) {
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "Pending":
-        return "bg-yellow-100 text-yellow-800"
-      case "In Progress":
-        return "bg-blue-100 text-blue-800"
-      case "Resolved":
-        return "bg-green-100 text-green-800"
-      default:
-        return "bg-gray-100 text-gray-800"
-    }
-  }
-
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case "Pending":
-        return <Clock className="h-4 w-4" />
-      case "In Progress":
-        return <AlertCircle className="h-4 w-4" />
-      case "Resolved":
-        return <CheckCircle className="h-4 w-4" />
-      default:
-        return <Clock className="h-4 w-4" />
-    }
-  }
-
-  const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case "Urgent":
-        return "bg-red-100 text-red-800"
-      case "High":
-        return "bg-orange-100 text-orange-800"
-      case "Medium":
-        return "bg-blue-100 text-blue-800"
-      case "Low":
-        return "bg-gray-100 text-gray-800"
-      default:
-        return "bg-gray-100 text-gray-800"
-    }
-  }
-
-  return (
-    <Card>
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-lg">{escalation.title}</CardTitle>
-          <div className="flex items-center space-x-2">
-            <Badge className={getPriorityColor(escalation.priority)}>{escalation.priority}</Badge>
-            <Badge className={getStatusColor(escalation.status)}>
-              {getStatusIcon(escalation.status)}
-              <span className="ml-1">{escalation.status}</span>
-            </Badge>
-          </div>
-        </div>
-        <CardDescription>
-          Advisor: {escalation.advisor} • {escalation.department}
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <p className="text-gray-700 mb-4">{escalation.description}</p>
-
-        {escalation.attachments.length > 0 && (
-          <div className="mb-4">
-            <h4 className="text-sm font-medium text-gray-900 mb-2">Attachments:</h4>
-            <div className="flex flex-wrap gap-2">
-              {escalation.attachments.map((attachment: string, index: number) => (
-                <Badge key={index} variant="outline" className="text-xs">
-                  <Paperclip className="h-3 w-3 mr-1" />
-                  {attachment}
-                </Badge>
-              ))}
-            </div>
-          </div>
-        )}
-
-        <div className="flex items-center justify-between text-sm text-gray-500">
-          <span>Submitted: {new Date(escalation.submittedDate).toLocaleDateString()}</span>
-          <span>Last updated: {new Date(escalation.lastUpdate).toLocaleDateString()}</span>
-        </div>
-      </CardContent>
-    </Card>
-  )
-}
-
 export default function AdvisorsPage() {
-  const [searchQuery, setSearchQuery] = useState("")
-  const [departmentFilter, setDepartmentFilter] = useState("All")
-  const [selectedAdvisor, setSelectedAdvisor] = useState<any>(null)
-  const [showEscalationForm, setShowEscalationForm] = useState(false)
-  const [userEscalations, setUserEscalations] = useState(escalations)
+  const [searchQuery, setSearchQuery] = useState("");
+  const [departmentFilter, setDepartmentFilter] = useState("All");
+  const [selectedAdvisor, setSelectedAdvisor] = useState<Advisor | null>(null);
+  const [showEscalationForm, setShowEscalationForm] = useState(false);
+  const [userEscalations, setUserEscalations] = useState<Escalation[]>(escalations);
 
-  const departments = ["All Departments", ...Array.from(new Set(advisors.map((advisor) => advisor.department)))]
+  const departments = ["All Departments", ...Array.from(new Set(advisors.map((advisor) => advisor.department)))];
 
   const filteredAdvisors = advisors.filter((advisor) => {
     const matchesSearch =
       advisor.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      advisor.specialties.some((specialty) => specialty.toLowerCase().includes(searchQuery.toLowerCase()))
+      advisor.specialties.some((specialty) => specialty.toLowerCase().includes(searchQuery.toLowerCase()));
 
-    const matchesDepartment = departmentFilter === "All" || advisor.department === departmentFilter
+    const matchesDepartment = departmentFilter === "All" || advisor.department === departmentFilter;
 
-    return matchesSearch && matchesDepartment
-  })
+    return matchesSearch && matchesDepartment;
+  });
 
-  const handleContactAdvisor = (advisor: any) => {
-    setSelectedAdvisor(advisor)
-    setShowEscalationForm(true)
-  }
+  const handleContactAdvisor = (advisor: Advisor) => {
+    setSelectedAdvisor(advisor);
+    setShowEscalationForm(true);
+  };
 
   const handleSubmitEscalation = (escalationData: any) => {
-    const newEscalation = {
+    const newEscalation: Escalation = {
       id: userEscalations.length + 1,
       ...escalationData,
       lastUpdate: escalationData.submittedDate,
-    }
-    setUserEscalations([newEscalation, ...userEscalations])
-    setShowEscalationForm(false)
-    setSelectedAdvisor(null)
-  }
+    };
+    setUserEscalations([newEscalation, ...userEscalations]);
+    setShowEscalationForm(false);
+    setSelectedAdvisor(null);
+  };
 
   return (
     <div className="p-2 sm:p-6 space-y-6">
       {/* Header */}
-      <Header title="Academic Advisors" description="Get guidance and support from experienced academic advisors" />
+      <Header
+        title="Academic Advisors"
+        description="Get guidance and support from experienced academic advisors"
+      />
 
       <Tabs defaultValue="advisors" className="space-y-6">
         <TabsList>
-          <TabsTrigger value="advisors">Find Advisors</TabsTrigger>
-          <TabsTrigger value="escalations">My Escalations ({userEscalations.length})</TabsTrigger>
+          <TabsTrigger value="advisors" className="cursor-pointer" >Find Advisors</TabsTrigger>
+          <TabsTrigger value="escalations" className="cursor-pointer" >My Escalations ({userEscalations.length})</TabsTrigger>
         </TabsList>
 
         <TabsContent value="advisors" className="space-y-6">
           {/* Filters */}
-          <Filters 
+          <Filters
             options={departments}
             currentFilter={departmentFilter}
             setCurrentFilter={setDepartmentFilter}
@@ -615,43 +202,16 @@ export default function AdvisorsPage() {
             countLabel="advisors available"
           />
 
-          {/* Advisors Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredAdvisors.map((advisor) => (
-              <AdvisorCard key={advisor.id} advisor={advisor} onContact={handleContactAdvisor} />
-            ))}
-          </div>
-
-          {/* Empty State */}
-          {filteredAdvisors.length === 0 && (
-            <div className="text-center py-12">
-              <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Search className="h-12 w-12 text-gray-400" />
-              </div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No advisors found</h3>
-              <p className="text-gray-500">Try adjusting your search terms or filters</p>
-            </div>
-          )}
+          {/* Advisors List */}
+          <AdvisorsList
+            advisors={filteredAdvisors}
+            onContactAdvisor={handleContactAdvisor}
+          />
         </TabsContent>
 
         <TabsContent value="escalations" className="space-y-6">
           {/* Escalations List */}
-          <div className="space-y-4">
-            {userEscalations.map((escalation) => (
-              <EscalationStatus key={escalation.id} escalation={escalation} />
-            ))}
-          </div>
-
-          {/* Empty State */}
-          {userEscalations.length === 0 && (
-            <div className="text-center py-12">
-              <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <MessageSquare className="h-12 w-12 text-gray-400" />
-              </div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No escalations yet</h3>
-              <p className="text-gray-500">Contact an advisor to get started with your first escalation</p>
-            </div>
-          )}
+          <EscalationsList escalations={userEscalations} />
         </TabsContent>
       </Tabs>
 
@@ -674,5 +234,5 @@ export default function AdvisorsPage() {
         </DialogContent>
       </Dialog>
     </div>
-  )
+  );
 }
