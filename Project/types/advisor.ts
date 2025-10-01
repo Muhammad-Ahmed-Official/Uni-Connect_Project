@@ -28,3 +28,39 @@ export interface AdvisorStats {
   resolvedThisMonth: number
   pendingDocuments: number
 }
+
+export interface Advisor {
+  id: number;
+  name: string;
+  title: string;
+  department: string;
+  specialties: string[];
+  email: string;
+  phone: string;
+  office: string;
+  rating: number;
+  responseTime: string;
+  availability: string;
+  image: string;
+  bio: string;
+}
+
+export interface Escalation {
+  id: number;
+  title: string;
+  advisor: string;
+  department: string;
+  status: "Pending" | "In Progress" | "Resolved";
+  priority: "Low" | "Medium" | "High" | "Urgent";
+  submittedDate: string;
+  lastUpdate: string;
+  description: string;
+  attachments: string[];
+}
+
+export interface EscalationFormData {
+  title: string;
+  description: string;
+  priority: string;
+  category: string;
+}
