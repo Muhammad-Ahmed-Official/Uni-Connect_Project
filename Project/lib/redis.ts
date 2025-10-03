@@ -7,16 +7,12 @@ if (!configs.redisUrl) {
 
 let redis: Redis;
 
-if (process.env.NODE_ENV === "development") {
-    redis = new Redis(configs.redisUrl);
-} else {
-    redis = new Redis({
-        username: "default",
-        password: configs.redisPassword,
-        host: configs.redisUrl,
-        port: parseInt(configs.redisPort || "6379", 10),
-    });
-}
+redis = new Redis({
+    username: "default",
+    password: configs.redisPassword,
+    host: configs.redisUrl.replace('redis://', '').split(':')[0],
+    port: parseInt(configs.redisPort || "6379", 10),
+});
 
 export { redis };
 
@@ -37,12 +33,16 @@ export async function safeSet(
 
 //* SAFE GET FOR OTP
 
-export async function safeGet<T = string>(
+export async function safeGet(
     key: string
-): Promise<T | null> {
+): Promise<string | null> {
     try {
+        console.log("key ==>", key)
         const data = await redis.get(key);
-        return data ? (JSON.parse(data) as T) : null;
+
+        console.log("data ==>", data);
+        // return data ? (JSON.parse(data) as T) : null;
+        return data;
     } catch (error) {
         console.log(`Redis Get failed for key: ${key}`, error)
         return null;

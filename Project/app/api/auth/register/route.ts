@@ -2,16 +2,17 @@ import { connectDB } from "@/lib/mongodb";
 import { asyncHandler } from "@/utils/asyncHandler";
 import { nextError, nextResponse } from "@/utils/Response";
 import { NextRequest } from "next/server";
-import User  from "@/models/user.model";
+import User from "@/models/user.model";
 import { sendEmailOTP } from "@/lib/nodemailer";
 import { generateOTP } from "@/helpers/generateOTP";
 import { safeSet } from "@/lib/redis";
 
 
 const handleStudentRegistration = async (data: any, department_id: string) => {
-  const { username, firstName, lastName, email, password, studentId, role, idCard } = data;
+  const { username, firstName, lastName, email, password, studentId, role } = data;
 
-  if (!username || !firstName || !lastName || !email || !password || !department_id || !studentId || !role || !idCard) {
+  if (!username || !firstName || !lastName || !email || !password || !studentId) {
+    console.log("me andar hon!");
     return nextError(400, "Missing required Fields!");
   }
 
@@ -21,15 +22,14 @@ const handleStudentRegistration = async (data: any, department_id: string) => {
   const verifyCode = generateOTP();
   const redisKey = `otp:${email}`;
 
-   const userPayload = {
+  const userPayload = {
     username,
     firstName,
     lastName,
     email,
-    password, // hashing handled by pre-save hook
+    password,
     studentId,
     role,
-    idCard,
     department_id,
   };
 
@@ -45,10 +45,10 @@ const handleStudentRegistration = async (data: any, department_id: string) => {
     await User.create(userPayload);
   }
 
-  const {success,error} = await safeSet(redisKey, verifyCode, 60 * 3);
+  const { success, error } = await safeSet(redisKey, verifyCode, 60 * 3);
 
   if (!success) {
-    return nextError(500, "Failed to save OTP. Please try again.",error);
+    return nextError(500, "Failed to save OTP. Please try again.", error);
   }
 
   try {
@@ -113,12 +113,12 @@ const handle_Advisor_Registration = async (data: any, department_id: string) => 
     return nextError(400, "Advisor details are required (officeLocation at minimum)");
   }
 
-   const verifyCode = generateOTP();
+  const verifyCode = generateOTP();
   const redisKey = `otp:${email}`;
 
-  const departmentId =  role === "department_Student_Advisor" ? department_id : null;
+  const departmentId = role === "department_Student_Advisor" ? department_id : null;
 
-   const userPayload = {
+  const userPayload = {
     username,
     firstName,
     lastName,
@@ -126,7 +126,7 @@ const handle_Advisor_Registration = async (data: any, department_id: string) => 
     password, // hashing handled by pre-save hook
     employeeId,
     role,
-    department_id:departmentId,
+    department_id: departmentId,
   };
 
   //* Check if user already exists
@@ -142,10 +142,10 @@ const handle_Advisor_Registration = async (data: any, department_id: string) => 
     user = await User.create(userPayload);
   }
 
-  const {success,error} = await safeSet(redisKey, verifyCode, 60 * 3);
+  const { success, error } = await safeSet(redisKey, verifyCode, 60 * 3);
 
   if (!success) {
-    return nextError(500, "Failed to save OTP. Please try again.",error);
+    return nextError(500, "Failed to save OTP. Please try again.", error);
   }
 
   //* Send OTP email
@@ -166,8 +166,7 @@ const handle_Advisor_Registration = async (data: any, department_id: string) => 
 export const POST = asyncHandler(async (request: NextRequest) => {
   const data = await request.json();
 
-  if (!data)
-    return nextResponse(400, "Missing Fields");
+  if (!data) return nextResponse(400, "Missing Fields");
 
   await connectDB();
 

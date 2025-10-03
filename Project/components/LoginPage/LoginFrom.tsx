@@ -12,13 +12,15 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog"
 import { Mail, Lock, Eye, EyeOff, AlertCircle } from "lucide-react"
-import { useRouter } from 'next/navigation'
+import { redirect, useRouter } from 'next/navigation'
 import { useToast } from '@/hooks/use-toast'
 import { Button } from '../ui/button'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { signIn } from 'next-auth/react'
+import axios from 'axios'
+import { ApiErrorResponse } from '@/types/ApiErrorResponse'
 
 const schema = z.object({
     email: z.string().email(),
@@ -41,6 +43,7 @@ const LoginFrom = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [resetEmail, setResetEmail] = useState<string>("")
     const [isResetLoading, setIsResetLoading] = useState<boolean>(false)
+    const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
 
     const router = useRouter()
     const { toast } = useToast()
@@ -93,8 +96,9 @@ const LoginFrom = () => {
         setIsResetLoading(true)
 
         try {
-            // Simulate API call
-            await new Promise((resolve) => setTimeout(resolve, 1000))
+            await axios.post("/api/auth/forgotPass", {
+                email: resetEmail
+            })
 
             toast({
                 title: "Reset link sent!",
@@ -102,12 +106,31 @@ const LoginFrom = () => {
             })
 
             setResetEmail("")
-        } catch (error) {
-            toast({
-                title: "Reset failed",
-                description: "Unable to send reset email. Please try again.",
-                variant: "destructive",
-            })
+            setIsDialogOpen(false)
+        } catch (error: any) {
+            if (axios.isAxiosError(error)) {
+                const serverError = error.response?.data as ApiErrorResponse;
+
+                if (serverError?.message == "Please verify your account first") {
+                    toast({
+                        title: "Reset failed",
+                        description: serverError?.message,
+                        variant: "destructive",
+                    })
+                    redirect("/verify-account");
+                }
+                toast({
+                    title: "Reset failed",
+                    description: serverError?.message || "Unable to send reset email. Please try again.",
+                    variant: "destructive",
+                })
+            } else {
+                toast({
+                    title: "Reset failed",
+                    description: "An unexpected error occurred. Please try again.",
+                    variant: "destructive",
+                })
+            }
         } finally {
             setIsResetLoading(false)
         }
@@ -171,9 +194,9 @@ const LoginFrom = () => {
                     </Label>
                 </div>
 
-                <Dialog>
+                <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                     <DialogTrigger asChild>
-                        <Button variant="link" className="px-0 text-sm text-blue-600 hover:text-blue-700">
+                        <Button variant="link" className="px-0 text-sm text-blue-600 hover:text-blue-700 cursor-pointer">
                             Forgot password?
                         </Button>
                     </DialogTrigger>
@@ -195,7 +218,7 @@ const LoginFrom = () => {
                                     onChange={(e) => setResetEmail(e.target.value)}
                                 />
                             </div>
-                            <Button type="submit" className="w-full" disabled={isResetLoading}>
+                            <Button className="w-full cursor-pointer" disabled={isResetLoading || !resetEmail} onClick={handlePasswordReset}>
                                 {isResetLoading ? "Sending..." : "Send Reset Link"}
                             </Button>
                         </form>
@@ -203,7 +226,7 @@ const LoginFrom = () => {
                 </Dialog>
             </div>
 
-            <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700" disabled={isLoading}>
+            <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 cursor-pointer" disabled={isLoading}>
                 {isLoading ? "Signing in..." : "Sign In"}
             </Button>
         </form>

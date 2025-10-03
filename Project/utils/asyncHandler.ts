@@ -1,12 +1,33 @@
-import { NextRequest, NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server";
+import { nextResponse } from "./Response";
+import { ApiError } from "./ApiError";
 
-const asyncHandler = (fn: (req: NextRequest) => Promise<NextResponse>) => {
+const asyncHandler = (
+    fn: (req: NextRequest) => Promise<NextResponse>
+) => {
     return async (req: NextRequest) => {
         try {
-            await fn(req)
+            return await fn(req);
         } catch (error) {
-            return NextResponse.json( { status: 500, message: error instanceof Error ? error.message : "Internal server Error" }, { status: 500 } );
+            console.log("error in asyncHandler ==>", error);
+
+            if (error instanceof ApiError) {
+                return nextResponse(
+                    error.statusCode,
+                    error.message,
+                    error.data,
+                    false
+                );
+            }
+
+            return nextResponse(
+                500,
+                error instanceof Error ? error.message : "Internal Server Error",
+                null,
+                false
+            );
         }
-    }
-}
+    };
+};
+
 export { asyncHandler };

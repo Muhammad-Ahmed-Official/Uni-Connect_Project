@@ -5,9 +5,9 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import { Input } from '@/components/ui/input'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { Bell, BookOpen, Calendar, FileText, GraduationCap, Home, LogOut, Menu, MessageSquare, Search, Settings, User, Users } from 'lucide-react'
-import { signOut } from 'next-auth/react'
+import { signOut, useSession } from 'next-auth/react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { redirect, usePathname } from 'next/navigation'
 import React, { Suspense, useState } from 'react'
 
 const sidebarItems = [
@@ -59,6 +59,11 @@ const Userlayout = ({
     const [searchQuery, setSearchQuery] = useState("");
     const [sidebarOpen, setSidebarOpen] = useState(false)
     const pathname = usePathname();
+    const session = useSession();
+    const role = session?.data?.user?.role;
+
+    if (!session) redirect("/login");
+    if (role === "admin") redirect("/admin");
 
     const handleLogout = () => {
         signOut()

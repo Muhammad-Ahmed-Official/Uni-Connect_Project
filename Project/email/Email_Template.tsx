@@ -89,7 +89,7 @@ export const SEND_EMAIL_LINK = (link:string, subject:string) => `
               margin-bottom: 20px;
           }
           .email-header h2 {
-              color: #4CAF50;
+              color: #155dfc;
               margin-bottom: 10px;
           }
           .email-body p {
@@ -104,7 +104,7 @@ export const SEND_EMAIL_LINK = (link:string, subject:string) => `
               padding: 12px 20px;
               font-size: 16px;
               color: #fff;
-              background-color: #4CAF50;
+              background-color: #155dfc;
               text-decoration: none;
               border-radius: 5px;
           }
@@ -114,7 +114,7 @@ export const SEND_EMAIL_LINK = (link:string, subject:string) => `
               color: #aaa;
           }
           .email-footer a {
-              color: #4CAF50;
+              color: #155dfc;
           }
       </style>
   </head>
@@ -127,7 +127,7 @@ export const SEND_EMAIL_LINK = (link:string, subject:string) => `
           <div class="email-body">
               <p>Hello,</p>
               <p>
-                  We received a request. To proceed, please click the button below. This link will expire in <strong>30 minutes</strong>.
+                  We received a request. To proceed, please click the button below. This link will expire in <strong>08 minutes</strong>.
               </p>
           </div>
           <div class="email-button">
@@ -137,7 +137,7 @@ export const SEND_EMAIL_LINK = (link:string, subject:string) => `
           </div>
           <div class="email-body">
               <p>If you did not request this, you can safely ignore this email.</p>
-              <p>Thank you,<br><strong>Reels_Pro</strong></p>
+              <p>Thank you,<br><strong>Uni-Connect</strong></p>
           </div>
           <hr>
           <div class="email-footer">

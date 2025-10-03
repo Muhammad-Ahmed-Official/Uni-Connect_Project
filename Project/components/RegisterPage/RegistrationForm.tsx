@@ -38,6 +38,7 @@ const schema = z.object({
     department: z.string().min(1, "Please select your department"),
     studentId: z.string().min(1, "Student ID is required"),
     agreeToTerms: z.boolean().refine(v => v === true, "You must agree to the terms and conditions"),
+    role: z.string()
 }).refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
     path: ["confirmPassword"],
@@ -56,6 +57,7 @@ const RegistrationForm = () => {
             department: "",
             studentId: "",
             agreeToTerms: false,
+            role: "student"
         }
     })
     const [showPassword, setShowPassword] = useState<boolean>(false)
@@ -69,7 +71,7 @@ const RegistrationForm = () => {
     const onSubmit = async (data: FormData) => {
         setIsLoading(true)
         try {
-            await axios.post('/api/users', data);
+            await axios.post('/api/auth/register', data);
             toast({ title: 'Account created successfully!', description: 'Welcome to Uni-Connect.' })
             router.push('/login')
         } catch (error) {
@@ -262,7 +264,7 @@ const RegistrationForm = () => {
                 </p>
             )}
 
-            <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700" disabled={isLoading}>
+            <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 cursor-pointer" disabled={isLoading}>
                 {isLoading ? "Creating Account..." : "Create Account"}
             </Button>
         </form>

@@ -4,7 +4,7 @@ import type React from "react"
 
 import { useState } from "react"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { redirect, usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
@@ -34,7 +34,7 @@ import {
   Shield,
 } from "lucide-react"
 import { Suspense } from "react"
-import { signOut } from "next-auth/react"
+import { signOut, useSession } from "next-auth/react"
 import { Input } from "@/components/ui/input"
 
 const navigation = [
@@ -87,6 +87,11 @@ export default function AdminLayout({
   const [searchQuery, setSearchQuery] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const pathname = usePathname();
+  const session = useSession();
+  const role = session?.data?.user?.role;
+
+  if (!session) redirect("/login");
+  if (role !== "admin") redirect("/dashboard");
 
   const handleLogout = () => {
     signOut()
