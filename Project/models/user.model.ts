@@ -47,7 +47,7 @@ const NotificationPreferencesSchema = new Schema<INotificationPreferences>({
 //* USER SCHEMA
 
 const UserSchema = new Schema<IUser>({
-    username: { type: String, unique: true, required: true, index: true,immutable:true },
+    username: { type: String, unique: true, required: true, index: true, immutable: true },
     email: {
         type: String,
         required: [true, "Email is required"],
@@ -55,7 +55,7 @@ const UserSchema = new Schema<IUser>({
         lowercase: true,
         trim: true,
         match: [/.+\@.+\..+/, "please use a valid email address"],
-        immutable:true
+        immutable: true
     },
     password: {
         type: String,
@@ -68,27 +68,28 @@ const UserSchema = new Schema<IUser>({
             return this.role === "student"
         },
         index: true,
-        immutable:true
+        immutable: true
     },
-    firstName: { 
-        type: String, 
-        required: true 
+    firstName: {
+        type: String,
+        required: true
     },
-    lastName: { 
-        type: String, 
-        required: true 
+    lastName: {
+        type: String,
+        required: true
     },
-    bio: { 
-        type: String, 
-        default: null 
+    bio: {
+        type: String,
+        default: null
     },
-    profilePic: { 
-        type: String 
+    profilePic: {
+        type: String
     },
     idCard: {
-        type: String, required: function () {
-            return this.role === "student"
-        },
+        type: String,
+        // required: function () {
+        //     return this.role === "student"
+        // },
     },
     social_links: { type: [SocialLinkSchema], default: [] },
     department_id: { type: Schema.Types.ObjectId, ref: "Department" },
@@ -112,7 +113,7 @@ const UserSchema = new Schema<IUser>({
     },
     advisor_details: {
         type: AdvisorDetailsSchema, required: function () {
-            return ["department_Student_Advisor","university_Student_Advisor"].includes(this.role);
+            return ["department_Student_Advisor", "university_Student_Advisor"].includes(this.role);
         }
     },
     employeeId: {
@@ -121,7 +122,7 @@ const UserSchema = new Schema<IUser>({
             return ["department_Student_Advisor", "university_Student_Advisor"].includes(this.role);
         },
         index: true,
-        immutable:true
+        immutable: true
     },
     notification_preferences: {
         type: NotificationPreferencesSchema,

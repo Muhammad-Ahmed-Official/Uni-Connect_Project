@@ -4,25 +4,34 @@ import { asyncHandler } from "@/utils/asyncHandler";
 import { nextError, nextResponse } from "@/utils/Response";
 import { NextRequest, NextResponse } from "next/server";
 import { redisDeleteKey, safeGet } from "@/lib/redis";
+import bcrypt from "bcryptjs";
 
 export const PUT = asyncHandler(async (request: NextRequest): Promise<NextResponse> => {
-    const { token, password } = await request.json();
-    if (!token || !password) return nextError(400, "Missing fields");
+    const { resetToken, newPassword } = await request.json();
+    console.log("resetToken ==>", resetToken);
+    console.log("newPassword ==>", newPassword);
+
+    if (!resetToken || !newPassword) return nextError(400, "Missing fields");
 
     await connectDB();
 
-    const userId = await safeGet(`reset:${token}`);
+    const userId = await safeGet(`reset:${resetToken}`) as string;
 
     if (!userId) {
-        return nextError(400, "Invalid user or password change time is finish");
+        return nextError(400, "Invalid token or token has expired");
     }
-    await redisDeleteKey(`reset:${token}`);
 
-    const user = await User.findById(userId);
+    const hashedPassword = await bcrypt.hash(newPassword, 12);
+
+    const user = await User.findByIdAndUpdate(
+        userId,
+        { password: hashedPassword },
+        { new: true, runValidators: false } // Skip validation for other fields
+    );
+
     if (!user) return nextError(404, "User not found");
 
-    user.password = password;
+    await redisDeleteKey(`reset:${resetToken}`);
 
-    await user.save();
     return nextResponse(200, "Password updated successfully");
 });
