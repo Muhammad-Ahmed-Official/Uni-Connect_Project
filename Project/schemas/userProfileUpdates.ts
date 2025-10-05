@@ -11,7 +11,7 @@ export const privacySettingsSchema = z.object({
 });
 
 //* Advisor Details (for advisor roles)
-const advisorDetailsSchema = z.object({
+export const advisorDetailsSchema = z.object({
     officeLocation: z.string().optional(),
     officeTiming: z.string().optional(),
     specialties: z.array(z.string()).optional(),

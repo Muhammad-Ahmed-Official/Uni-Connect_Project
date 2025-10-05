@@ -6,6 +6,7 @@ import User from "@/models/user.model";
 import { sendEmailOTP } from "@/lib/nodemailer";
 import { generateOTP } from "@/helpers/generateOTP";
 import { safeSet } from "@/lib/redis";
+import departmentModel from "@/models/department.model";
 
 
 const handleStudentRegistration = async (data: any, department_id: string) => {
@@ -142,6 +143,8 @@ const handle_Advisor_Registration = async (data: any, department_id: string) => 
     user = await User.create(userPayload);
   }
 
+  
+
   const { success, error } = await safeSet(redisKey, verifyCode, 60 * 3);
 
   if (!success) {
@@ -166,11 +169,12 @@ const handle_Advisor_Registration = async (data: any, department_id: string) => 
 export const POST = asyncHandler(async (request: NextRequest) => {
   const data = await request.json();
 
-  if (!data) return nextResponse(400, "Missing Fields");
+  if (!data) return nextError(400, "Missing Fields");
 
   await connectDB();
 
-  const department_id = ""; //* GET DEPARTMENT ID FRON SCEHMA   :
+  const department_id = await departmentModel.findOne({deapartmentName:data.departmentName}).select("_id")
+  if(!department_id) return nextError(400,"Department not found")
 
   switch (data?.role) {
     case "student":

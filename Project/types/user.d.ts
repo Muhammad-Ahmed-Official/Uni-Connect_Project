@@ -36,6 +36,7 @@ export interface IUser extends Document,BaseEntity {
   password: string;
   firstName: string;
   lastName: string;
+  year?: number;
   bio?: string;
   profilePic?: string;
   idCard: string;

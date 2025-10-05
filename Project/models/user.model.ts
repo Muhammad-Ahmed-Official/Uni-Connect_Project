@@ -53,9 +53,9 @@ const UserSchema = new Schema<IUser>({
         required: [true, "Email is required"],
         unique: true,
         lowercase: true,
+        immutable: true,
         trim: true,
         match: [/.+\@.+\..+/, "please use a valid email address"],
-        immutable: true
     },
     password: {
         type: String,
@@ -69,6 +69,10 @@ const UserSchema = new Schema<IUser>({
         },
         index: true,
         immutable: true
+    },
+    year:{
+        type: Number,
+        default :null
     },
     firstName: {
         type: String,
@@ -92,7 +96,7 @@ const UserSchema = new Schema<IUser>({
         // },
     },
     social_links: { type: [SocialLinkSchema], default: [] },
-    department_id: { type: Schema.Types.ObjectId, ref: "Department" },
+    // department_id: { type: Schema.Types.ObjectId, ref: "Department" },
     isVerified: {
         type: Boolean,
         default: false,

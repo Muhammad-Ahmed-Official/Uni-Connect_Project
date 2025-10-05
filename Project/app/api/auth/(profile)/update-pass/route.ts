@@ -16,11 +16,14 @@ export const PUT = asyncHandler(async (request: NextRequest): Promise<NextRespon
     if (newPassword !== confirmNewPassword) return nextError(400, "Updated Password not match");
 
     await connectDB();
+    console.log(oldPassword, newPassword, confirmNewPassword);
 
     const currentUser = await User.findById(token?.id);
     if (!currentUser) return nextError(400, "User not found");
+    // console.log(currentUser);
 
-    const isPasswordCorrect = await bcrypt.compare(oldPassword, currentUser?.Password);
+    const isPasswordCorrect = await bcrypt.compare(oldPassword, currentUser?.password);
+    console.log(isPasswordCorrect);
     if (!isPasswordCorrect) return nextError(400, "Incorrect Password");
 
     currentUser.password = confirmNewPassword;

@@ -11,6 +11,7 @@ export const PUT = asyncHandler(async (req: NextRequest): Promise<NextResponse> 
   if (!token?.id) return nextError(401, "Unauthorized");
 
   const body = await req.json();
+  console.log("body", body);
 
   // validate with Zod
   const result = profileUpdateSchema.safeParse(body);

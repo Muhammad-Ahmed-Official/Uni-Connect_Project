@@ -23,6 +23,7 @@ export const authOptions: NextAuthOptions = {
                 }
 
                 const { email, password } = parsedCredentials.data
+                console.log("Attempting to authorize user:", email);
 
                 await connectDB();
                 const user = await User.findOne({ email }).lean() as {
@@ -33,6 +34,8 @@ export const authOptions: NextAuthOptions = {
                     lastName: string;
                     role: string;
                 } | null;
+                // const user = await User.find().lean() ;
+                console.log("User found:", user);
                 if (!user) {
                     throw new Error("User not found");
                 }

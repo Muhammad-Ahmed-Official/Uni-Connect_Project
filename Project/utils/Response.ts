@@ -8,7 +8,12 @@ const nextResponse = (status: number, message: string, data: any = null, success
     )
 }
 const nextError = (status: number, message: string, data: any = null, success: boolean = false) => {
-    throw new ApiError(status, message, data)
+    return NextResponse.json({
+        status: status,
+        success: false,
+        message: message,
+        data: data
+    },{ status: status })
 }
 
 export { nextResponse, nextError };
