@@ -96,7 +96,7 @@ const UserSchema = new Schema<IUser>({
         // },
     },
     social_links: { type: [SocialLinkSchema], default: [] },
-    // department_id: { type: Schema.Types.ObjectId, ref: "Department" },
+    department_id: { type: Schema.Types.ObjectId, ref: "Department" },
     isVerified: {
         type: Boolean,
         default: false,

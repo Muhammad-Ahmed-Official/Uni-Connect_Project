@@ -1,13 +1,10 @@
 import { connectDB } from "@/lib/mongodb";
 import commentModel from "@/models/comment.model";
-import departmentModel from "@/models/department.model";
 import Event from "@/models/event.model";
 import PostModel from "@/models/post.model";
-import { postSchema } from "@/schemas/post.schema";
 import { asyncHandler } from "@/utils/asyncHandler";
 import { authOptions } from "@/utils/authOptions.util";
 import { nextError, nextResponse } from "@/utils/Response";
-import { de } from "date-fns/locale";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 

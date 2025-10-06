@@ -7,7 +7,7 @@ const PostSchema = new Schema<IPost>(
     title: { type: String, required: true },
     content: { type: String, required: true },
     tags: { type: [String], default: [] },
-    // department_id: { type: Schema.Types.ObjectId, ref: "Department", required: true },
+    department_id: { type: Schema.Types.ObjectId, ref: "Department", required: true },
     share_count: { type: Number, default: 0 },
     likes_count: { type: Number, default: 0 },
     comment_count: { type: Number, default: 0 },

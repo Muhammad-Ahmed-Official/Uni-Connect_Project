@@ -36,10 +36,15 @@ export const POST = asyncHandler(async (req: NextRequest): Promise<NextResponse>
         return nextError(400, `Validation Error: ${firstError.message}`);
     }
 
+     const department_id =user?.user?.department_id as any;
+            if (!department_id) {
+                return nextError(404, "Department not found");
+            }
+
     const payload = {
         ...result.data,
         user_id: user_id,
-        department_id: user?.user?.department_id || null,
+        department_id,
     }
 
     const event = await Event.create(payload);

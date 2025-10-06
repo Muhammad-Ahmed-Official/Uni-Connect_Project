@@ -1,5 +1,4 @@
 import { connectDB } from "@/lib/mongodb";
-import departmentModel from "@/models/department.model";
 import PostModel from "@/models/post.model";
 import { asyncHandler } from "@/utils/asyncHandler";
 import { authOptions } from "@/utils/authOptions.util";

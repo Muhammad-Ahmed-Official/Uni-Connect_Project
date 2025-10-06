@@ -33,6 +33,7 @@ export const authOptions: NextAuthOptions = {
                     firstName: string;
                     lastName: string;
                     role: string;
+                    department_id:any
                 } | null;
                 // const user = await User.find().lean() ;
                 // console.log("User found:", user);
@@ -56,6 +57,7 @@ export const authOptions: NextAuthOptions = {
                     firstName: user.firstName,
                     lastName: user.lastName,
                     role: user.role,
+                    department_id:user.department_id
                 }
             }
         })
@@ -67,6 +69,7 @@ export const authOptions: NextAuthOptions = {
                 token.id = user.id;
                 token.firstName = (user as any).firstName;
                 token.lastName = (user as any).lastName;
+                token.department_id=(user as any).department_id
             }
             return token;
         },
@@ -76,6 +79,7 @@ export const authOptions: NextAuthOptions = {
                 session.user.id = token.id as string;
                 (session as any).user.firstName = token.firstName;
                 (session as any).user.lastName = token.lastName;
+                (session as any).user.department_id=token.department_id
             }
             return session;
         }

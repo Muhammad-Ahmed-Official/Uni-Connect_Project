@@ -1,6 +1,5 @@
 import { connectDB } from "@/lib/mongodb";
 import commentModel from "@/models/comment.model";
-import departmentModel from "@/models/department.model";
 import Like from "@/models/like.model";
 import PostModel from "@/models/post.model";
 import { asyncHandler } from "@/utils/asyncHandler";

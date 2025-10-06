@@ -45,14 +45,14 @@ export const POST=asyncHandler(async (req: NextRequest):Promise<NextResponse> =>
             return nextError(400,errorMessage as string);
         }
 
-        // const department_id = await departmentModel.findOne({ name: body?.departmentName }).select("_id");
-        // if (!department_id) {
-        //     return nextError(404, "Department not found");
-        // }
+        const department_id =user?.user?.department_id as any;
+        if (!department_id) {
+            return nextError(404, "Department not found");
+        }
 
         const postData = {
             ...result.data,
-            // department_id,
+            department_id,
             user_id}
 
 
