@@ -16,14 +16,14 @@ export const authOptions: NextAuthOptions = {
             },
             authorize: async (credentials) => {
                 const parsedCredentials = loginSchema.safeParse(credentials);
-                console.log(parsedCredentials)
+                // console.log(parsedCredentials)
 
                 if (!parsedCredentials.success) {
                     throw new Error(parsedCredentials.error.errors[0].message);
                 }
 
                 const { email, password } = parsedCredentials.data
-                console.log("Attempting to authorize user:", email);
+                // console.log("Attempting to authorize user:", email);
 
                 await connectDB();
                 const user = await User.findOne({ email }).lean() as {
@@ -35,7 +35,7 @@ export const authOptions: NextAuthOptions = {
                     role: string;
                 } | null;
                 // const user = await User.find().lean() ;
-                console.log("User found:", user);
+                // console.log("User found:", user);
                 if (!user) {
                     throw new Error("User not found");
                 }
@@ -48,6 +48,7 @@ export const authOptions: NextAuthOptions = {
                 if (!user._id) {
                     throw new Error("User ID is missing");
                 }
+                console.log(user)
                 
                 return {
                     id: user._id.toString(),

@@ -7,5 +7,6 @@ export interface IComment extends Document,BaseEntity {
   user_id: Types.ObjectId;   // user
   entity_type: "post" | "event";
   content: string;
-  parentCommentId?: Types.ObjectId
+  parentCommentId?: Types.ObjectId;
+  like_count?: number;
 }

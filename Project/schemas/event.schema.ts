@@ -6,7 +6,9 @@ export const eventSchema = z.object({
   location: z.string().min(2, "Location is required"),
   start_date: z.string().datetime(),
   end_date: z.string().datetime(),
-  tags: z.array(z.string()).default([])
+  tags: z.array(z.string()).default([]).optional(),
+  image: z.string().url().optional(),
+  note: z.string().optional(),
 })
 
 export type EventSchema = z.infer<typeof eventSchema>

@@ -5,8 +5,6 @@ import { emailQueue } from "@/lib/bullMq";
 import jwt from "jsonwebtoken";
 import { inviteAdvisor } from "@/helpers/inviteAdvisor";
 
-
-
 export const POST = asyncHandler(async (req: NextRequest): Promise<NextResponse> => {
     const body = await req.json();
 
