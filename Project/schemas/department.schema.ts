@@ -1,9 +1,9 @@
 import { z } from "zod"
 
 export const departmentSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters"),
-  description: z.string().optional(),
-  head: z.string().optional()
+  departmentName: z.string().min(2, "Name must be at least 2 characters"),
+  departmentBio: z.string().min(10, "Bio must be at least 10 characters"),
+  departmentTags: z.array(z.string()).min(1, "At least one tag is required"),
 })
 
 export type DepartmentSchema = z.infer<typeof departmentSchema>

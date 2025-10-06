@@ -37,7 +37,7 @@ export async function safeGet(
     key: string
 ): Promise<string | null> {
     try {
-        console.log("key ==>", key)
+        // console.log("key ==>", key)
         const data = await redis.get(key);
 
         console.log("data ==>", data);

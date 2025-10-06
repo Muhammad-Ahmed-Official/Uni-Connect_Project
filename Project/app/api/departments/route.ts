@@ -1,37 +1,36 @@
 import { DepartmentEntity } from "@/lib/db";
 import { connectDB } from "@/lib/mongodb";
-import { clearCache, getOrSetCache } from "@/lib/redis";
-import Department from "@/schemas/department.schema";
+import { safeGet, safeSet } from "@/lib/redis";
+import departmentModel from "@/models/department.model";
+import { asyncHandler } from "@/utils/asyncHandler";
+import { nextResponse } from "@/utils/Response";
 import { NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
 
-const schema = z.object({
-    name: z.string().min(1, "Name is required"),
-    description: z.string().optional()
-})
+export const GET = asyncHandler(async (req:NextRequest): Promise<NextResponse> => {
+  await connectDB()
 
-export async function GET() {
-    const items = await getOrSetCache<DepartmentEntity[]>("departments:all", 300, async () => {
-        await connectDB();
+    const cacheKey = "departments:sorted";
 
-        // return await Department.find().sort({ name: 1 }).lean()
-        return await Department.find()
-    })
+  // 🔹 1. Try fetching from cache
+  const cachedData = await safeGet(cacheKey);
+  if (cachedData) {
+    console.log("📦 Departments served from cache");
+    return nextResponse(200, "Departments fetched successfully (from cache)", JSON.parse(cachedData));
+  }
 
-    return NextResponse.json(items)
-}
+  const { searchParams } = new URL(req.url);
+  const sortBy = searchParams.get("sortBy") || "followers"; // 'followers' or 'name'
 
-export async function POST(req: NextRequest) {
-    const body = await req.json();
-    const parsed = schema.safeParse(body);
-    if (!parsed.success) return NextResponse.json(
-        { error: parsed.error.flatten() },
-        { status: 400 }
-    );
+  const sort = sortBy;
 
-    await connectDB();
-    const department = new Department(parsed.data);
-    await department.save();
-    await clearCache(["departments:all"])
-    return NextResponse.json({ ok: true });
-}
+    const departments=await departmentModel.find()
+    .sort(sort === "followers" ? { followers_count: -1 } : { departmentName: 1 })
+    .lean();
+
+    const { success } = await safeSet(cacheKey, JSON.stringify(departments), 300);
+  if (!success) {
+    console.warn("⚠️ Failed to set Redis cache for departments");
+  }
+
+    return nextResponse(200, "Departments fetched successfully", departments);
+});
