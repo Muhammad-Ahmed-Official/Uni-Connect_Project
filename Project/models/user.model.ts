@@ -47,7 +47,7 @@ const NotificationPreferencesSchema = new Schema<INotificationPreferences>({
 //* USER SCHEMA
 
 const UserSchema = new Schema<IUser>({
-    username: { type: String, unique: true, required: true, index: true, immutable: true },
+    // username: { type: String, unique: true, required: true, index: true, immutable: true },
     email: {
         type: String,
         required: [true, "Email is required"],

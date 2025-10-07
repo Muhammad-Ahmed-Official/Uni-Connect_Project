@@ -10,9 +10,9 @@ import departmentModel from "@/models/department.model";
 
 
 const handleStudentRegistration = async (data: any, department_id: string) => {
-  const { username, firstName, lastName, email, password, studentId, role } = data;
+  const { firstName, lastName, email, password, studentId, role } = data;
 
-  if (!username || !firstName || !lastName || !email || !password || !studentId) {
+  if (!firstName || !lastName || !email || !password || !studentId) {
     console.log("me andar hon!");
     return nextError(400, "Missing required Fields!");
   }
@@ -24,7 +24,6 @@ const handleStudentRegistration = async (data: any, department_id: string) => {
   const redisKey = `otp:${email}`;
 
   const userPayload = {
-    username,
     firstName,
     lastName,
     email,
@@ -68,7 +67,6 @@ const handleStudentRegistration = async (data: any, department_id: string) => {
 
 const handle_Advisor_Registration = async (data: any, department_id: string) => {
   const {
-    username,
     firstName,
     lastName,
     email,
@@ -80,7 +78,6 @@ const handle_Advisor_Registration = async (data: any, department_id: string) => 
 
   //* Validate required fields dynamically
   const requiredFields: { key: string; value: any }[] = [
-    { key: "username", value: username },
     { key: "firstName", value: firstName },
     { key: "lastName", value: lastName },
     { key: "email", value: email },
@@ -120,7 +117,6 @@ const handle_Advisor_Registration = async (data: any, department_id: string) => 
   const departmentId = role === "department_Student_Advisor" ? department_id : null;
 
   const userPayload = {
-    username,
     firstName,
     lastName,
     email,
@@ -170,6 +166,7 @@ export const POST = asyncHandler(async (request: NextRequest) => {
   const data = await request.json();
 
   if (!data) return nextError(400, "Missing Fields");
+
 
   await connectDB();
 

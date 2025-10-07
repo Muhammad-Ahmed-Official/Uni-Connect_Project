@@ -31,7 +31,7 @@ export interface INotificationPreferences {
 }
 
 export interface IUser extends Document,BaseEntity {
-  username: string;
+  // username: string;
   email: string;
   password: string;
   firstName: string;

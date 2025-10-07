@@ -39,7 +39,7 @@ export const GET = asyncHandler(async (req: NextRequest): Promise<NextResponse> 
     return nextError(400, "Entity is Missing");
   };
 
-  const comments = await commentModel.find({ entity_id:entityId }).sort({ createdAt: -1 }).populate('user_id',"username profilePic");
+  const comments = await commentModel.find({ entity_id:entityId }).sort({ createdAt: -1 }).populate('user_id',"firstName lastName profilePic");
   console.log("comments",comments)
 
   if (!comments) {
