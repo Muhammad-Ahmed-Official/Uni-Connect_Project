@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-import { connectDB } from "@/lib/mongodb";
-=======
 import { redisDeleteKey, safeGet } from "@/lib/redis";
->>>>>>> Ahmed-Abbasi
 import User from "@/models/user.model";
 import { asyncHandler } from "@/utils/asyncHandler";
 import { nextError, nextResponse } from "@/utils/Response";
@@ -12,7 +8,7 @@ export const POST = asyncHandler(async (request: NextRequest): Promise<NextRespo
   const { email, code } = await request.json();
   const redisKey = `otp:${email}`;
 
-  const data = await safeGet<string>(redisKey);
+  const data = await safeGet(redisKey);
 
   if (!data) {
     return nextError(400, "Verification code not found or expired");
