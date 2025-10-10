@@ -3,7 +3,7 @@ import { z } from "zod"
 import { getOrSetCache, clearCache } from "@/lib/redis"
 import { DocumentEntity } from "@/lib/db"
 import { connectDB } from "@/lib/mongodb"
-import { DocumentSchema } from "@/schemas/document.schema"
+import { DocumentSchema } from "@/models/document.schema"
 
 const schema = z.object({
     title: z.string().min(1),
