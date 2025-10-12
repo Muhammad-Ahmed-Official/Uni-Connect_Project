@@ -45,7 +45,7 @@ export const POST=asyncHandler(async (req: NextRequest):Promise<NextResponse> =>
             return nextError(400,errorMessage as string);
         }
 
-        const department_id =user?.user?.department_id as any;
+        const department_id = user?.user?.department_id as any;
         if (!department_id) {
             return nextError(404, "Department not found");
         }
