@@ -69,7 +69,7 @@ export const authOptions: NextAuthOptions = {
                 token.id = user.id;
                 token.firstName = (user as any).firstName;
                 token.lastName = (user as any).lastName;
-                token.department_id=(user as any).department_id
+                token.department_id=(user as any).department_id;
             }
             return token;
         },
