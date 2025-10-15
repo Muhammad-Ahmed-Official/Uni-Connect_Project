@@ -83,13 +83,13 @@ const AddDepartmentDialog = ({ isAddDialogOpen, setIsAddDialogOpen, editForm, se
                             />
                         </div>
                         <div>
-                            <Label className='mb-2' htmlFor="new-email">Email</Label>
+                            <Label className='mb-2' htmlFor="new-email">Chairman Email</Label>
                             <Input
                                 id="new-email"
                                 type="email"
                                 value={editForm.email}
                                 onChange={(e) => setEditForm({ ...editForm, email: e.target.value })}
-                                placeholder="department@university.edu"
+                                placeholder="chairman@department.edu"
                             />
                         </div>
                     </div>
