@@ -64,16 +64,16 @@ const Header = ({ isCreateDialogOpen, setIsCreateDialogOpen }: HeaderProps) => {
                         </div>
                         <div className="grid grid-cols-3 gap-4">
                             <div className="space-y-2">
-                                <Label htmlFor="date">Date</Label>
+                                <Label htmlFor="date">Start Date</Label>
                                 <Input id="date" type="date" />
                             </div>
                             <div className="space-y-2">
-                                <Label htmlFor="time">Time</Label>
+                                <Label htmlFor="time">End Date</Label>
                                 <Input id="time" type="time" />
                             </div>
                             <div className="space-y-2">
-                                <Label htmlFor="capacity">Capacity</Label>
-                                <Input id="capacity" type="number" placeholder="Max attendees" />
+                                <Label htmlFor="capacity">Note</Label>
+                                <Input id="capacity" type="text" placeholder="about event...." />
                             </div>
                         </div>
                         <div className="space-y-2">
