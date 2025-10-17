@@ -1,4 +1,3 @@
-import { DepartmentEntity } from "@/lib/db";
 import { connectDB } from "@/lib/mongodb";
 import { safeGet, safeSet } from "@/lib/redis";
 import departmentModel from "@/models/department.model";
