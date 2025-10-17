@@ -22,8 +22,15 @@ const DepartmentSchema = new Schema<IDepartment>(
         total_posts:{
             type:Number,
             default:0
+        },
+        departmentChairman:{
+            type:String,
+            required:[true,"Department Chairman is required"]
+        },
+        deaprtmentchairmanEmail:{
+            type:String,
+            required:false
         }
-        
     }
 )
 

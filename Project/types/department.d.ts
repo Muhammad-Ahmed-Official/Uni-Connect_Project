@@ -5,5 +5,7 @@ export interface IDepartment extends BaseEntity {
     departmentBio: string
     departmentTags: string[]
     followers_count: number
-    total_posts: number
+    total_posts: number;
+    departmentChairman: string;
+    deaprtmentchairmanEmail?: string;
 }
