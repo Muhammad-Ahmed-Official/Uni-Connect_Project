@@ -10,13 +10,11 @@ interface HeaderProps {
 const Header = ({ setIsAddDialogOpen, setEditForm }: HeaderProps) => {
     const handleAddDepartment = () => {
         setEditForm({
-            name: "",
-            code: "",
-            description: "",
-            head: "",
-            building: "",
-            phone: "",
-            email: "",
+            departmentName: "",
+            departmentBio: "",
+            departmentChairman: "",
+            deaprtmentchairmanEmail: "",
+            established: "",
         })
         setIsAddDialogOpen(true)
     }

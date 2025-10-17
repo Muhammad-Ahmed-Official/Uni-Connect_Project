@@ -1,12 +1,11 @@
 import React from 'react'
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { DepartmentFormValues } from '@/app/admin/departments/page'
-import { apiClient } from '@/lib/api-client'
-import { toast } from 'sonner'
+import { Loader } from 'lucide-react'
 
 interface AddDepartmentDialogProps {
     isAddDialogOpen: boolean
@@ -14,16 +13,10 @@ interface AddDepartmentDialogProps {
     editForm: DepartmentFormValues
     setEditForm: React.Dispatch<React.SetStateAction<DepartmentFormValues>>
     handleSaveDepartment: () => void
+    loading: boolean,
 }
 
-const AddDepartmentDialog = ({ isAddDialogOpen, setIsAddDialogOpen, editForm, setEditForm, handleSaveDepartment }: AddDepartmentDialogProps) => {
-    // const addDeprt = async () => {
-    //     try {
-    //         await apiClient.createDepartment();
-    //     } catch (error) {
-    //         toast.error("Failed to create department")
-    //     }
-    // }
+const AddDepartmentDialog = ({ isAddDialogOpen, setIsAddDialogOpen, editForm, setEditForm, handleSaveDepartment, loading}: AddDepartmentDialogProps) => {
     return (
         <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
             <DialogContent className="max-w-2xl">
@@ -32,32 +25,33 @@ const AddDepartmentDialog = ({ isAddDialogOpen, setIsAddDialogOpen, editForm, se
                     <DialogDescription>Create a new department with complete information</DialogDescription>
                 </DialogHeader>
                 <div className="space-y-4">
-                    {/* <div className="grid grid-cols-2 gap-4"> */}
+                    <div className="grid grid-cols-2 gap-4">
                         <div>
                             <Label className='mb-2' htmlFor="new-name">Department Name</Label>
                             <Input
                                 id="new-name"
-                                value={editForm.name}
-                                onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
+                                value={editForm.departmentName}
+                                onChange={(e) => setEditForm({ ...editForm, departmentName: e.target.value })}
                                 placeholder="e.g., Computer Science"
                             />
                         </div>
-                        {/* <div>
-                            <Label className='mb-2' htmlFor="new-code">Department Code</Label>
+                        <div>
+                            <Label className='mb-2' htmlFor="new-name">Established Year</Label>
                             <Input
-                                id="new-code"
-                                value={editForm.code}
-                                onChange={(e) => setEditForm({ ...editForm, code: e.target.value })}
-                                placeholder="e.g., CS"
+                                id="new-name"
+                                type='number'
+                                value={editForm.established}
+                                onChange={(e) => setEditForm({ ...editForm, established: e.target.value })}
+                                placeholder="e.g., 1991"
                             />
-                        </div> */}
-                    {/* </div> */}
+                        </div>
+                     </div>
                     <div>
                         <Label className='mb-2' htmlFor="new-description">Description</Label>
                         <Textarea
                             id="new-description"
-                            value={editForm.description}
-                            onChange={(e) => setEditForm({ ...editForm, description: e.target.value })}
+                            value={editForm.departmentBio}
+                            onChange={(e) => setEditForm({ ...editForm, departmentBio: e.target.value })}
                             placeholder="Brief description of the department"
                         />
                     </div>
@@ -66,8 +60,8 @@ const AddDepartmentDialog = ({ isAddDialogOpen, setIsAddDialogOpen, editForm, se
                             <Label className='mb-2' htmlFor="new-head">Department Chairman</Label>
                             <Input
                                 id="new-head"
-                                value={editForm.head}
-                                onChange={(e) => setEditForm({ ...editForm, head: e.target.value })}
+                                value={editForm.departmentChairman}
+                                onChange={(e) => setEditForm({ ...editForm, departmentChairman: e.target.value })}
                                 placeholder="e.g., Dr. John Smith"
                             />
                         </div>
@@ -76,48 +70,18 @@ const AddDepartmentDialog = ({ isAddDialogOpen, setIsAddDialogOpen, editForm, se
                             <Input
                                 id="new-email"
                                 type="email"
-                                value={editForm.email}
-                                onChange={(e) => setEditForm({ ...editForm, email: e.target.value })}
+                                value={editForm.deaprtmentchairmanEmail}
+                                onChange={(e) => setEditForm({ ...editForm, deaprtmentchairmanEmail: e.target.value })}
                                 placeholder="Dr. John Smith.edu"
                             />
                         </div>
-                        {/* <div>
-                            <Label className='mb-2' htmlFor="new-building">Building</Label>
-                            <Input
-                                id="new-building"
-                                value={editForm.building}
-                                onChange={(e) => setEditForm({ ...editForm, building: e.target.value })}
-                                placeholder="e.g., Science Hall"
-                            />
-                        </div> */}
                     </div>
-                    {/* <div className="grid grid-cols-2 gap-4">
-                        <div>
-                            <Label className='mb-2' htmlFor="new-phone">Phone</Label>
-                            <Input
-                                id="new-phone"
-                                value={editForm.phone}
-                                onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })}
-                                placeholder="+1 (555) 123-4567"
-                            />
-                        </div>
-                        <div>
-                            <Label className='mb-2' htmlFor="new-email">Chairman Email</Label>
-                            <Input
-                                id="new-email"
-                                type="email"
-                                value={editForm.email}
-                                onChange={(e) => setEditForm({ ...editForm, email: e.target.value })}
-                                placeholder="chairman@department.edu"
-                            />
-                        </div>
-                    </div> */}
                 </div>
                 <DialogFooter>
                     <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>
                         Cancel
                     </Button>
-                    <Button className='cursor-pointer' onClick={handleSaveDepartment}>Create Department</Button>
+                    <Button className='cursor-pointer' onClick={handleSaveDepartment}>{loading ? <span> <Loader className='animate-spin' /> Processing </span> : "Create Department"}</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>

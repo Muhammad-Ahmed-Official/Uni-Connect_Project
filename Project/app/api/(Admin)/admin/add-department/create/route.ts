@@ -35,8 +35,7 @@ export const POST = asyncHandler(async (req: NextRequest): Promise<NextResponse>
     return nextError(400, errorMessage as string);
   }
 
-  const { departmentName, departmentBio, departmentTags } =
-    validation.data;
+  const { departmentName, departmentBio, deaprtmentchairmanEmail, departmentChairman, established} = validation.data;
   // 🔹 Check if department already exists
   const existingDept = await departmentModel.findOne({ departmentName });
   if (existingDept) {
@@ -47,7 +46,9 @@ export const POST = asyncHandler(async (req: NextRequest): Promise<NextResponse>
   const newDepartment = await departmentModel.create({
     departmentName,
     departmentBio,
-    departmentTags,
+    deaprtmentchairmanEmail,
+    departmentChairman,
+    established,
   });
 
   if (!newDepartment) {

@@ -1,5 +1,4 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Label } from '@/components/ui/label'
@@ -15,8 +14,7 @@ interface ViewDeparmentDialogProps {
 const ViewDeparmentDialog = ({ isViewDialogOpen, setIsViewDialogOpen, selectedDepartment }: ViewDeparmentDialogProps) => {
     return (
         <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
-            <DialogContent className="max-w-4xl max-h-[90vh]"
-            >
+            <DialogContent className="max-w-4xl max-h-[90vh]">
                 <DialogHeader>
                     <DialogTitle>Department Details</DialogTitle>
                     <DialogDescription>Complete information and statistics for the department</DialogDescription>
@@ -28,11 +26,8 @@ const ViewDeparmentDialog = ({ isViewDialogOpen, setIsViewDialogOpen, selectedDe
                                 <Building2 className="h-8 w-8 text-blue-600" />
                             </div>
                             <div>
-                                <h3 className="text-2xl font-semibold">{selectedDepartment.name}</h3>
-                                <p className="text-gray-600">{selectedDepartment.description}</p>
-                                <Badge variant="outline" className="mt-2">
-                                    {selectedDepartment.code}
-                                </Badge>
+                                <h3 className="text-2xl font-semibold">{selectedDepartment.departmentName}</h3>
+                                <p className="text-gray-600">{selectedDepartment.departmentBio}</p>
                             </div>
                         </div>
 
@@ -72,16 +67,8 @@ const ViewDeparmentDialog = ({ isViewDialogOpen, setIsViewDialogOpen, selectedDe
                                         <p className="text-sm">{selectedDepartment.established}</p>
                                     </div>
                                     <div>
-                                        <span className="text-sm text-gray-500">Building:</span>
-                                        <p className="text-sm">{selectedDepartment.building}</p>
-                                    </div>
-                                    <div>
-                                        <span className="text-sm text-gray-500">Phone:</span>
-                                        <p className="text-sm">{selectedDepartment.phone}</p>
-                                    </div>
-                                    <div>
                                         <span className="text-sm text-gray-500">Email:</span>
-                                        <p className="text-sm">{selectedDepartment.email}</p>
+                                        <p className="text-sm">{selectedDepartment.deaprtmentchairmanEmail}</p>
                                     </div>
                                 </div>
                             </div>
@@ -89,16 +76,16 @@ const ViewDeparmentDialog = ({ isViewDialogOpen, setIsViewDialogOpen, selectedDe
                                 <Label className="text-sm font-medium text-gray-600">Department Head</Label>
                                 <div className="mt-2 flex items-center space-x-3">
                                     <Avatar className="h-12 w-12">
-                                        <AvatarImage src={selectedDepartment.headAvatar || "/placeholder.svg"} />
+                                        {/* <AvatarImage src={"/placeholder.svg"} /> */}
                                         <AvatarFallback>
-                                            {selectedDepartment.head
+                                            {selectedDepartment.departmentChairman
                                                 .split(" ")
                                                 .map((n) => n[0])
                                                 .join("")}
                                         </AvatarFallback>
                                     </Avatar>
                                     <div>
-                                        <p className="font-medium">{selectedDepartment.head}</p>
+                                        <p className="font-medium">{selectedDepartment.departmentChairman}</p>
                                         <p className="text-sm text-gray-500">Department Head</p>
                                     </div>
                                 </div>
@@ -133,5 +120,4 @@ const ViewDeparmentDialog = ({ isViewDialogOpen, setIsViewDialogOpen, selectedDe
         </Dialog>
     )
 }
-
 export default ViewDeparmentDialog

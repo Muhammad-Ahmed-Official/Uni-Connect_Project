@@ -8,4 +8,5 @@ export interface IDepartment extends BaseEntity {
     total_posts: number;
     departmentChairman: string;
     deaprtmentchairmanEmail?: string;
+    established: string,
 }

@@ -1,4 +1,3 @@
-
 import { useState } from 'react'
 import { useToast } from '@/hooks/use-toast'
 import { DepartmentFormValues } from '@/app/admin/departments/page'
@@ -20,13 +19,11 @@ const DepartmentsTable = ({ filteredDepartments, setDepartments }: DepartmentsTa
     const [selectedDepartment, setSelectedDepartment] = useState<AdminDepartment | null>(null);
     const [isDropdownOpen, setIsDropdownOpen] = useState<number | null>(null);
     const [editForm, setEditForm] = useState<DepartmentFormValues>({
-        name: "",
-        code: "",
-        description: "",
-        head: "",
-        building: "",
-        phone: "",
-        email: "",
+        departmentName: "",
+        departmentBio: "",
+        departmentChairman: "",
+        deaprtmentchairmanEmail: "",
+        established: "",
     })
     const { toast } = useToast()
 
@@ -38,19 +35,17 @@ const DepartmentsTable = ({ filteredDepartments, setDepartments }: DepartmentsTa
     const handleEditDepartment = (department: AdminDepartment) => {
         setSelectedDepartment(department)
         setEditForm({
-            name: department.name,
-            code: department.code,
-            description: department.description,
-            head: department.head,
-            building: department.building,
-            phone: department.phone,
-            email: department.email,
+            departmentName: department.departmentName,
+            departmentBio: department.departmentBio,
+            departmentChairman: department.departmentChairman,
+            deaprtmentchairmanEmail: department.deaprtmentchairmanEmail,
+            established: department?.established,
         })
         setIsEditDialogOpen(true)
     }
 
     const handleDeleteDepartment = (departmentId: number) => {
-        setDepartments(filteredDepartments.filter((dept) => dept.id !== departmentId))
+        setDepartments(filteredDepartments.filter((dept) => dept._id !== departmentId))
         toast({
             title: "Department Deleted",
             description: "Department has been successfully removed from the system.",
@@ -63,16 +58,13 @@ const DepartmentsTable = ({ filteredDepartments, setDepartments }: DepartmentsTa
             // Edit existing department
             setDepartments(
                 filteredDepartments.map((dept) =>
-                    dept.id === selectedDepartment.id
+                    dept._id === selectedDepartment._id
                         ? {
                             ...dept,
-                            name: editForm.name,
-                            code: editForm.code,
-                            description: editForm.description,
-                            head: editForm.head,
-                            building: editForm.building,
-                            phone: editForm.phone,
-                            email: editForm.email,
+                            departmentName: editForm.departmentName,
+                            departmentBio: editForm.departmentBio,
+                            departmentChairman: editForm.departmentChairman,
+                            deaprtmentchairmanEmail: editForm.deaprtmentchairmanEmail,
                         }
                         : dept,
                 ),
@@ -89,7 +81,7 @@ const DepartmentsTable = ({ filteredDepartments, setDepartments }: DepartmentsTa
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
             {filteredDepartments.map((department) => (
-                <DepartmentTableCard key={department.id} department={department} isDropdownOpen={isDropdownOpen} setIsDropdownOpen={setIsDropdownOpen} handleViewDepartment={handleViewDepartment} handleEditDepartment={handleEditDepartment} setDeleteDialogOpen={setDeleteDialogOpen} setDepartmentToDelete={setDepartmentToDelete} />
+                <DepartmentTableCard key={department._id} department={department} isDropdownOpen={isDropdownOpen} setIsDropdownOpen={setIsDropdownOpen} handleViewDepartment={handleViewDepartment} handleEditDepartment={handleEditDepartment} setDeleteDialogOpen={setDeleteDialogOpen} setDepartmentToDelete={setDepartmentToDelete} />
             ))}
 
             {/* View Department Dialog */}
@@ -99,7 +91,7 @@ const DepartmentsTable = ({ filteredDepartments, setDepartments }: DepartmentsTa
             <EditDeparmentDialog isEditDialogOpen={isEditDialogOpen} setIsEditDialogOpen={setIsEditDialogOpen} editForm={editForm} setEditForm={setEditForm} handleSaveDepartment={handleSaveDepartment} />
 
             {/* Delete Department Dialog */}
-            <DeleteDepartmentDialog isOpen={deleteDialogOpen} onClose={() => { setDeleteDialogOpen(false) }} onConfirm={() => { if (departmentToDelete) { handleDeleteDepartment(departmentToDelete.id); } setDeleteDialogOpen(false) }} />
+            <DeleteDepartmentDialog isOpen={deleteDialogOpen} onClose={() => { setDeleteDialogOpen(false) }} onConfirm={() => { if (departmentToDelete) { handleDeleteDepartment(departmentToDelete._id!); } setDeleteDialogOpen(false) }} />
         </div>
     )
 }
