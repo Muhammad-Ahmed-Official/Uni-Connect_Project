@@ -50,39 +50,32 @@ const EventTableCard = ({ event, handleEditEvent, handleApproveEvent, handleReje
         return <Badge className={colors[category] || "bg-gray-100 text-gray-800"}>{category}</Badge>
     }
     return (
-        <Card key={event.id} className="overflow-hidden pt-0">
+        <Card key={event._id} className="overflow-hidden pt-0">
             <div className="aspect-video relative">
                 <img src={event.image || "/placeholder.svg"} alt={event.title} className="w-full h-40 object-cover" />
                 <div className="absolute top-2 right-2">{getStatusBadge(event.status)}</div>
             </div>
             <CardHeader>
-                <div className="flex justify-between items-start">
-                    <CardTitle className="text-lg line-clamp-2">{event.title}</CardTitle>
-                    {getCategoryBadge(event.category)}
-                </div>
-                <CardDescription className="line-clamp-2">{event.description}</CardDescription>
+                <CardDescription className="line-clamp-2">{event.content}</CardDescription>
             </CardHeader>
             <CardContent>
                 <div className="space-y-2 text-sm text-gray-600">
                     <div className="flex items-center">
                         <Calendar className="w-4 h-4 mr-2" />
-                        {event.date}
+                        {event.start_date}
                     </div>
                     <div className="flex items-center">
-                        <Clock className="w-4 h-4 mr-2" />
-                        {event.time}
+                        <Calendar className="w-4 h-4 mr-2" />
+                        {event.end_date}
                     </div>
                     <div className="flex items-center">
                         <MapPin className="w-4 h-4 mr-2" />
                         {event.location}
                     </div>
-                    <div className="flex items-center">
-                        <Users className="w-4 h-4 mr-2" />
-                        {event.rsvps}/{event.capacity} RSVPs
-                    </div>
+
                 </div>
                 <div className="flex justify-between items-center mt-4 pt-4 border-t">
-                    <span className="text-sm text-gray-500">by {event.organizer}</span>
+                    {/* <span className="text-sm text-gray-500">by {event.organizer}</span> */}
                     <div className="flex gap-2">
                         <Button
                             size="sm"
@@ -96,16 +89,16 @@ const EventTableCard = ({ event, handleEditEvent, handleApproveEvent, handleReje
                                 <Button
                                     size="sm"
                                     className="bg-green-600 hover:bg-green-700"
-                                    onClick={() => handleApproveEvent(event.id)}
+                                    onClick={() => handleApproveEvent(event._id)}
                                 >
                                     <CheckCircle className="w-3 h-3" />
                                 </Button>
-                                <Button size="sm" variant="destructive" onClick={() => handleRejectEvent(event.id)}>
+                                <Button size="sm" variant="destructive" onClick={() => handleRejectEvent(event._id)}>
                                     <XCircle className="w-3 h-3" />
                                 </Button>
                             </>
                         )}
-                        <Button size="sm" variant="destructive" onClick={() => handleDeleteEvent(event.id)}>
+                        <Button size="sm" variant="destructive" onClick={() => handleDeleteEvent(event._id)}>
                             <Trash2 className="w-3 h-3" />
                         </Button>
                     </div>

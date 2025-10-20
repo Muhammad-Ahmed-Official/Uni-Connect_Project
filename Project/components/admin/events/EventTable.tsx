@@ -19,16 +19,13 @@ interface EventTableProps {
 
 export interface EventFormValues {
     title: string
-    category: string
-    description: string
-    date: string
-    time: string
+    content: string
+    start_date: string,
+    end_date: string
     location: string
-    capacity: number
     image: string
     status: string
-    organizer: string
-    rsvps: number
+
 }
 
 const EventTable = ({ filteredEvents, setEvents, events }: EventTableProps) => {
@@ -36,20 +33,16 @@ const EventTable = ({ filteredEvents, setEvents, events }: EventTableProps) => {
     const [isEditDialogOpen, setIsEditDialogOpen] = useState<boolean>(false)
     const [editForm, setEditForm] = useState<EventFormValues>({
         title: "",
-        description: "",
-        date: "",
-        time: "",
+        content: "",
+        start_date: "",
+        end_date: "",
         location: "",
-        category: "",
         status: "",
-        capacity: 0,
-        rsvps: 0,
-        organizer: "",
         image: "",
     })
 
     const handleApproveEvent = (eventId: number) => {
-        setEvents(events.map((event) => (event.id === eventId ? { ...event, status: "approved" } : event)))
+        setEvents(events.map((event) => (event._id === eventId ? { ...event, status: "approved" } : event)))
         toast({
             title: "Event Approved",
             description: "The event has been approved and is now visible to users.",
@@ -57,7 +50,7 @@ const EventTable = ({ filteredEvents, setEvents, events }: EventTableProps) => {
     }
 
     const handleRejectEvent = (eventId: number) => {
-        setEvents(events.map((event) => (event.id === eventId ? { ...event, status: "rejected" } : event)))
+        setEvents(events.map((event) => (event._id === eventId ? { ...event, status: "rejected" } : event)))
         toast({
             title: "Event Rejected",
             description: "The event has been rejected and will not be visible to users.",
@@ -65,7 +58,7 @@ const EventTable = ({ filteredEvents, setEvents, events }: EventTableProps) => {
     }
 
     const handleDeleteEvent = (eventId: number) => {
-        setEvents(events.filter((event) => event.id !== eventId))
+        setEvents(events.filter((event) => event._id !== eventId))
         toast({
             title: "Event Deleted",
             description: "The event has been permanently deleted.",
@@ -76,19 +69,16 @@ const EventTable = ({ filteredEvents, setEvents, events }: EventTableProps) => {
         if (selectedEvent) {
             setEvents(
                 filteredEvents.map((event) =>
-                    event.id === selectedEvent.id
+                    event._id === selectedEvent._id
                         ? {
                             ...event,
                             title: editForm.title,
-                            description: editForm.description,
-                            date: editForm.date,
-                            time: editForm.time,
+                            content: editForm.content,
+                            start_date: editForm.start_date,
+                            end_date: editForm.end_date,
                             location: editForm.location,
-                            category: editForm.category,
-                            status: editForm.status,
-                            capacity: editForm.capacity,
-                            organizer: editForm.organizer,
                             image: editForm.image,
+                            status: editForm.status,
                         }
                         : event
                 )
@@ -108,26 +98,21 @@ const EventTable = ({ filteredEvents, setEvents, events }: EventTableProps) => {
         setIsEditDialogOpen(true)
         setEditForm({
             title: event?.title || "",
-            description: event?.description || "",
-            date: event?.date || "",
-            time: event?.time || "",
+            content: event?.content || "",
+            start_date: event?.start_date || "",
+            end_date: event?.end_date || "",
             location: event?.location || "",
-            category: event?.category || "",
-            status: event?.status || "",
-            capacity: event?.capacity || 0,
-            rsvps: event?.rsvps || 0,
-            organizer: event?.organizer || "",
             image: event?.image || "",
+            status: event?.status || "",
         })
     }
 
-    console.log("editForm", editForm.category)
 
     return (
         <div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
                 {filteredEvents.map((event) => (
-                    <EventTableCard key={event.id} event={event} handleEditEvent={handleEditEvent} handleApproveEvent={handleApproveEvent} handleRejectEvent={handleRejectEvent} handleDeleteEvent={handleDeleteEvent} />
+                    <EventTableCard key={event._id} event={event} handleEditEvent={handleEditEvent} handleApproveEvent={handleApproveEvent} handleRejectEvent={handleRejectEvent} handleDeleteEvent={handleDeleteEvent} />
                 ))}
             </div>
 

@@ -6,10 +6,9 @@ interface StatsCardsProps {
     totalEvents: number
     approvedEvents: number
     pendingEvents: number
-    totalRSVPs: number
 }
 
-const StatsCards = ({ totalEvents, approvedEvents, pendingEvents, totalRSVPs }: StatsCardsProps) => {
+const StatsCards = ({ totalEvents, approvedEvents, pendingEvents }: StatsCardsProps) => {
     return (
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             <Card>
@@ -40,16 +39,6 @@ const StatsCards = ({ totalEvents, approvedEvents, pendingEvents, totalRSVPs }: 
                 <CardContent>
                     <div className="text-2xl font-bold">{pendingEvents}</div>
                     <p className="text-xs text-muted-foreground">Awaiting review</p>
-                </CardContent>
-            </Card>
-            <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">Total RSVPs</CardTitle>
-                    <Users className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                    <div className="text-2xl font-bold">{totalRSVPs}</div>
-                    <p className="text-xs text-muted-foreground">Across all events</p>
                 </CardContent>
             </Card>
         </div>

@@ -78,18 +78,18 @@ declare global {
     }
 
     interface AdminEvent {
-        id: number
+        _id: number
         title: string
-        description: string
-        date: string
-        time: string
-        location: string
-        category: string
-        status: string
-        rsvps: number
-        capacity: number
-        organizer: string
+        content: string
         image: string
+        start_date: string
+        end_date: string
+        location: string
+        status: string
+        // category: string
+        // rsvps: number
+        // capacity: number
+        // organizer: string
     }
 }
 

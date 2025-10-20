@@ -84,9 +84,10 @@ class ApiClient {
 
 
 
-    async createEvent(){
+    async createEvent(data:object){
         return this.fetch("event/create", {
-            method: "POST"
+            method: "POST",
+            body: data,
         })
     };
 
