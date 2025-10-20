@@ -6,6 +6,7 @@ import AddDepartmentDialog from "@/components/admin/departments/AddDepartmentDia
 import Header from "@/components/admin/departments/Header"
 import StatsCards from "@/components/admin/departments/StatsCards"
 import FiltersAndSearches from "@/components/admin/departments/FiltersAndSearches"
+import { apiClient } from "@/lib/api-client"
 
 export interface DepartmentFormValues {
   name: string
@@ -165,7 +166,7 @@ export default function DepartmentManagement() {
       dept.head.toLowerCase().includes(searchTerm.toLowerCase()),
   )
 
-  const handleSaveDepartment = () => {
+  const handleSaveDepartment = async() => {
     // Add new department
     const newDepartment = {
       id: Math.max(...filteredDepartments.map((d) => d.id)) + 1,
@@ -184,6 +185,13 @@ export default function DepartmentManagement() {
       title: "Department Added",
       description: "New department has been successfully created.",
     })
+    try {
+        const response = await apiClient.createDepartment(newDepartment);
+    } catch (error) {
+      toast({
+        title: "Failed to create department"
+      })
+    }
   }
 
   return (

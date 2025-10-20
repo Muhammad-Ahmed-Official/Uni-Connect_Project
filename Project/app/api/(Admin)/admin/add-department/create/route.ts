@@ -37,7 +37,6 @@ export const POST = asyncHandler(async (req: NextRequest): Promise<NextResponse>
 
   const { departmentName, departmentBio, departmentTags } =
     validation.data;
-
   // 🔹 Check if department already exists
   const existingDept = await departmentModel.findOne({ departmentName });
   if (existingDept) {

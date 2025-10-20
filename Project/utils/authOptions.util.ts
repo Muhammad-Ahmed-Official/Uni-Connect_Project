@@ -33,7 +33,7 @@ export const authOptions: NextAuthOptions = {
                     firstName: string;
                     lastName: string;
                     role: string;
-                    department_id:any
+                    department_id:string
                 } | null;
                 // const user = await User.find().lean() ;
                 // console.log("User found:", user);

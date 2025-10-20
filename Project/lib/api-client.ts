@@ -103,9 +103,10 @@ class ApiClient {
     };
 
 
-    async createDepartment(){
+    async createDepartment(data:object){
         return this.fetch("admin/add-department/create", {
-            method: "POST"
+            method: "POST",
+            body: data,
         })
     };
 
