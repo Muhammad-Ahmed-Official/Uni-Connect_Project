@@ -89,7 +89,7 @@ const RegistrationForm = () => {
     const onSubmit = async (data: FormData) => {
         setIsLoading(true)
         try {
-            const res = await axios.post('/api/auth/register', data);
+            await axios.post('/api/auth/register', data);
             toast({ title: 'Registration successful!', description: 'Please check your email for the OTP to verify your account.', variant: "success" });
             router.push(`/verify-account?email=${data.email}`);
         } catch (error) {

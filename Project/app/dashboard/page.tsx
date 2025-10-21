@@ -4,7 +4,6 @@ import RecentActivity from "@/components/dashboard/LandingPage/RecentActivity"
 import QuickLinks from "@/components/dashboard/LandingPage/QuickLinks"
 import Header from "@/components/dashboard/common/Header"
 
-
 export default function DashboardPage() {
   return (
     <div className="p-2 sm:p-6 space-y-6">

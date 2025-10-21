@@ -1,4 +1,5 @@
 "use client"
+
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
@@ -59,11 +60,24 @@ const Userlayout = ({
     const [searchQuery, setSearchQuery] = useState("");
     const [sidebarOpen, setSidebarOpen] = useState(false)
     const pathname = usePathname();
-    const session = useSession();
-    const role = session?.data?.user?.role;
+    const { data: session, status } = useSession();
+    const user = session?.user;
+
+    if (status === "loading") {
+        return (
+            <div className="h-screen flex bg-gray-50">
+                <div className="flex-1 flex items-center justify-center">
+                    <div className="text-center">
+                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                        <p className="text-gray-600">Loading...</p>
+                    </div>
+                </div>
+            </div>
+        )
+    }
 
     if (!session) redirect("/login");
-    if (role === "admin") redirect("/admin");
+    if (user?.role === "admin") redirect("/admin");
 
     const handleLogout = () => {
         signOut()
@@ -72,7 +86,6 @@ const Userlayout = ({
     const Sidebar = () => {
         return (
             <div className="flex h-full flex-col">
-                {/* Logo */}
                 <div className="flex h-16 items-center border-b px-6">
                     <div className="flex items-center space-x-2">
                         <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
@@ -82,7 +95,6 @@ const Userlayout = ({
                     </div>
                 </div>
 
-                {/* Navigation */}
                 <nav className='flex-1 space-y-1 px-4 py-6'>
                     {sidebarItems.map((item) => {
                         const isActive = item.href === "/dashboard"
@@ -105,16 +117,21 @@ const Userlayout = ({
                     })}
                 </nav>
 
-                {/* Admin Info */}
                 <div className="border-t p-4">
                     <div className="flex items-center space-x-3">
                         <Avatar className="h-8 w-8">
-                            <AvatarImage src="/placeholder-user.jpg" />
-                            <AvatarFallback>AD</AvatarFallback>
+                            <AvatarImage src={user?.profilePic || "/student-avatar.png"} />
+                            <AvatarFallback>
+                                {user?.firstName?.[0]}{user?.lastName?.[0]}
+                            </AvatarFallback>
                         </Avatar>
                         <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-gray-900 truncate">Admin User</p>
-                            <p className="text-xs text-gray-500 truncate">admin@university.edu</p>
+                            <p className="text-sm font-medium text-gray-900 truncate">
+                                {user?.firstName} {user?.lastName}
+                            </p>
+                            <p className="text-xs text-gray-500 truncate">
+                                {user?.email}
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -205,16 +222,22 @@ const Userlayout = ({
                                     <DropdownMenuTrigger asChild>
                                         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                                             <Avatar className="h-8 w-8">
-                                                <AvatarImage src="/student-avatar.png" alt="Profile" />
-                                                <AvatarFallback>SC</AvatarFallback>
+                                                <AvatarImage src={user?.profilePic || "/student-avatar.png"} alt="Profile" />
+                                                <AvatarFallback>
+                                                    {user?.firstName?.[0]}{user?.lastName?.[0]}
+                                                </AvatarFallback>
                                             </Avatar>
                                         </Button>
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent className="w-56" align="end" forceMount>
                                         <DropdownMenuLabel className="font-normal">
                                             <div className="flex flex-col space-y-1">
-                                                <p className="text-sm font-medium leading-none">Sarah Chen</p>
-                                                <p className="text-xs leading-none text-muted-foreground">sarah.chen@university.edu</p>
+                                                <p className="text-sm font-medium leading-none">
+                                                    {user?.firstName} {user?.lastName}
+                                                </p>
+                                                <p className="text-xs leading-none text-muted-foreground">
+                                                    {user?.email}
+                                                </p>
                                             </div>
                                         </DropdownMenuLabel>
                                         <DropdownMenuSeparator />
@@ -238,7 +261,9 @@ const Userlayout = ({
                     </header>
 
                     {/* Page Content */}
-                    <main className="flex-1 relative focus:outline-none pt-16">{children}</main>
+                    <main className="flex-1 relative focus:outline-none pt-16">
+                        {children}
+                    </main>
                 </div>
             </div>
         </Suspense>

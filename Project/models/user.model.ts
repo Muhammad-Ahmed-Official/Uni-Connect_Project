@@ -87,7 +87,8 @@ const UserSchema = new Schema<IUser>({
         default: null
     },
     profilePic: {
-        type: String
+        type: String,
+        default: null
     },
     idCard: {
         type: String,

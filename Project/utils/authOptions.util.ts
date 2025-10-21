@@ -16,14 +16,12 @@ export const authOptions: NextAuthOptions = {
             },
             authorize: async (credentials) => {
                 const parsedCredentials = loginSchema.safeParse(credentials);
-                // console.log(parsedCredentials)
 
                 if (!parsedCredentials.success) {
                     throw new Error(parsedCredentials.error.errors[0].message);
                 }
 
                 const { email, password } = parsedCredentials.data
-                // console.log("Attempting to authorize user:", email);
 
                 await connectDB();
                 const user = await User.findOne({ email }).lean() as {
@@ -33,10 +31,10 @@ export const authOptions: NextAuthOptions = {
                     firstName: string;
                     lastName: string;
                     role: string;
-                    department_id:string
+                    department_id: string
+                    profilePic: string;
+                    bio?: string;
                 } | null;
-                // const user = await User.find().lean() ;
-                // console.log("User found:", user);
                 if (!user) {
                     throw new Error("User not found");
                 }
@@ -49,15 +47,15 @@ export const authOptions: NextAuthOptions = {
                 if (!user._id) {
                     throw new Error("User ID is missing");
                 }
-                console.log(user)
-                
                 return {
                     id: user._id.toString(),
                     email: user.email,
                     firstName: user.firstName,
                     lastName: user.lastName,
                     role: user.role,
-                    department_id:user.department_id
+                    department_id: user.department_id,
+                    profilePic: user.profilePic,
+                    bio: user.bio
                 }
             }
         })
@@ -69,7 +67,9 @@ export const authOptions: NextAuthOptions = {
                 token.id = user.id;
                 token.firstName = (user as any).firstName;
                 token.lastName = (user as any).lastName;
-                token.department_id=(user as any).department_id;
+                token.department_id = (user as any).department_id;
+                token.profilePic = (user as any).profilePic;
+                token.createdAt = (user as any).createdAt;
             }
             return token;
         },
@@ -79,7 +79,9 @@ export const authOptions: NextAuthOptions = {
                 session.user.id = token.id as string;
                 (session as any).user.firstName = token.firstName;
                 (session as any).user.lastName = token.lastName;
-                (session as any).user.department_id=token.department_id
+                (session as any).user.department_id = token.department_id;
+                (session as any).user.profilePic = token.profilePic;
+                (session as any).user.createdAt = token.createdAt;
             }
             return session;
         }
