@@ -27,16 +27,8 @@ const EditDeparmentDialog = ({ isEditDialogOpen, setIsEditDialogOpen, editForm, 
                             <Label className="mb-2" htmlFor="name">Department Name</Label>
                             <Input
                                 id="name"
-                                value={editForm.name}
-                                onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
-                            />
-                        </div>
-                        <div>
-                            <Label className="mb-2" htmlFor="code">Department Code</Label>
-                            <Input
-                                id="code"
-                                value={editForm.code}
-                                onChange={(e) => setEditForm({ ...editForm, code: e.target.value })}
+                                value={editForm.departmentName}
+                                onChange={(e) => setEditForm({ ...editForm, departmentName: e.target.value })}
                             />
                         </div>
                     </div>
@@ -44,8 +36,8 @@ const EditDeparmentDialog = ({ isEditDialogOpen, setIsEditDialogOpen, editForm, 
                         <Label className="mb-2" htmlFor="description">Description</Label>
                         <Textarea
                             id="description"
-                            value={editForm.description}
-                            onChange={(e) => setEditForm({ ...editForm, description: e.target.value })}
+                            value={editForm.departmentBio}
+                            onChange={(e) => setEditForm({ ...editForm, departmentBio: e.target.value })}
                         />
                     </div>
                     <div className="grid grid-cols-2 gap-4">
@@ -53,35 +45,19 @@ const EditDeparmentDialog = ({ isEditDialogOpen, setIsEditDialogOpen, editForm, 
                             <Label className="mb-2" htmlFor="head">Department Head</Label>
                             <Input
                                 id="head"
-                                value={editForm.head}
-                                onChange={(e) => setEditForm({ ...editForm, head: e.target.value })}
-                            />
-                        </div>
-                        <div>
-                            <Label className="mb-2" htmlFor="building">Building</Label>
-                            <Input
-                                id="building"
-                                value={editForm.building}
-                                onChange={(e) => setEditForm({ ...editForm, building: e.target.value })}
+                                value={editForm.departmentChairman}
+                                onChange={(e) => setEditForm({ ...editForm, departmentChairman: e.target.value })}
                             />
                         </div>
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <Label className="mb-2" htmlFor="phone">Phone</Label>
-                            <Input
-                                id="phone"
-                                value={editForm.phone}
-                                onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })}
-                            />
-                        </div>
-                        <div>
                             <Label className="mb-2" htmlFor="email">Email</Label>
                             <Input
                                 id="email"
                                 type="email"
-                                value={editForm.email}
-                                onChange={(e) => setEditForm({ ...editForm, email: e.target.value })}
+                                value={editForm.deaprtmentchairmanEmail}
+                                onChange={(e) => setEditForm({ ...editForm, deaprtmentchairmanEmail: e.target.value })}
                             />
                         </div>
                     </div>

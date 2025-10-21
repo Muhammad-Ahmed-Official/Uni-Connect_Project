@@ -18,7 +18,7 @@ interface DepartmentTableCardProps {
 
 const DepartmentTableCard = ({ department, isDropdownOpen, setIsDropdownOpen, handleViewDepartment, handleEditDepartment, setDeleteDialogOpen, setDepartmentToDelete }: DepartmentTableCardProps) => {
     return (
-        <Card key={department.id} className="border hover:shadow-md transition-shadow">
+        <Card key={department._id} className="border hover:shadow-md transition-shadow">
             <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
@@ -26,15 +26,15 @@ const DepartmentTableCard = ({ department, isDropdownOpen, setIsDropdownOpen, ha
                             <Building2 className="h-6 w-6 text-blue-600" />
                         </div>
                         <div>
-                            <CardTitle className="text-lg">{department.name}</CardTitle>
-                            <Badge variant="outline" className="text-xs">
+                            <CardTitle className="text-lg">{department.departmentName}</CardTitle>
+                            {/* <Badge variant="outline" className="text-xs">
                                 {department.code}
-                            </Badge>
+                            </Badge> */}
                         </div>
                     </div>
                     <DropdownMenu
-                        open={isDropdownOpen === department.id}
-                        onOpenChange={(open) => { setIsDropdownOpen(open ? department.id : null) }}
+                        open={isDropdownOpen === department._id}
+                        onOpenChange={(open) => { setIsDropdownOpen(open ? department._id! : null) }}
                     >
                         <DropdownMenuTrigger asChild>
                             <Button variant="ghost" className="h-8 w-8 p-0 cursor-pointer">
@@ -81,16 +81,16 @@ const DepartmentTableCard = ({ department, isDropdownOpen, setIsDropdownOpen, ha
             <CardContent className="space-y-4">
                 <div className="flex items-center space-x-2">
                     <Avatar className="h-8 w-8">
-                        <AvatarImage src={department.headAvatar || "/placeholder.svg"} />
+                        {/* <AvatarImage src={department.headAvatar} /> */}
                         <AvatarFallback>
-                            {department.head
+                            {department.departmentChairman
                                 .split(" ")
                                 .map((n) => n[0])
                                 .join("")}
                         </AvatarFallback>
                     </Avatar>
                     <div>
-                        <p className="text-sm font-medium text-gray-900">{department.head}</p>
+                        <p className="text-sm font-medium text-gray-900">{department.departmentChairman}</p>
                         <p className="text-xs text-gray-500">Department Head</p>
                     </div>
                 </div>

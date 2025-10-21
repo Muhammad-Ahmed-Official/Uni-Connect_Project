@@ -4,5 +4,5 @@ export const postSchema = z.object({
   title: z.string().min(1, "Title is required"),
   content: z.string().min(1, "Content is required"),
   tags: z.array(z.string()).optional(),
-  image:z.string().url("Image must be a valid URL").optional(),
+  // image:z.string().url("Image must be a valid URL").optional(),
 })

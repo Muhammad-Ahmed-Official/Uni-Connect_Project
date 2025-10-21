@@ -59,20 +59,17 @@ declare global {
     }
 
     interface AdminDepartment {
-        id: number
-        name: string
-        description: string
-        code: string
-        head: string
-        headAvatar: string
+        _id?: number
+        departmentName: string
+        departmentBio: string
+        departmentChairman: string
+        deaprtmentchairmanEmail: string
+        headAvatar?: string
         totalStudents: number
         totalAdvisors: number
         activeEscalations: number
         totalEvents: number
         established: string
-        building: string
-        phone: string
-        email: string
         advisors: {
             name: string
             avatar: string
@@ -81,18 +78,18 @@ declare global {
     }
 
     interface AdminEvent {
-        id: number
+        _id: number
         title: string
-        description: string
-        date: string
-        time: string
-        location: string
-        category: string
-        status: string
-        rsvps: number
-        capacity: number
-        organizer: string
+        content: string
         image: string
+        start_date: string
+        end_date: string
+        location: string
+        status: string
+        // category: string
+        // rsvps: number
+        // capacity: number
+        // organizer: string
     }
 }
 

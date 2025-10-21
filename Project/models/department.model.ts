@@ -15,6 +15,10 @@ const DepartmentSchema = new Schema<IDepartment>(
             type:[String],
             required:true
         },
+        established: {
+            type: String,
+            required: true,
+        },
         followers_count:{
             type:Number,
             default:0

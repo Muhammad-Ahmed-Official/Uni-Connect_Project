@@ -1,23 +1,28 @@
+import { EventFormValues } from '@/app/admin/events/page'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog'
 import FileInput from '@/components/ui/FileInput'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import { toast } from '@/hooks/use-toast'
-import { Plus } from 'lucide-react'
+import { Loader, Loader2, Plus } from 'lucide-react'
 import React from 'react'
 
 interface HeaderProps {
     isCreateDialogOpen: boolean
     setIsCreateDialogOpen: React.Dispatch<React.SetStateAction<boolean>>
+    editEvent: EventFormValues,
+    setEditEvent: React.Dispatch<React.SetStateAction<EventFormValues>>
+    handleSaveEvent: () => void
+    loading: boolean,
 }
 
-const Header = ({ isCreateDialogOpen, setIsCreateDialogOpen }: HeaderProps) => {
-    const handleFileUpload = (files: File[]) => {
-        console.log('Files uploaded:', files);
-        // Handle the upload logic here
+const Header = ({ isCreateDialogOpen, setIsCreateDialogOpen, editEvent, setEditEvent, handleSaveEvent, loading }: HeaderProps) => {
+    const handleFileUpload = (files: File | null) => {
+        // if(files){
+        //     setEditEvent({...editEvent, image: files})
+        // }
     };
 
     return (
@@ -39,67 +44,47 @@ const Header = ({ isCreateDialogOpen, setIsCreateDialogOpen }: HeaderProps) => {
                         <DialogDescription>Add a new event to the university calendar</DialogDescription>
                     </DialogHeader>
                     <div className="grid gap-4 py-4">
-                        <div className="grid grid-cols-2 gap-4">
+                        <div>
                             <div className="space-y-2">
                                 <Label htmlFor="title">Event Title</Label>
-                                <Input id="title" placeholder="Enter event title" />
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="category">Category</Label>
-                                <Select>
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Select category" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="university-wide">University-wide</SelectItem>
-                                        <SelectItem value="department">Department</SelectItem>
-                                        <SelectItem value="club">Club</SelectItem>
-                                    </SelectContent>
-                                </Select>
+                                <Input id="title" value={editEvent?.title} required onChange={(e) => setEditEvent({...editEvent, title: e?.target.value})} placeholder="Enter event title" />
                             </div>
                         </div>
                         <div className="space-y-2">
                             <Label htmlFor="description">Description</Label>
-                            <Textarea id="description" placeholder="Enter event description" rows={3} />
+                            <Textarea id="description" value={editEvent?.content} required onChange={(e) => setEditEvent({...editEvent, content: e?.target.value})} placeholder="Enter event description" rows={3} />
                         </div>
-                        <div className="grid grid-cols-3 gap-4">
+                        <div className="grid grid-cols-2 gap-4">
                             <div className="space-y-2">
-                                <Label htmlFor="date">Start Date</Label>
-                                <Input id="date" type="date" />
+                                <Label htmlFor="startdate">Start Date</Label>
+                                <Input id="startdate" value={editEvent?.eventDetails?.start_date} required  type="date" 
+                                    onChange={(e) => setEditEvent({...editEvent, eventDetails: {...editEvent?.eventDetails, start_date: e.target.value}})} 
+                                />
                             </div>
                             <div className="space-y-2">
-                                <Label htmlFor="time">End Date</Label>
-                                <Input id="time" type="time" />
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="capacity">Note</Label>
-                                <Input id="capacity" type="text" placeholder="about event...." />
+                                <Label htmlFor="enddate">End Date</Label>
+                                <Input id="enddate" value={editEvent?.eventDetails?.end_date} required type="date" 
+                                    onChange={(e) => setEditEvent({...editEvent, eventDetails: {...editEvent?.eventDetails, end_date: e.target.value}})}
+                                />
                             </div>
                         </div>
                         <div className="space-y-2">
                             <Label htmlFor="location">Location</Label>
-                            <Input id="location" placeholder="Enter event location" />
+                            <Input id="location" value={editEvent?.eventDetails?.location} required
+                            onChange={(e) => setEditEvent({...editEvent, eventDetails: { ...editEvent.eventDetails, location: e.target.value }})} 
+                            placeholder="Enter event location" />
                         </div>
                         <div className="space-y-2">
                             <Label htmlFor="Image">Image</Label>
-                            <FileInput onUpload={handleFileUpload} />
-                            {/* <Input id="location" placeholder="Enter event location" /> */}
+                            <FileInput onFileSelect={handleFileUpload} />
                         </div>
                     </div>
                     <DialogFooter >
                         <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)}>
                             Cancel
                         </Button>
-                        <Button
-                            onClick={() => {
-                                setIsCreateDialogOpen(false)
-                                toast({
-                                    title: "Event Created",
-                                    description: "New event has been created and is pending approval.",
-                                })
-                            }}
-                        >
-                            Create Event
+                        <Button onClick={handleSaveEvent}>
+                            {loading? <span className='flex items-center gap-2'> <Loader className='animate-spin' /> Creating ... </span>  : "Create Event"}
                         </Button>
                     </DialogFooter>
                 </DialogContent>
