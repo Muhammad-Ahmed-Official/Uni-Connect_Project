@@ -12,7 +12,6 @@ interface FiltersAndSearchesProps {
 
 const FiltersAndSearches = ({ departments, setDepartments }: FiltersAndSearchesProps) => {
     const [searchTerm, setSearchTerm] = useState("");
-
     return (
         <Card className="border-0 shadow-sm">
             <CardHeader>
