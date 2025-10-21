@@ -33,5 +33,4 @@ export const POST = asyncHandler(async (request: NextRequest):Promise<NextRespon
     console.log(err)
     return nextError(500, "Internal Server Error");
   }
-
 });

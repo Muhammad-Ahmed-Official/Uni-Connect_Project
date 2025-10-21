@@ -66,6 +66,7 @@ const LoginFrom = () => {
                 toast({
                     title: "Login successful!",
                     description: "Welcome back to Uni-Connect.",
+                    variant: "success",
                 });
                 router.push("/dashboard");
             }

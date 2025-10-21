@@ -113,7 +113,12 @@ class ApiClient {
 
     
     async getDepartments(){
-        return this.fetch("admin/add-department")
+        return this.fetch("admin/deaprtment-management")
+    };
+
+
+    async updateDepartment(){
+        return this.fetch("admin/")
     };
     
 
@@ -122,6 +127,10 @@ class ApiClient {
             method: "DELETE"
         })
     };
+
+    async departmentStats(){
+        return this.fetch("admin/deaprtment-management/stats")
+    }
 
 }
 
