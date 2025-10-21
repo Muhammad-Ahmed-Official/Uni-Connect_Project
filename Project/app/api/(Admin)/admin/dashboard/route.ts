@@ -28,13 +28,13 @@ export const GET = asyncHandler(async (req: NextRequest): Promise<NextResponse> 
   // 🔹 Aggregations
   const [
     totalStudents,
-    totalPosts,
+    totalAdvisors,
     totalEvents,
     totalDepartments,
     totalDocuments,
   ] = await Promise.all([
     User.countDocuments({ role: "student" }),
-    PostModel.countDocuments(),
+    User.countDocuments({role:{ $in: ["department_Student_Advisor", "university_Student_Advisor"] }}),
     Event.countDocuments(),
     DepartmentModel.countDocuments(),
     DocumentSchema.countDocuments(),
@@ -43,7 +43,7 @@ export const GET = asyncHandler(async (req: NextRequest): Promise<NextResponse> 
   // ✅ Return Dashboard Overview
   return nextResponse(200, "Dashboard Overview fetched successfully", {
     totalStudents,
-    totalPosts,
+    totalAdvisors,
     totalEvents,
     totalDepartments,
     totalDocuments,

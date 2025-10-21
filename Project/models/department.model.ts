@@ -5,7 +5,8 @@ const DepartmentSchema = new Schema<IDepartment>(
     {
         departmentName:{
             type:String,
-            required:[true,"Department Name is required"]
+            required:[true,"Department Name is required"],
+            enum: ["CS", "POL", "MC", "LAW", "PHAR"]
         },
         departmentBio:{
             type:String,

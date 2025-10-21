@@ -7,7 +7,6 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/utils/authOptions.util";
 import User from "@/models/user.model";
 import Event from "@/models/event.model";
-import { deAT } from "date-fns/locale";
 
 // 🚀 DEPARTMENTS FETCHING ROUTE
 export const GET = asyncHandler(async (req: NextRequest): Promise<NextResponse> => {

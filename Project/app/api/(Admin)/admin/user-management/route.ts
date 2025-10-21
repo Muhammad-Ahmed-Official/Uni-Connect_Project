@@ -12,13 +12,13 @@ export const GET = asyncHandler(async (req: NextRequest): Promise<NextResponse> 
   // 🔹 Authenticate user
   const session = await getServerSession(authOptions);
   if (!session) {
-    return nextError(401, "Unauthorized: Please login to view students data");
+    return nextError(401, "Unauthorized: Please login to view users data");
   }
 
-  // 🔹 Role-based Access
+  // 🔹 Role-based Access Control
   const role = session?.user?.role;
   if (!["admin", "department_Student_Advisor", "university_Student_Advisor"].includes(role)) {
-    return nextError(403, "Forbidden: You are not allowed to view students list");
+    return nextError(403, "Forbidden: You are not allowed to view users list");
   }
 
   // 🔹 Extract query params
@@ -30,8 +30,11 @@ export const GET = asyncHandler(async (req: NextRequest): Promise<NextResponse> 
   const page = parseInt(searchParams.get("page") || "1");
   const limit = parseInt(searchParams.get("limit") || "10");
 
-  // 🔹 Filter: only students
-  const filter: any = { role: "student" };
+  // 🔹 Filter base: exclude admin
+  const filter: any = {
+    role: { $in: ["student", "department_Student_Advisor", "university_Student_Advisor"] },
+  };
+
 
   // Department filter
   if (departmentId && departmentId !== "All") {
@@ -51,24 +54,24 @@ export const GET = asyncHandler(async (req: NextRequest): Promise<NextResponse> 
   // 🔹 Pagination setup
   const skip = (page - 1) * limit;
 
-  // 🔹 Fetch students
-  const students = await User.find(filter)
-    .populate("department_id", "departmentName") // optional populate
+  // 🔹 Fetch users
+  const users = await User.find(filter)
+    .populate("department_id", "departmentName")
     .sort({ [sortBy]: sortOrder })
     .skip(skip)
     .limit(limit)
     .select("-password")
     .lean();
 
-  // 🔹 Count total students for pagination
-  const totalStudents = await User.countDocuments(filter);
+  // 🔹 Count total for pagination
+  const totalUsers = await User.countDocuments(filter);
 
   // ✅ Response
-  return nextResponse(200, "Students fetched successfully", {
-    total: totalStudents,
-    count: students.length,
+  return nextResponse(200, "Users fetched successfully", {
+    total: totalUsers,
+    count: users.length,
     currentPage: page,
-    totalPages: Math.ceil(totalStudents / limit),
-    students,
+    totalPages: Math.ceil(totalUsers / limit),
+    users,
   });
 });

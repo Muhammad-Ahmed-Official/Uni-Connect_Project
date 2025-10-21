@@ -40,11 +40,14 @@ export const GET = asyncHandler(async (req: NextRequest): Promise<NextResponse> 
     Event.countDocuments({ department_id: id }),
   ]);
 
+  const departmentAdvisors = await User.find({ department_id:department?._id, role: { $in: ["department_Student_Advisor", "university_Student_Advisor"] } }).select('firstName lastName email ');
+
   // ✅ Return data
   return nextResponse(200, "Department details fetched successfully", {
     department,
     totalStudents,
     totalPosts,
     totalEvents,
+    departmentAdvisors
   });
 });

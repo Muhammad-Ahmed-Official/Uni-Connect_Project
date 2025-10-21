@@ -14,14 +14,16 @@ export const GET = asyncHandler(async (req:NextRequest): Promise<NextResponse> =
   // 🔹 Total Counts Fetch karna
   const totalDepartments = await DepartmentModel.countDocuments();
   const totalStudents = await User.countDocuments({ role: "student" });
-  const totalPosts = await PostModel.countDocuments();
+  const totalAdvisors = await User.countDocuments({role:{
+    $in: ["department_Student_Advisor", "university_Student_Advisor"]
+  }});
   const totalEvents = await Event.countDocuments();
 
   // ✅ Response
   return nextResponse(200, "University stats fetched successfully", {
     totalDepartments,
     totalStudents,
-    totalPosts,
+    totalAdvisors,
     totalEvents
   });
 });

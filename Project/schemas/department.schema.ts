@@ -1,7 +1,13 @@
 import { z } from "zod"
 
 export const departmentSchema = z.object({
-  departmentName: z.string().min(2, "Name must be at least 2 characters"),
+  departmentName: z.enum([
+    "CS",   // Computer Science
+    "POL",  // Political Science
+    "MC",   // Mass Communication
+    "LAW",   // Law
+    "PHAR"   // pharmacy
+  ]),
   departmentBio: z.string().min(10, "Bio must be at least 10 characters"),
   deaprtmentchairmanEmail: z.string().email(),
   departmentChairman: z.string(),
