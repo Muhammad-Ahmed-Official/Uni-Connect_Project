@@ -2,19 +2,20 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Users, Search, Clock } from "lucide-react"
+import { Users, Search, Clock, Building2 } from "lucide-react"
 import Link from "next/link"
+import { departmentMetaData } from "@/constants/DepartmentMetaData"
 
-type Department = {
-    id: string
-    name: string
-    description: string
-    memberCount: number
-    activeDiscussions: number
-    recentActivity: string
-    color: string
-    icon: string
-    tags: string[]
+interface Department {
+    _id: string;
+    departmentName: string;
+    departmentCharmanEmail: string;
+    followers_count: number;
+    total_posts: number;
+    departmentBio: string;
+    departmentCharman: string;
+    departmentTags: string[];
+    established: string;
 }
 
 interface DepartmentCardsProps {
@@ -24,14 +25,14 @@ interface DepartmentCardsProps {
 const Tags = ({ department }: { department: Department }) => {
     return (
         <div className="flex flex-wrap gap-1">
-            {department.tags.slice(0, 3).map((tag) => (
+            {department.departmentTags.slice(0, 3).map((tag) => (
                 <Badge key={tag} variant="outline" className="text-xs">
                     {tag}
                 </Badge>
             ))}
-            {department.tags.length > 3 && (
+            {department.departmentTags.length > 3 && (
                 <Badge variant="outline" className="text-xs">
-                    +{department.tags.length - 3}
+                    +{department.departmentTags.length - 3}
                 </Badge>
             )}
         </div>
@@ -40,14 +41,14 @@ const Tags = ({ department }: { department: Department }) => {
 
 const Stats = ({ department }: { department: Department }) => {
     return (
-        <div className="flex items-center justify-between text-sm text-gray-500">
+        <div className="flex items-center justify-between text-sm text-gray-800">
             <div className="flex items-center space-x-1">
                 <Users className="h-4 w-4" />
-                <span>{department.memberCount.toLocaleString()} members</span>
+                <span>{department.followers_count.toLocaleString()} members</span>
             </div>
             <div className="flex items-center space-x-1">
                 <Clock className="h-4 w-4" />
-                <span>{department.recentActivity}</span>
+                {/* <span>{department.recentActivity}</span> todo */}
             </div>
         </div>
     )
@@ -56,36 +57,38 @@ const Stats = ({ department }: { department: Department }) => {
 const ActivityTracker = ({ department }: { department: Department }) => {
     return (
         <div className="flex items-center space-x-2">
-            <div className="flex-1 bg-gray-200 rounded-full h-2">
+            <div className="flex-1 bg-gray-100 rounded-full h-2">
                 <div
                     className="bg-blue-600 h-2 rounded-full"
                     style={{
-                        width: `${Math.min((department.activeDiscussions / 35) * 100, 100)}%`,
+                        width: `${Math.min((department.total_posts / 35) * 100, 100)}%`,
                     }}
                 />
             </div>
-            <span className="text-xs text-gray-500">Activity</span>
+            <span className="text-xs text-gray-800">Activity</span>
         </div>
     )
 }
 
 const DepartmentCard = ({ department }: { department: Department }) => {
     return (
-        <Card className="hover:shadow-lg transition-shadow duration-200 cursor-pointer h-full">
+        <Card className={`hover:shadow-lg transition-shadow duration-200 cursor-pointer h-full ${departmentMetaData.find((dept) => dept.name === department.departmentName)?.color}`}>
             <CardHeader>
                 <div className="flex items-center justify-between">
                     <div
-                        className={`w-12 h-12 rounded-lg ${department.color} flex items-center justify-center text-2xl`}
+                        className={`w-12 h-12 rounded-lg flex items-center justify-center text-2xl bg-accent`}
                     >
-                        {department.icon}
+                        {
+                            departmentMetaData.find((dept) => dept.name === department.departmentName)?.icon || <Building2 className="h-6 w-6 text-blue-600" />
+                        }
                     </div>
                     <Badge variant="secondary" className="text-xs">
-                        {department.activeDiscussions} active
+                        {department.total_posts} active
                     </Badge>
                 </div>
-                <CardTitle className="text-xl font-semibold">{department.name}</CardTitle>
-                <CardDescription className="text-sm text-gray-600 line-clamp-2">
-                    {department.description}
+                <CardTitle className="text-xl font-semibold">{department.departmentName}</CardTitle>
+                <CardDescription className="text-sm text-gray-800 line-clamp-2">
+                    {department.departmentBio}
                 </CardDescription>
             </CardHeader>
             <CardContent>
@@ -118,7 +121,7 @@ const DepartmentCards = ({ departmentsData }: DepartmentCardsProps) => {
             ) :
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {departmentsData.map((department) => (
-                        <Link key={department.id} href={`/dashboard/departments/${department.id}`}>
+                        <Link key={department._id} href={`/dashboard/departments/${department._id}`}>
                             <DepartmentCard department={department} />
                         </Link>
                     ))}

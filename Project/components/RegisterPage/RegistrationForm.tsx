@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button } from '../ui/button'
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -14,20 +14,19 @@ import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import axios from "axios"
-import { signIn } from 'next-auth/react'
+import { ApiErrorResponse } from '@/types/ApiErrorResponse'
 
-const departments = [
-    "Computer Science",
-    "Engineering",
-    "Business Administration",
-    "Medicine",
-    "Law",
-    "Arts & Humanities",
-    "Natural Sciences",
-    "Social Sciences",
-    "Education",
-    "Architecture",
-]
+interface Department {
+    _id: string;
+    departmentName: string;
+    departmentCharmanEmail: string;
+    followers_count: number;
+    total_posts: number;
+    departmentBio: string;
+    departmentCharman: string;
+    departmentTags?: string[];
+    established: string;
+}
 
 const schema = z.object({
     firstName: z.string().min(1, "First name is required"),
@@ -59,23 +58,46 @@ const RegistrationForm = () => {
             agreeToTerms: false,
             role: "student"
         }
-    })
+    });
+    const [departments, setDepartments] = useState<Department[]>([]);
     const [showPassword, setShowPassword] = useState<boolean>(false)
     const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false)
     const [isLoading, setIsLoading] = useState<boolean>(false)
+    const [isFetchingDeparts, setIsFetchingDeparts] = useState<boolean>(true);
 
     const router = useRouter()
     const { toast } = useToast();
+
+    useEffect(() => {
+        const fetchDepartments = async () => {
+            try {
+                setIsFetchingDeparts(true);
+                const response = await axios.get('/api/departments');
+                setDepartments(response.data.data || []);
+            }
+            catch (error) {
+                console.error("Error fetching departments:", error);
+            } finally {
+                setIsFetchingDeparts(false);
+            }
+        };
+        fetchDepartments();
+    }, [])
+
 
 
     const onSubmit = async (data: FormData) => {
         setIsLoading(true)
         try {
             await axios.post('/api/auth/register', data);
-            toast({ title: 'Account created successfully!', description: 'Welcome to Uni-Connect.' })
-            router.push('/login')
+            toast({ title: 'Registration successful!', description: 'Please check your email for the OTP to verify your account.', variant: "success" });
+            router.push(`/verify-account?email=${data.email}`);
         } catch (error) {
-            toast({ title: 'Registration failed', description: 'Unable to create account.', variant: 'destructive' })
+            if (axios.isAxiosError(error)) {
+                const serverError = error.response?.data as ApiErrorResponse;
+                console.log("error in signup form ==>", error);
+                toast({ title: 'Registration failed', description: serverError?.message || "Unable to create account!", variant: 'destructive' })
+            }
         } finally {
             setIsLoading(false)
         }
@@ -156,11 +178,27 @@ const RegistrationForm = () => {
                             <SelectValue placeholder="Select department" />
                         </SelectTrigger>
                         <SelectContent>
-                            {departments.map((dept) => (
-                                <SelectItem key={dept} value={dept}>
-                                    {dept}
+                            {/* {departments && departments.map((dept) => (
+                                <SelectItem key={dept._id} value={dept.departmentName}>
+                                    {dept.departmentName}
                                 </SelectItem>
-                            ))}
+                            ))} */}
+
+                            {isFetchingDeparts ? (
+                                <SelectItem value="loading" disabled>Loading departments...</SelectItem>
+                            ) : (
+                                Array.isArray(departments) && departments.length > 0 ? (
+                                    departments.map((dept) => (
+                                        <SelectItem key={dept._id} value={dept.departmentName} className='w-full'>
+                                            {dept.departmentName}
+                                        </SelectItem>
+                                    ))
+                                ) : (
+                                    <SelectItem value="no-departments" disabled>
+                                        No departments available
+                                    </SelectItem>
+                                )
+                            )}
                         </SelectContent>
                     </Select>
                     {errors.department && (
