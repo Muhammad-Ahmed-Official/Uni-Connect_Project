@@ -9,7 +9,7 @@ export const departmentSchema = z.object({
     "PHAR"   // pharmacy
   ]),
   departmentBio: z.string().min(10, "Bio must be at least 10 characters"),
-  deaprtmentchairmanEmail: z.string().email(),
+  deaprtmentchairmanEmail: z.string(),
   departmentChairman: z.string(),
   established: z.string(),
   // departmentTags: z.array(z.string()).min(1, "At least one tag is required"),
