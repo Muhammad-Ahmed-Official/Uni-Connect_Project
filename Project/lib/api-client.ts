@@ -92,9 +92,14 @@ class ApiClient {
     };
 
     
-    async getEvent(){
+    async getEvents(){
         return this.fetch("event/read")
     };
+
+
+    async updateEvent(){
+        return this.fetch("event/")
+    }
     
 
     async deleteEvent(eventId:string){
@@ -102,6 +107,12 @@ class ApiClient {
             method: "DELETE"
         })
     };
+
+    async eventStats(){
+        return this.fetch("admin/event-management/stats")
+    };
+
+
 
 
     async createDepartment(data:object){
@@ -130,6 +141,15 @@ class ApiClient {
 
     async departmentStats(){
         return this.fetch("admin/deaprtment-management/stats")
+    }
+
+
+    async userStats(){
+        return this.fetch("admin/user-management/stats")
+    }
+
+    async getUsers(){
+        return this.fetch("admin/user-management")
     }
 
 }

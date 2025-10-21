@@ -1,9 +1,11 @@
 import { EventFormValues } from '@/app/admin/events/page'
+import FileUpload from '@/components/FileUpload'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog'
 import FileInput from '@/components/ui/FileInput'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import { toast } from '@/hooks/use-toast'
 import { Loader, Loader2, Plus } from 'lucide-react'
@@ -19,11 +21,6 @@ interface HeaderProps {
 }
 
 const Header = ({ isCreateDialogOpen, setIsCreateDialogOpen, editEvent, setEditEvent, handleSaveEvent, loading }: HeaderProps) => {
-    const handleFileUpload = (files: File | null) => {
-        // if(files){
-        //     setEditEvent({...editEvent, image: files})
-        // }
-    };
 
     return (
         <div className="flex justify-between items-center flex-wrap gap-2">
@@ -44,11 +41,55 @@ const Header = ({ isCreateDialogOpen, setIsCreateDialogOpen, editEvent, setEditE
                         <DialogDescription>Add a new event to the university calendar</DialogDescription>
                     </DialogHeader>
                     <div className="grid gap-4 py-4">
-                        <div>
+                        <div className="space-y-2">
+                            <Label htmlFor="Image">Image</Label>
+                            <FileUpload onSuccess={(res) => setEditEvent({...editEvent, image:res.url})} />
+                        </div>
+                        <div className='grid grid-cols-2 gap-4'>
                             <div className="space-y-2">
                                 <Label htmlFor="title">Event Title</Label>
                                 <Input id="title" value={editEvent?.title} required onChange={(e) => setEditEvent({...editEvent, title: e?.target.value})} placeholder="Enter event title" />
                             </div>
+                            <div>
+                            <Label className='mb-2' htmlFor="new-name">Department Name</Label>
+                            <Select
+                                value={editEvent.departmentName}
+                                onValueChange={(value) =>
+                                    setEditEvent({ ...editEvent, departmentName: value })
+                            }>
+                                <SelectTrigger
+                                    id="department-select"
+                                    className="w-full cursor-pointer border-gray-300 hover:border-blue-400 focus:ring-2 focus:ring-blue-500 transition-all"
+                                >
+                                    <SelectValue placeholder="Select Department" />
+                                </SelectTrigger>
+
+                                <SelectContent className="rounded-lg shadow-lg border border-gray-200">
+                                    <SelectItem value="Computer Science" className="cursor-pointer hover:bg-blue-100 transition-colors">Computer Science
+                                    </SelectItem>
+                                    <SelectItem
+                                    value="Political Science"
+                                    className="cursor-pointer hover:bg-blue-100 transition-colors">
+                                    Political Science
+                                    </SelectItem>
+                                    <SelectItem
+                                    value="Mass Communication"
+                                    className="cursor-pointer hover:bg-blue-100 transition-colors">
+                                    Mass Communication
+                                    </SelectItem>
+                                    <SelectItem
+                                    value="LAW"
+                                    className="cursor-pointer hover:bg-blue-100 transition-colors">
+                                    Law
+                                    </SelectItem>
+                                    <SelectItem
+                                    value="Pharmacy"
+                                    className="cursor-pointer hover:bg-blue-100 transition-colors">
+                                    Pharmacy
+                                    </SelectItem>
+                                </SelectContent>
+                                </Select>
+                        </div>
                         </div>
                         <div className="space-y-2">
                             <Label htmlFor="description">Description</Label>
@@ -73,10 +114,6 @@ const Header = ({ isCreateDialogOpen, setIsCreateDialogOpen, editEvent, setEditE
                             <Input id="location" value={editEvent?.eventDetails?.location} required
                             onChange={(e) => setEditEvent({...editEvent, eventDetails: { ...editEvent.eventDetails, location: e.target.value }})} 
                             placeholder="Enter event location" />
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="Image">Image</Label>
-                            <FileInput onFileSelect={handleFileUpload} />
                         </div>
                     </div>
                     <DialogFooter >

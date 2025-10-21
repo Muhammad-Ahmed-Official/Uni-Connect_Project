@@ -32,7 +32,7 @@ export const GET = asyncHandler(async (req: NextRequest): Promise<NextResponse> 
 
   // 🔹 Filter base: exclude admin
   const filter: any = {
-    role: { $in: ["student", "department_Student_Advisor", "university_Student_Advisor"] },
+    role: { $in: ["student", "department_Student_Advisor", "admin"] },
   };
 
 
@@ -55,6 +55,7 @@ export const GET = asyncHandler(async (req: NextRequest): Promise<NextResponse> 
   const skip = (page - 1) * limit;
 
   // 🔹 Fetch users
+  console.log(filter);
   const users = await User.find(filter)
     .populate("department_id", "departmentName")
     .sort({ [sortBy]: sortOrder })

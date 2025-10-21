@@ -2,9 +2,9 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Link from "next/link"
-import { redirect, usePathname } from "next/navigation"
+import { redirect, usePathname, useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
@@ -89,10 +89,9 @@ export default function AdminLayout({
   const pathname = usePathname();
   const session = useSession();
   const role = session?.data?.user?.role;
-
   if (!session) redirect("/login");
   if (role !== "admin") redirect("/dashboard");
-
+  const router = useRouter();
   const handleLogout = () => {
     signOut()
   }
@@ -138,8 +137,8 @@ export default function AdminLayout({
             <AvatarFallback>AD</AvatarFallback>
           </Avatar>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-gray-900 truncate">Admin User</p>
-            <p className="text-xs text-gray-500 truncate">admin@university.edu</p>
+            <p className="text-sm font-medium text-gray-900 truncate">{session?.data?.user?.email}</p>
+            <p className="text-xs text-gray-500 truncate">{session?.data?.user?.firstName! + session?.data?.user?.lastName}</p>
           </div>
         </div>
       </div>
@@ -237,9 +236,9 @@ export default function AdminLayout({
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="w-56" align="end" forceMount>
                     <DropdownMenuLabel className="font-normal">
-                      <div className="flex flex-col space-y-1">
-                        <p className="text-sm font-medium leading-none">Admin User</p>
-                        <p className="text-xs leading-none text-muted-foreground">admin@university.edu</p>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-gray-900 truncate">{session?.data?.user?.email}</p>
+                        <p className="text-xs text-gray-500 truncate">{session?.data?.user?.firstName! + session?.data?.user?.lastName}</p>
                       </div>
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />

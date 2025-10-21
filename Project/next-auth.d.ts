@@ -6,6 +6,8 @@ declare module "next-auth" {
 
             id: string;
             email: string;
+            firstName?: string;
+            lastName?: string;
             name: string;
             isVerified: boolean;
             image?: string;

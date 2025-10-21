@@ -31,7 +31,7 @@ const FiltersAndSearches = ({ filteredEvents, searchTerm, setSearchTerm, statusF
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
                     </div>
-                    <Select value={statusFilter} onValueChange={setStatusFilter}>
+                    {/* <Select value={statusFilter} onValueChange={setStatusFilter}>
                         <SelectTrigger className="w-full md:w-[180px]">
                             <SelectValue placeholder="Filter by status" />
                         </SelectTrigger>
@@ -41,8 +41,8 @@ const FiltersAndSearches = ({ filteredEvents, searchTerm, setSearchTerm, statusF
                             <SelectItem value="pending">Pending</SelectItem>
                             <SelectItem value="rejected">Rejected</SelectItem>
                         </SelectContent>
-                    </Select>
-                    <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                    </Select> */}
+                    {/* <Select value={categoryFilter} onValueChange={setCategoryFilter}>
                         <SelectTrigger className="w-full md:w-[180px]">
                             <SelectValue placeholder="Filter by category" />
                         </SelectTrigger>
@@ -50,9 +50,8 @@ const FiltersAndSearches = ({ filteredEvents, searchTerm, setSearchTerm, statusF
                             <SelectItem value="all">All Categories</SelectItem>
                             <SelectItem value="University-wide">University-wide</SelectItem>
                             <SelectItem value="Department">Department</SelectItem>
-                            <SelectItem value="Club">Club</SelectItem>
                         </SelectContent>
-                    </Select>
+                    </Select> */}
                 </div>
 
                 {/* Events Grid */}

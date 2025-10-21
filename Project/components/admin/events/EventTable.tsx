@@ -10,6 +10,7 @@ import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import EditEventDialog from './EditEventDialog'
+import { apiClient } from '@/lib/api-client'
 
 interface EventTableProps {
     filteredEvents: AdminEvent[]
@@ -25,10 +26,12 @@ export interface EventFormValues {
     location: string
     image: string
     status: string
+    departmentName:string
 
 }
 
 const EventTable = ({ filteredEvents, setEvents, events }: EventTableProps) => {
+    // console.log(events)
     const [selectedEvent, setSelectedEvent] = useState<AdminEvent | null>(null)
     const [isEditDialogOpen, setIsEditDialogOpen] = useState<boolean>(false)
     const [editForm, setEditForm] = useState<EventFormValues>({
@@ -39,9 +42,10 @@ const EventTable = ({ filteredEvents, setEvents, events }: EventTableProps) => {
         location: "",
         status: "",
         image: "",
+        departmentName: "",
     })
 
-    const handleApproveEvent = (eventId: number) => {
+    const handleApproveEvent = (eventId:string) => {
         setEvents(events.map((event) => (event._id === eventId ? { ...event, status: "approved" } : event)))
         toast({
             title: "Event Approved",
@@ -49,7 +53,7 @@ const EventTable = ({ filteredEvents, setEvents, events }: EventTableProps) => {
         })
     }
 
-    const handleRejectEvent = (eventId: number) => {
+    const handleRejectEvent = (eventId: string) => {
         setEvents(events.map((event) => (event._id === eventId ? { ...event, status: "rejected" } : event)))
         toast({
             title: "Event Rejected",
@@ -57,8 +61,9 @@ const EventTable = ({ filteredEvents, setEvents, events }: EventTableProps) => {
         })
     }
 
-    const handleDeleteEvent = (eventId: number) => {
+    const handleDeleteEvent = async(eventId: string) => {
         setEvents(events.filter((event) => event._id !== eventId))
+        await apiClient.deleteEvent(eventId);
         toast({
             title: "Event Deleted",
             description: "The event has been permanently deleted.",
@@ -74,6 +79,7 @@ const EventTable = ({ filteredEvents, setEvents, events }: EventTableProps) => {
                             ...event,
                             title: editForm.title,
                             content: editForm.content,
+                            departmentName: editForm?.departmentName,
                             start_date: editForm.start_date,
                             end_date: editForm.end_date,
                             location: editForm.location,
@@ -99,11 +105,12 @@ const EventTable = ({ filteredEvents, setEvents, events }: EventTableProps) => {
         setEditForm({
             title: event?.title || "",
             content: event?.content || "",
-            start_date: event?.start_date || "",
-            end_date: event?.end_date || "",
-            location: event?.location || "",
+            start_date: event?.eventDetails.start_date || "",
+            end_date: event?.eventDetails.end_date || "",
+            location: event?.eventDetails.location || "",
             image: event?.image || "",
             status: event?.status || "",
+            departmentName: ""
         })
     }
 
