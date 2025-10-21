@@ -1,7 +1,7 @@
 import { connectDB } from "@/lib/mongodb";
 import { asyncHandler } from "@/utils/asyncHandler";
 import { nextError, nextResponse } from "@/utils/Response";
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import User from "@/models/user.model";
 import { sendEmailOTP } from "@/lib/nodemailer";
 import { generateOTP } from "@/helpers/generateOTP";
@@ -11,9 +11,7 @@ import departmentModel from "@/models/department.model";
 
 const handleStudentRegistration = async (data: any, department_id: string) => {
   const { firstName, lastName, email, password, studentId, role } = data;
-
   if (!firstName || !lastName || !email || !password || !studentId) {
-    console.log("me andar hon!");
     return nextError(400, "Missing required Fields!");
   }
 
@@ -51,17 +49,11 @@ const handleStudentRegistration = async (data: any, department_id: string) => {
     return nextError(500, "Failed to save OTP. Please try again.", error);
   }
 
-  try {
-    const emailResponse = await sendEmailOTP(email, verifyCode);
-    if (!emailResponse.success) {
-      return nextError(500, emailResponse.message);
-    }
-    return nextResponse(200, `OTP sent to ${email}`);
-  } catch (err) {
-    console.log(err)
-    return nextError(500, "Internal Server Error");
+  const emailResponse = await sendEmailOTP(email, verifyCode);
+  if (!emailResponse.success) {
+    return nextError(500, emailResponse.message);
   }
-
+  return nextResponse(200, `OTP sent to ${email}`);
 };
 
 
@@ -139,8 +131,6 @@ const handle_Advisor_Registration = async (data: any, department_id: string) => 
     user = await User.create(userPayload);
   }
 
-  
-
   const { success, error } = await safeSet(redisKey, verifyCode, 60 * 3);
 
   if (!success) {
@@ -162,7 +152,7 @@ const handle_Advisor_Registration = async (data: any, department_id: string) => 
 };
 
 
-export const POST = asyncHandler(async (request: NextRequest) => {
+export const POST = asyncHandler(async (request: NextRequest): Promise<NextResponse> => {
   const data = await request.json();
 
   if (!data) return nextError(400, "Missing Fields");
@@ -170,8 +160,8 @@ export const POST = asyncHandler(async (request: NextRequest) => {
 
   await connectDB();
 
-  const department_id = await departmentModel.findOne({deapartmentName:data.departmentName}).select("_id")
-  if(!department_id) return nextError(400,"Department not found")
+  const department_id = await departmentModel.findOne({ deapartmentName: data.departmentName }).select("_id")
+  if (!department_id) return nextError(400, "Department not found")
 
   switch (data?.role) {
     case "student":
