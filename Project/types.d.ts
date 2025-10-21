@@ -59,15 +59,17 @@ declare global {
     }
 
     interface AdminDepartment {
-        _id?: number
+        _id?: string
         departmentName: string
         departmentBio: string
         departmentChairman: string
         deaprtmentchairmanEmail: string
         headAvatar?: string
         totalStudents: number
-        totalAdvisors: number
-        activeEscalations: number
+        totalAdvisors?: number
+        totalPosts?: number
+        activeEscalations?: number
+        totalDepartments?: number
         totalEvents: number
         established: string
         advisors: {

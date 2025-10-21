@@ -5,6 +5,7 @@ import ViewDeparmentDialog from './ViewDeparmentDialog'
 import EditDeparmentDialog from './EditDeparmentDialog'
 import DeleteDepartmentDialog from './DeleteDepartmentDialog'
 import DepartmentTableCard from './DepartmentTableCard'
+import { apiClient } from '@/lib/api-client'
 
 interface DepartmentsTableProps {
     filteredDepartments: AdminDepartment[]
@@ -44,7 +45,8 @@ const DepartmentsTable = ({ filteredDepartments, setDepartments }: DepartmentsTa
         setIsEditDialogOpen(true)
     }
 
-    const handleDeleteDepartment = (departmentId: number) => {
+    const handleDeleteDepartment = async(departmentId: string) => {
+        await apiClient.deleteDepartment(departmentId);
         setDepartments(filteredDepartments.filter((dept) => dept._id !== departmentId))
         toast({
             title: "Department Deleted",

@@ -1,13 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card"
-import { Building2, MessageSquare, UserCheck, Users } from "lucide-react"
+import { Building2, Calendar, MessageSquare, UserCheck, Users } from "lucide-react"
 
-const StatsCards = ({ departments }: { departments: AdminDepartment[]; }) => {
-    const totalStats: Record<string, number> = {
-        totalStudents: departments.reduce((sum, dept) => sum + dept.totalStudents, 0),
-        totalAdvisors: departments.reduce((sum, dept) => sum + dept.totalAdvisors, 0),
-        totalEscalations: departments.reduce((sum, dept) => sum + dept.activeEscalations, 0),
-        totalEvents: departments.reduce((sum, dept) => sum + dept.totalEvents, 0),
-    }
+const StatsCards = ({ departments }: { departments:any }) => {
     return (
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             <Card className="border-0 shadow-sm">
@@ -15,7 +9,7 @@ const StatsCards = ({ departments }: { departments: AdminDepartment[]; }) => {
                     <div className="flex items-center justify-between">
                         <div>
                             <p className="text-sm font-medium text-gray-600">Total Departments</p>
-                            <p className="text-2xl font-bold text-gray-900">{departments.length}</p>
+                            <p className="text-2xl font-bold text-gray-900">{departments?.totalDepartments ? departments?.totalDepartments : 0}</p>
                         </div>
                         <Building2 className="h-8 w-8 text-blue-600" />
                     </div>
@@ -26,7 +20,7 @@ const StatsCards = ({ departments }: { departments: AdminDepartment[]; }) => {
                     <div className="flex items-center justify-between">
                         <div>
                             <p className="text-sm font-medium text-gray-600">Total Students</p>
-                            <p className="text-2xl font-bold text-gray-900">{totalStats.totalStudents.toLocaleString()}</p>
+                            <p className="text-2xl font-bold text-gray-900">{departments?.totalStudents ? departments?.totalStudents : 0}</p>
                         </div>
                         <Users className="h-8 w-8 text-green-600" />
                     </div>
@@ -36,8 +30,8 @@ const StatsCards = ({ departments }: { departments: AdminDepartment[]; }) => {
                 <CardContent className="p-6">
                     <div className="flex items-center justify-between">
                         <div>
-                            <p className="text-sm font-medium text-gray-600">Total Advisors</p>
-                            <p className="text-2xl font-bold text-gray-900">{totalStats.totalAdvisors}</p>
+                            <p className="text-sm font-medium text-gray-600">Total Posts</p>
+                            <p className="text-2xl font-bold text-gray-900">{departments?.totalPosts ? departments?.totalPosts : 0}</p>
                         </div>
                         <UserCheck className="h-8 w-8 text-purple-600" />
                     </div>
@@ -47,10 +41,10 @@ const StatsCards = ({ departments }: { departments: AdminDepartment[]; }) => {
                 <CardContent className="p-6">
                     <div className="flex items-center justify-between">
                         <div>
-                            <p className="text-sm font-medium text-gray-600">Active Escalations</p>
-                            <p className="text-2xl font-bold text-gray-900">{totalStats.totalEscalations}</p>
+                            <p className="text-sm font-medium text-gray-600">Total Events</p>
+                            <p className="text-2xl font-bold text-gray-900">{departments?.totalEvents ? departments?.totalEvents : 0}</p>
                         </div>
-                        <MessageSquare className="h-8 w-8 text-orange-600" />
+                        <Calendar className="h-8 w-8 text-orange-600" />
                     </div>
                 </CardContent>
             </Card>
