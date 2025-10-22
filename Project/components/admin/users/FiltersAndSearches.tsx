@@ -40,7 +40,7 @@ const FiltersAndSearches = ({ users }: { users: User[] }) => {
                             <SelectItem value="admin">Administrators</SelectItem>
                         </SelectContent>
                     </Select>
-                    <Select value={statusFilter} onValueChange={setStatusFilter}>
+                    {/* <Select value={statusFilter} onValueChange={setStatusFilter}>
                         <SelectTrigger className="w-full md:w-48">
                             <SelectValue placeholder="Filter by status" />
                         </SelectTrigger>
@@ -50,7 +50,7 @@ const FiltersAndSearches = ({ users }: { users: User[] }) => {
                             <SelectItem value="suspended">Suspended</SelectItem>
                             <SelectItem value="inactive">Inactive</SelectItem>
                         </SelectContent>
-                    </Select>
+                    </Select> */}
                 </div>
 
                 {/* Users Table */}

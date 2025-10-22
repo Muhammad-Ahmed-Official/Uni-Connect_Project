@@ -22,7 +22,7 @@ const EditDeparmentDialog = ({ isEditDialogOpen, setIsEditDialogOpen, editForm, 
                     <DialogDescription>Update department information and settings</DialogDescription>
                 </DialogHeader>
                 <div className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4">
+                    {/* <div className="grid grid-cols-2 gap-4">
                         <div>
                             <Label className="mb-2" htmlFor="name">Department Name</Label>
                             <Input
@@ -41,7 +41,7 @@ const EditDeparmentDialog = ({ isEditDialogOpen, setIsEditDialogOpen, editForm, 
                                 placeholder="e.g., 1991"
                             />
                         </div>
-                    </div>
+                    </div> */}
                     <div>
                         <Label className="mb-2" htmlFor="description">Description</Label>
                         <Textarea

@@ -15,12 +15,12 @@ interface UserTableRowProps {
     setIsDropdownOpen: React.Dispatch<React.SetStateAction<number | null>>;
     handleViewUser: (user: User) => void;
     handleEditUser: (user: User) => void;
-    handleSuspendUser: (userId: number) => void;
+    // handleSuspendUser: (userId: number) => void;
     setUserToDelete: (user: User) => void
     setDeleteDialogOpen: (open: boolean) => void
 }
 
-const UserTableRow = ({ user, isDropdownOpen, roleColors, statusColors, setIsDropdownOpen, handleViewUser, handleEditUser, handleSuspendUser, setUserToDelete, setDeleteDialogOpen }: UserTableRowProps) => {
+const UserTableRow = ({ user, isDropdownOpen, roleColors, statusColors, setIsDropdownOpen, handleViewUser, handleEditUser, setUserToDelete, setDeleteDialogOpen }: UserTableRowProps) => {
     return (
         <TableRow key={user.id}>
             <TableCell>
@@ -75,7 +75,7 @@ const UserTableRow = ({ user, isDropdownOpen, roleColors, statusColors, setIsDro
                             <Eye className="mr-2 h-4 w-4" />
                             View Details
                         </DropdownMenuItem>
-                        <DropdownMenuItem
+                        {/* <DropdownMenuItem
                             onClick={() => {
                                 handleEditUser(user);
                                 setIsDropdownOpen(null);
@@ -83,9 +83,9 @@ const UserTableRow = ({ user, isDropdownOpen, roleColors, statusColors, setIsDro
                         >
                             <Edit className="mr-2 h-4 w-4" />
                             Edit User
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem
+                        </DropdownMenuItem> */}
+                        {/* <DropdownMenuSeparator /> */}
+                        {/* <DropdownMenuItem
                             onClick={() => {
                                 handleSuspendUser(user.id);
                                 setIsDropdownOpen(null);
@@ -93,7 +93,7 @@ const UserTableRow = ({ user, isDropdownOpen, roleColors, statusColors, setIsDro
                         >
                             <UserX className="mr-2 h-4 w-4" />
                             {user.status === "suspended" ? "Activate" : "Suspend"} User
-                        </DropdownMenuItem>
+                        </DropdownMenuItem> */}
                         <DropdownMenuItem
                             onClick={() => {
                                 setUserToDelete(user)

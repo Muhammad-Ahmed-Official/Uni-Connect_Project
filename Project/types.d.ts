@@ -9,7 +9,7 @@ declare global {
     interface Activity {
         id: number;
         type: string;
-        message: string;
+        title: string;
         time: string;
         icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
         color: string;
@@ -18,7 +18,7 @@ declare global {
     interface Stat {
         title: string
         value: string
-        change: string
+        // change: string
         trend: "up" | "down"
         color: string
         icon: React.ComponentType<React.SVGProps<SVGSVGElement>>
