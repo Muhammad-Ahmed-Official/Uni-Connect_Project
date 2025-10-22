@@ -30,7 +30,7 @@ export default function PlatformSettingsTab({
             >
                 <div className="space-y-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
+                        <div className="flex flex-col gap-2">
                             <Label htmlFor="siteName">Site Name</Label>
                             <Input
                                 id="siteName"
@@ -38,18 +38,9 @@ export default function PlatformSettingsTab({
                                 onChange={(e) => updateSetting('siteName', e.target.value)}
                             />
                         </div>
-                        <div>
-                            <Label htmlFor="sessionTimeout">Session Timeout (hours)</Label>
-                            <Input
-                                id="sessionTimeout"
-                                type="number"
-                                value={settings.sessionTimeout}
-                                onChange={(e) => updateSetting('sessionTimeout', e.target.value)}
-                            />
-                        </div>
                     </div>
 
-                    <div>
+                    <div className="flex gap-2 flex-col">
                         <Label htmlFor="siteDescription">Site Description</Label>
                         <Textarea
                             id="siteDescription"
@@ -59,39 +50,14 @@ export default function PlatformSettingsTab({
                         />
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <Label htmlFor="maxFileUploadSize">Max File Upload Size (MB)</Label>
-                            <Input
-                                id="maxFileUploadSize"
-                                type="number"
-                                value={settings.maxFileUploadSize}
-                                onChange={(e) => updateSetting('maxFileUploadSize', e.target.value)}
-                            />
-                        </div>
-                    </div>
-
-                    <div className="space-y-4">
+                    <div className="space-y-4"> 
                         <SettingsSwitch
                             id="maintenanceMode"
                             label="Maintenance Mode"
                             description="Temporarily disable site access for maintenance"
                             checked={settings.maintenanceMode}
                             onCheckedChange={(checked) => updateSetting('maintenanceMode', checked)}
-                        />
-                        <SettingsSwitch
-                            id="registrationEnabled"
-                            label="User Registration"
-                            description="Allow new users to register accounts"
-                            checked={settings.registrationEnabled}
-                            onCheckedChange={(checked) => updateSetting('registrationEnabled', checked)}
-                        />
-                        <SettingsSwitch
-                            id="emailVerificationRequired"
-                            label="Email Verification Required"
-                            description="Require email verification for new accounts"
-                            checked={settings.emailVerificationRequired}
-                            onCheckedChange={(checked) => updateSetting('emailVerificationRequired', checked)}
+                            disabled={true}
                         />
                     </div>
 
