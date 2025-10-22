@@ -12,7 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 import { PlatformSettings, SecuritySettings, NotificationSettings, UserSettings } from "@/types/settings";
 import axios from "axios";
 import { useSession } from "next-auth/react";
-import ComingSoonWrapper from "@/components/shared/ComingSoonWrapper";
+import { ComingSoonWrapper } from "@/components/shared/ComingSoonWrapper";
 
 export default function AdminSettingsPage() {
   const [isLoading, setIsLoading] = useState(false);
