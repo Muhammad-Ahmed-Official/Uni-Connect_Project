@@ -61,24 +61,21 @@ export function OTPVerification({ email }: { email: string | null }) {
 
     const handleVerify = async () => {
         const otpCode = otp.join("")
-
+        setIsLoading(true);
         if (otpCode.length !== 6) {
             setError("Please enter all 6 digits")
             return
         }
-
-        setError("")
-        setIsLoading(true)
-
         try {
             await axios.post("/api/auth/verifyCode", { code: otpCode, email: email as string })
 
-            toast({ title: 'Verification successful!', description: 'Your account has been verified successfully.', variant: "success"});
+            toast({ title: 'Verification successful!', description: 'Your account has been verified successfully.', variant: "success" });
             redirect('/login');
         } catch (err) {
             setError("Verification failed. Please try again.")
         } finally {
             setIsLoading(false)
+            setError("")
         }
     }
 
