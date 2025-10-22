@@ -3,12 +3,13 @@ import User from "@/models/user.model";
 import PostModel from "@/models/post.model";
 import Event from "@/models/event.model";
 import DepartmentModel from "@/models/department.model";
-import { DocumentSchema } from "@/models/document.schema"; 
+// import { DocumentSchema } from "@/models/document.schema"; 
 import { asyncHandler } from "@/utils/asyncHandler";
 import { nextError, nextResponse } from "@/utils/Response";
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/utils/authOptions.util";
+import DocumentSchema from "@/models/document.schema";
 
 export const GET = asyncHandler(async (req: NextRequest): Promise<NextResponse> => {
   await connectDB();

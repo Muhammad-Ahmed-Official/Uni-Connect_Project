@@ -47,8 +47,11 @@ class ApiClient {
     };
 
 
-    async updateEvent(){
-        return this.fetch("event/")
+    async updateEvent(data:any, eventId:string){
+        return this.fetch(`event/update?eventId=${eventId}`, {
+            method: "PUT",
+            body: data
+        })
     }
     
 
@@ -77,8 +80,11 @@ class ApiClient {
     };
 
 
-    async updateDepartment(){
-        return this.fetch("admin/")
+    async updateDepartment(departmentId:string, data:any){
+        return this.fetch(`admin/add-department/update?departmentId=${departmentId}`, {
+            method: "PUT",
+            body: data
+        })
     };
     
 
