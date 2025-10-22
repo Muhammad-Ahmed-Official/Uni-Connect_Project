@@ -1,6 +1,7 @@
 import { connectDB } from "@/lib/mongodb";
 import departmentModel from "@/models/department.model";
 import Event from "@/models/event.model";
+import { eventSchema } from "@/schemas/event.schema";
 import { postSchema } from "@/schemas/post.schema";
 import { asyncHandler } from "@/utils/asyncHandler";
 import { authOptions } from "@/utils/authOptions.util";
@@ -37,7 +38,7 @@ export const POST = asyncHandler(async (req: NextRequest): Promise<NextResponse>
   console.log("Request Body:", body);
 
   // ✅ Validate data using Zod schema
-  const result = postSchema.safeParse(body);
+  const result = eventSchema.safeParse(body);
   if (!result.success) {
     const firstError = result.error.errors[0];
     return nextError(400, `Validation Error: ${firstError.message}`);

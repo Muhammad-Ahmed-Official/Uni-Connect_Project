@@ -54,7 +54,7 @@ const UsersTable = ({ usersData }: { usersData: User[] }) => {
         const matchesSearch =
             user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
             user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            user.department.toLowerCase().includes(searchTerm.toLowerCase())
+            user?.department?.toLowerCase().includes(searchTerm.toLowerCase())
         const matchesRole = roleFilter === "all" || user.role === roleFilter
         const matchesStatus = statusFilter === "all" || user.status === statusFilter
         return matchesSearch && matchesRole && matchesStatus
@@ -121,7 +121,7 @@ const UsersTable = ({ usersData }: { usersData: User[] }) => {
                                 setIsDropdownOpen={setIsDropdownOpen}
                                 handleViewUser={handleViewUser}
                                 handleEditUser={handleEditUser}
-                                handleSuspendUser={handleSuspendUser}
+                                // handleSuspendUser={handleSuspendUser}
                                 setUserToDelete={setUserToDelete}
                                 setDeleteDialogOpen={setDeleteDialogOpen}
                             />

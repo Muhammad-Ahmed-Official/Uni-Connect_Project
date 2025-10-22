@@ -33,7 +33,7 @@ const DepartmentTableCard = ({ department, isDropdownOpen, setIsDropdownOpen, ha
                         </div>
                     </div>
                     <DropdownMenu
-                        open={isDropdownOpen === department._id}
+                        open={isDropdownOpen === department?._id}
                         onOpenChange={(open) => { setIsDropdownOpen(open ? department._id! : null) }}
                     >
                         <DropdownMenuTrigger asChild>

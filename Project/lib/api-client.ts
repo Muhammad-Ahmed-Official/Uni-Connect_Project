@@ -23,65 +23,15 @@ class ApiClient {
         return response.json();
     };
 
+    
     // Admin Dashboard
-    async createPost(data:object){
-        return this.fetch("posts/create", {
-            method: "POST"
-        })
-    };
+    async getDashboardStats(){
+        return this.fetch("admin/dashboard");
+    }
 
-    async getDepartmentPost(department:string){
-        return this.fetch(`posts/read/get-dept-post?department=${department}`)
-    };
-
-    async getPost(postId:string){
-        return this.fetch(`posts/read/get-single-post?postId=${postId}`)
-    };
-
-    async deletePost(postId:string){
-        return this.fetch(`posts/delete?postId=${postId}`, {
-            method: "DELETE"
-        })
-    };
-
-
-
-    async createComment(){
-        return this.fetch("comment/create", {
-            method: "POST"
-        })
-    };
-
-    
-    async getComment(entityId:string){
-        return this.fetch(`comment/read?entityId=${entityId}`)
-    };
-    
-
-    async deleteComment(commentId:string){
-        return this.fetch(`comment/delete?commentId=${commentId}`, {
-            method: "DELETE"
-        })
-    };
-    
-    
-    async replyComment(){
-        return this.fetch("comment/create/reply")
-    };
-
-
-
-    async createLike(){
-        return this.fetch("like/create", {
-            method: "POST"
-        })
-    };
-
-    
-    async getLike(){
-        return this.fetch("")
-    };
-
+    async getDashboardActivity(){
+        return this.fetch("admin/dashboard/recent-activity");
+    }
 
 
     async createEvent(data:object){
@@ -92,9 +42,14 @@ class ApiClient {
     };
 
     
-    async getEvent(){
+    async getEvents(){
         return this.fetch("event/read")
     };
+
+
+    async updateEvent(){
+        return this.fetch("event/")
+    }
     
 
     async deleteEvent(eventId:string){
@@ -102,6 +57,11 @@ class ApiClient {
             method: "DELETE"
         })
     };
+
+    async eventStats(){
+        return this.fetch("admin/event-management/stats")
+    };
+
 
 
     async createDepartment(data:object){
@@ -130,6 +90,15 @@ class ApiClient {
 
     async departmentStats(){
         return this.fetch("admin/deaprtment-management/stats")
+    }
+
+
+    async userStats(){
+        return this.fetch("admin/user-management/stats")
+    }
+
+    async getUsers(){
+        return this.fetch("admin/user-management")
     }
 
 }

@@ -55,7 +55,7 @@ export const GET = asyncHandler(async (req: NextRequest): Promise<NextResponse> 
   ];
 
   // 🔹 Sort by latest first
-  activities.sort((a, b) => b.time.getTime() - a.time.getTime());
+  activities.sort((a, b) => b?.time?.getTime() - a?.time?.getTime());
 
   // 🔹 Limit to top 5 most recent
   const latestActivities = activities.slice(0, 5);

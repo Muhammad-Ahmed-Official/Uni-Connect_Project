@@ -9,10 +9,10 @@ const Header = () => {
                 <h1 className="text-3xl font-bold text-gray-900">User Management</h1>
                 <p className="text-gray-600 mt-1">Manage all registered users, advisors, and administrators.</p>
             </div>
-            <Button className="bg-blue-600 hover:bg-blue-700">
+            {/* <Button className="bg-blue-600 hover:bg-blue-700">
                 <Plus className="h-4 w-4 mr-2" />
                 Add New User
-            </Button>
+            </Button> */}
         </div>
     )
 }

@@ -9,7 +9,7 @@ declare global {
     interface Activity {
         id: number;
         type: string;
-        message: string;
+        title: string;
         time: string;
         icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
         color: string;
@@ -18,7 +18,7 @@ declare global {
     interface Stat {
         title: string
         value: string
-        change: string
+        // change: string
         trend: "up" | "down"
         color: string
         icon: React.ComponentType<React.SVGProps<SVGSVGElement>>
@@ -38,7 +38,7 @@ declare global {
         name: string
         email: string
         role: string
-        department: string
+        department?: string
         status: string
         status: string
         joinDate: string
@@ -80,14 +80,17 @@ declare global {
     }
 
     interface AdminEvent {
-        _id: number
+        _id: string
         title: string
         content: string
         image: string
-        start_date: string
-        end_date: string
-        location: string
+        eventDetails: {
+            start_date: string
+            end_date: string
+            location: string
+        }
         status: string
+        departmentName: string,
         // category: string
         // rsvps: number
         // capacity: number

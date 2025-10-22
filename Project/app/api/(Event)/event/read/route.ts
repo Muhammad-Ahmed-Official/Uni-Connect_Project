@@ -10,15 +10,21 @@ export const GET = asyncHandler(async (req: NextRequest): Promise<NextResponse> 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  const events = await Event.find({
-    start_date: { $gte: today }
+  let events = await Event.find({
+    "eventDetails.start_date": { $gte: today }
   })
-    .sort({ start_date: 1 }) 
+    // .populate("department_id", "departmentName") // fetch only departmentName
+    .sort({ "eventDetails.start_date": 1 })
     .lean();
 
   if (!events || events.length === 0) {
     return nextError(404, "No upcoming events found");
   }
+
+  // events = events.map(event => ({
+  //   ...event,
+  //   departmentName: event.department_id?.departmentName || "Unknown",
+  // }));
 
   return nextResponse(200, "Upcoming events fetched successfully", events);
 });

@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { DepartmentFormValues } from '@/app/admin/departments/page'
 import { Loader } from 'lucide-react'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
 interface AddDepartmentDialogProps {
     isAddDialogOpen: boolean
@@ -28,12 +29,43 @@ const AddDepartmentDialog = ({ isAddDialogOpen, setIsAddDialogOpen, editForm, se
                     <div className="grid grid-cols-2 gap-4">
                         <div>
                             <Label className='mb-2' htmlFor="new-name">Department Name</Label>
-                            <Input
-                                id="new-name"
+                            <Select
                                 value={editForm.departmentName}
-                                onChange={(e) => setEditForm({ ...editForm, departmentName: e.target.value })}
-                                placeholder="e.g., Computer Science"
-                            />
+                                onValueChange={(value) =>
+                                    setEditForm({ ...editForm, departmentName: value })
+                            }>
+                                <SelectTrigger
+                                    id="department-select"
+                                    className="w-full cursor-pointer border-gray-300 hover:border-blue-400 focus:ring-2 focus:ring-blue-500 transition-all"
+                                >
+                                    <SelectValue placeholder="Select Department" />
+                                </SelectTrigger>
+
+                                <SelectContent className="rounded-lg shadow-lg border border-gray-200">
+                                    <SelectItem value="CS" className="cursor-pointer hover:bg-blue-100 transition-colors">Computer Science
+                                    </SelectItem>
+                                    <SelectItem
+                                    value="POL"
+                                    className="cursor-pointer hover:bg-blue-100 transition-colors">
+                                    Political Science
+                                    </SelectItem>
+                                    <SelectItem
+                                    value="MC"
+                                    className="cursor-pointer hover:bg-blue-100 transition-colors">
+                                    Mass Communication
+                                    </SelectItem>
+                                    <SelectItem
+                                    value="LAW"
+                                    className="cursor-pointer hover:bg-blue-100 transition-colors">
+                                    Law
+                                    </SelectItem>
+                                    <SelectItem
+                                    value="PHAR"
+                                    className="cursor-pointer hover:bg-blue-100 transition-colors">
+                                    Pharmacy
+                                    </SelectItem>
+                                </SelectContent>
+                                </Select>
                         </div>
                         <div>
                             <Label className='mb-2' htmlFor="new-name">Established Year</Label>
@@ -81,7 +113,7 @@ const AddDepartmentDialog = ({ isAddDialogOpen, setIsAddDialogOpen, editForm, se
                     <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>
                         Cancel
                     </Button>
-                    <Button className='cursor-pointer' onClick={handleSaveDepartment}>{loading ? <span> <Loader className='animate-spin' /> Processing </span> : "Create Department"}</Button>
+                    <Button className='cursor-pointer' onClick={handleSaveDepartment}>{loading ? <span className='flex items-center gap-2'> <Loader className='animate-spin ' /> Processing </span> : "Create Department"}</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
