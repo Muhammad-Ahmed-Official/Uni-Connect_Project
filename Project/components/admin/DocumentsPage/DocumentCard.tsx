@@ -7,39 +7,39 @@ import { Document } from "@/types/admin-documents";
 interface DocumentCardProps {
     document: Document;
     type: "past-paper" | "policy-doc";
-    onApprove: (id: number, type: string) => void;
+    // onApprove: (id: number, type: string) => void;
     onReject: (id: number, type: string) => void;
     onDelete: (id: number, type: string) => void;
 }
 
-export default function DocumentCard({ document, type, onApprove, onReject, onDelete }: DocumentCardProps) {
-    const getStatusBadge = (status: string) => {
-        switch (status) {
-            case "approved":
-                return (
-                    <Badge className="bg-green-100 text-green-800">
-                        <CheckCircle className="w-3 h-3 mr-1" />
-                        Approved
-                    </Badge>
-                );
-            case "pending":
-                return (
-                    <Badge className="bg-yellow-100 text-yellow-800">
-                        <AlertCircle className="w-3 h-3 mr-1" />
-                        Pending
-                    </Badge>
-                );
-            case "rejected":
-                return (
-                    <Badge className="bg-red-100 text-red-800">
-                        <XCircle className="w-3 h-3 mr-1" />
-                        Rejected
-                    </Badge>
-                );
-            default:
-                return <Badge variant="secondary">{status}</Badge>;
-        }
-    };
+export default function DocumentCard({ document, type, onReject, onDelete }: DocumentCardProps) {
+    // const getStatusBadge = (status: string) => {
+    //     switch (status) {
+    //         case "approved":
+    //             return (
+    //                 <Badge className="bg-green-100 text-green-800">
+    //                     <CheckCircle className="w-3 h-3 mr-1" />
+    //                     Approved
+    //                 </Badge>
+    //             );
+    //         case "pending":
+    //             return (
+    //                 <Badge className="bg-yellow-100 text-yellow-800">
+    //                     <AlertCircle className="w-3 h-3 mr-1" />
+    //                     Pending
+    //                 </Badge>
+    //             );
+    //         case "rejected":
+    //             return (
+    //                 <Badge className="bg-red-100 text-red-800">
+    //                     <XCircle className="w-3 h-3 mr-1" />
+    //                     Rejected
+    //                 </Badge>
+    //             );
+    //         default:
+    //             return <Badge variant="secondary">{status}</Badge>;
+    //     }
+    // };
 
     const renderDocumentDetails = () => {
         if (type === "past-paper") {
@@ -90,10 +90,10 @@ export default function DocumentCard({ document, type, onApprove, onReject, onDe
             <CardContent className="p-6">
                 <div className="flex items-start justify-between">
                     <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-2">
+                        {/* <div className="flex items-center gap-3 mb-2">
                             <h3 className="text-lg font-semibold">{document.title}</h3>
                             {getStatusBadge(document.status)}
-                        </div>
+                        </div> */}
 
                         {renderDocumentDetails()}
 
@@ -116,7 +116,7 @@ export default function DocumentCard({ document, type, onApprove, onReject, onDe
                             <Edit className="w-3 h-3" />
                         </Button>
 
-                        {document.status === "pending" && (
+                        {/* {document.status === "pending" && (
                             <>
                                 <Button
                                     size="sm"
@@ -133,7 +133,7 @@ export default function DocumentCard({ document, type, onApprove, onReject, onDe
                                     <XCircle className="w-3 h-3" />
                                 </Button>
                             </>
-                        )}
+                        )} */}
 
                         <Button
                             size="sm"
