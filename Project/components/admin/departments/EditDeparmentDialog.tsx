@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { DepartmentFormValues } from "@/app/admin/departments/page"
+import { Loader } from "lucide-react"
 
 interface EditDeparmentDialogProps {
     isEditDialogOpen: boolean
@@ -11,9 +12,10 @@ interface EditDeparmentDialogProps {
     editForm: DepartmentFormValues
     setEditForm: React.Dispatch<React.SetStateAction<DepartmentFormValues>>
     handleSaveDepartment: () => void
+    loading: boolean
 }
 
-const EditDeparmentDialog = ({ isEditDialogOpen, setIsEditDialogOpen, editForm, setEditForm, handleSaveDepartment }: EditDeparmentDialogProps) => {
+const EditDeparmentDialog = ({ isEditDialogOpen, setIsEditDialogOpen, editForm, setEditForm, handleSaveDepartment, loading }: EditDeparmentDialogProps) => {
     return (
         <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
             <DialogContent className="max-w-2xl">
@@ -22,26 +24,6 @@ const EditDeparmentDialog = ({ isEditDialogOpen, setIsEditDialogOpen, editForm, 
                     <DialogDescription>Update department information and settings</DialogDescription>
                 </DialogHeader>
                 <div className="space-y-4">
-                    {/* <div className="grid grid-cols-2 gap-4">
-                        <div>
-                            <Label className="mb-2" htmlFor="name">Department Name</Label>
-                            <Input
-                                id="name"
-                                value={editForm.departmentName}
-                                onChange={(e) => setEditForm({ ...editForm, departmentName: e.target.value })}
-                            />
-                        </div>
-                        <div>
-                            <Label className='mb-2' htmlFor="new-name">Established Year</Label>
-                            <Input
-                                id="new-name"
-                                type='number'
-                                value={editForm.established}
-                                onChange={(e) => setEditForm({ ...editForm, established: e.target.value })}
-                                placeholder="e.g., 1991"
-                            />
-                        </div>
-                    </div> */}
                     <div>
                         <Label className="mb-2" htmlFor="description">Description</Label>
                         <Textarea
@@ -75,7 +57,7 @@ const EditDeparmentDialog = ({ isEditDialogOpen, setIsEditDialogOpen, editForm, 
                     <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>
                         Cancel
                     </Button>
-                    <Button className="cursor-pointer" onClick={handleSaveDepartment}>Save Changes</Button>
+                    <Button className="cursor-pointer" onClick={handleSaveDepartment}>{loading ? <span className="flex items-center gap-2"> <Loader className="animate-spin" /> Upading... </span>  : "Save Changes"}</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>

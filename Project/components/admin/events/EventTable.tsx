@@ -21,28 +21,33 @@ interface EventTableProps {
 export interface EventFormValues {
     title: string
     content: string
-    start_date: string,
-    end_date: string
-    location: string
-    image: string
-    status: string
     departmentName:string
+    eventDetails: {
+        start_date: string,
+        end_date: string
+        location: string
+    }
+    // image: string
+    // status: string
 
 }
 
 const EventTable = ({ filteredEvents, setEvents, events }: EventTableProps) => {
-    // console.log(events)
+    console.log(events)
     const [selectedEvent, setSelectedEvent] = useState<AdminEvent | null>(null)
     const [isEditDialogOpen, setIsEditDialogOpen] = useState<boolean>(false)
+    const [loading, setLoading] = useState<boolean>(false)
     const [editForm, setEditForm] = useState<EventFormValues>({
         title: "",
-        content: "",
-        start_date: "",
-        end_date: "",
-        location: "",
-        status: "",
-        image: "",
         departmentName: "",
+        content: "",
+        eventDetails: {
+            start_date: "",
+            end_date: "",
+            location: "",
+        }
+        // status: "",
+        // image: "",
     })
 
     const handleApproveEvent = (eventId:string) => {
@@ -62,7 +67,7 @@ const EventTable = ({ filteredEvents, setEvents, events }: EventTableProps) => {
     }
 
     const handleDeleteEvent = async(eventId: string) => {
-        setEvents(events.filter((event) => event._id !== eventId))
+        setEvents(events.filter((event) => event?._id !== eventId))
         await apiClient.deleteEvent(eventId);
         toast({
             title: "Event Deleted",
@@ -70,31 +75,62 @@ const EventTable = ({ filteredEvents, setEvents, events }: EventTableProps) => {
         })
     }
 
-    const handleSaveEvent = () => {
+    const handleSaveEvent = async() => {
+        setLoading(true);
         if (selectedEvent) {
             setEvents(
                 filteredEvents.map((event) =>
-                    event._id === selectedEvent._id
+                    event?._id === selectedEvent?._id
                         ? {
                             ...event,
-                            title: editForm.title,
-                            content: editForm.content,
+                            title: editForm?.title,
+                            content: editForm?.content,
                             departmentName: editForm?.departmentName,
-                            start_date: editForm.start_date,
-                            end_date: editForm.end_date,
-                            location: editForm.location,
-                            image: editForm.image,
-                            status: editForm.status,
+                            start_date: editForm?.eventDetails?.start_date,
+                            end_date: editForm?.eventDetails?.end_date,
+                            location: editForm?.eventDetails.location,
+                            // image: editForm.image,
+                            // status: editForm.status,
                         }
                         : event
                 )
             )
-
-            setIsEditDialogOpen(false)
-            toast({
-                title: "Event Updated",
-                description: "The event has been successfully updated.",
-            })
+            setEvents((prev) =>
+                prev.map((event) =>
+                    event._id === selectedEvent?._id
+                    ? {
+                        ...event,
+                        title: editForm?.title,
+                        content: editForm?.content,
+                        departmentName: editForm?.departmentName,
+                        eventDetails: {
+                            ...event.eventDetails,
+                            start_date: editForm?.eventDetails?.start_date,
+                            end_date: editForm?.eventDetails?.end_date,
+                            location: editForm.eventDetails?.location,
+                        },
+                        // image: newImage,
+                        // status: newStatus,
+                        }
+                    : event
+                )
+            );
+            try {
+                await apiClient.updateEvent(editForm, selectedEvent?._id)
+                toast({
+                    title: "Event Updated",
+                    description: "The event has been successfully updated.",
+                })
+            } catch (error) {
+                 toast({
+                    title: "Update Failed",
+                    description: "Something went wrong while updating the event. Please try again.",
+                    variant: "destructive",
+                });
+            }finally{
+                setIsEditDialogOpen(false);
+                setLoading(false);
+            }
         }
 
     }
@@ -105,12 +141,14 @@ const EventTable = ({ filteredEvents, setEvents, events }: EventTableProps) => {
         setEditForm({
             title: event?.title || "",
             content: event?.content || "",
-            start_date: event?.eventDetails.start_date || "",
-            end_date: event?.eventDetails.end_date || "",
-            location: event?.eventDetails.location || "",
-            image: event?.image || "",
-            status: event?.status || "",
-            departmentName: ""
+            departmentName: "",
+              eventDetails: {
+                start_date: event?.eventDetails?.start_date || "",
+                end_date: event?.eventDetails?.end_date || "",
+                location: event?.eventDetails?.location || "",
+            },
+            // image: event?.image || "",
+            // status: event?.status || "",
         })
     }
 
@@ -134,7 +172,7 @@ const EventTable = ({ filteredEvents, setEvents, events }: EventTableProps) => {
             )}
 
             {/* Edit Event Dialog */}
-            <EditEventDialog isEditDialogOpen={isEditDialogOpen} setIsEditDialogOpen={setIsEditDialogOpen} editForm={editForm} setEditForm={setEditForm} handleSaveEvent={handleSaveEvent} />
+            <EditEventDialog isEditDialogOpen={isEditDialogOpen} setIsEditDialogOpen={setIsEditDialogOpen} editForm={editForm} setEditForm={setEditForm} handleSaveEvent={handleSaveEvent} loading={loading} />
         </div>
     )
 }

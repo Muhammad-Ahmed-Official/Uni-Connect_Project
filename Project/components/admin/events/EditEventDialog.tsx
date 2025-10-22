@@ -5,6 +5,7 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { EventFormValues } from './EventTable'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Loader } from 'lucide-react'
 
 interface EditEventDialogProps {
     isEditDialogOpen: boolean
@@ -12,10 +13,11 @@ interface EditEventDialogProps {
     editForm: EventFormValues
     setEditForm: React.Dispatch<React.SetStateAction<EventFormValues>>
     handleSaveEvent: () => void
+    loading: boolean
 }
 
 
-const EditEventDialog = ({ isEditDialogOpen, setIsEditDialogOpen, editForm, setEditForm, handleSaveEvent }: EditEventDialogProps) => {
+const EditEventDialog = ({ isEditDialogOpen, setIsEditDialogOpen, editForm, setEditForm, handleSaveEvent, loading }: EditEventDialogProps) => {
     return (
         <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
             <DialogContent className="max-w-2xl">
@@ -47,15 +49,15 @@ const EditEventDialog = ({ isEditDialogOpen, setIsEditDialogOpen, editForm, setE
                                 </SelectTrigger>
 
                                 <SelectContent className="rounded-lg shadow-lg border border-gray-200">
-                                    <SelectItem value="CS" className="cursor-pointer hover:bg-blue-100 transition-colors">Computer Science
+                                    <SelectItem value="Computer Science" className="cursor-pointer hover:bg-blue-100 transition-colors">Computer Science
                                     </SelectItem>
                                     <SelectItem
-                                    value="POL"
+                                    value="Political Science"
                                     className="cursor-pointer hover:bg-blue-100 transition-colors">
                                     Political Science
                                     </SelectItem>
                                     <SelectItem
-                                    value="MC"
+                                    value="Mass Communication"
                                     className="cursor-pointer hover:bg-blue-100 transition-colors">
                                     Mass Communication
                                     </SelectItem>
@@ -65,7 +67,7 @@ const EditEventDialog = ({ isEditDialogOpen, setIsEditDialogOpen, editForm, setE
                                     Law
                                     </SelectItem>
                                     <SelectItem
-                                    value="PHAR"
+                                    value="Pharmacy"
                                     className="cursor-pointer hover:bg-blue-100 transition-colors">
                                     Pharmacy
                                     </SelectItem>
@@ -77,7 +79,7 @@ const EditEventDialog = ({ isEditDialogOpen, setIsEditDialogOpen, editForm, setE
                         <Label htmlFor="edit-description">Description</Label>
                         <Textarea
                             id="edit-description"
-                            value={editForm.content}
+                            value={editForm?.content}
                             onChange={(e) => setEditForm({ ...editForm, content: e.target.value })} rows={3}
                         />
                     </div>
@@ -87,8 +89,8 @@ const EditEventDialog = ({ isEditDialogOpen, setIsEditDialogOpen, editForm, setE
                             <Input
                                 id="edit-start_date"
                                 type="date"
-                                value={editForm.start_date ? editForm.start_date.split("T")[0] : ""}
-                                onChange={(e) => setEditForm({ ...editForm, start_date: e.target.value })}
+                                value={editForm?.eventDetails?.start_date ? editForm?.eventDetails?.start_date.split("T")[0] : ""}
+                                onChange={(e) => setEditForm({ ...editForm, eventDetails: {...editForm.eventDetails, start_date: e.target.value} })}
                             />
                         </div>
                         <div className="space-y-2">
@@ -96,8 +98,8 @@ const EditEventDialog = ({ isEditDialogOpen, setIsEditDialogOpen, editForm, setE
                             <Input
                                 id="edit-start_date"
                                 type="date"
-                                value={editForm.end_date ? editForm.end_date.split("T")[0] : ""}
-                                onChange={(e) => setEditForm({ ...editForm, end_date: e.target.value })}
+                                value={editForm?.eventDetails.end_date ? editForm?.eventDetails?.end_date.split("T")[0] : ""}
+                                onChange={(e) => setEditForm({ ...editForm, eventDetails: {...editForm?.eventDetails, end_date: e.target.value} })}
                             />
                         </div>
                     </div>
@@ -105,8 +107,8 @@ const EditEventDialog = ({ isEditDialogOpen, setIsEditDialogOpen, editForm, setE
                         <Label htmlFor="edit-location">Location</Label>
                         <Input
                             id="edit-location"
-                            value={editForm?.location}
-                            onChange={(e) => setEditForm({ ...editForm, location: e.target.value })}
+                            value={editForm?.eventDetails?.location}
+                            onChange={(e) => setEditForm({ ...editForm, eventDetails: {...editForm?.eventDetails, location: e.target.value} })}
                         />
                     </div>
                 </div>
@@ -117,7 +119,7 @@ const EditEventDialog = ({ isEditDialogOpen, setIsEditDialogOpen, editForm, setE
                     <Button
                         onClick={handleSaveEvent}
                     >
-                        Save Changes
+                        {loading? <span className='flex items-center gap-2'><Loader className='animate-spin' /> updating...</span> : "Save Changes"}
                     </Button>
                 </DialogFooter>
             </DialogContent>

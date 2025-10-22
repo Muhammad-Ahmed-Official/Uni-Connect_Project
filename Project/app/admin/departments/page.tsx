@@ -9,11 +9,11 @@ import FiltersAndSearches from "@/components/admin/departments/FiltersAndSearche
 import { apiClient } from "@/lib/api-client"
 
 export interface DepartmentFormValues {
-  departmentName: string
+  departmentName?: string
   departmentBio: string
   departmentChairman: string
   deaprtmentchairmanEmail: string
-  established: string,
+  established?: string,
 }
 
 
@@ -68,7 +68,7 @@ export default function DepartmentManagement() {
     try {
       const response = await apiClient.createDepartment(newDepartment);
       
-      setDepartments([...filteredDepartments, newDepartment])
+      setDepartments([...filteredDepartments as any, newDepartment])
       
       toast({
         title: "Department Added",
