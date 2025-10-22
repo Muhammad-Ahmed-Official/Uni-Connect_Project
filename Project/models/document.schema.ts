@@ -1,15 +1,21 @@
-import { DocumentEntity } from "@/lib/db";
 import mongoose from "mongoose";
 
 const { Schema, model, models } = mongoose;
 
 // Document Schema
 const documentSchema = new Schema({
-    title: { type: String, required: true },
-    url: { type: String, required: true },
-    type: { type: String, enum: ["pdf", "docx", "xlsx", "pptx", "txt"] },
-    departmentId: { type: String },
-    uploadedByUserId: { type: String, required: true }
+    title: { type: String, required: true , index:true },
+    document:{type:String,required:true},
+    department_id: { type: String},
+    userId: { type: String, required: true },
+    year:{type:Number,required:true},
+    semester:{type:String,required:true},
+    document_type:{type:String,enum:["final","midterms","repeater"]},
+    teacher:{type:String,required:true},
+    totalDownloads:{type:Number,default:0},
+    view:{type:Number,default:0}
 }, { timestamps: true });
 
-export const DocumentSchema = models?.Document || model<DocumentEntity>("Document", documentSchema);
+const DocumentSchema = models?.Document || model("Document", documentSchema);
+
+export default DocumentSchema;

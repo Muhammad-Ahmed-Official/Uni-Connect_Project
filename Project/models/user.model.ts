@@ -56,6 +56,7 @@ const UserSchema = new Schema<IUser>({
         immutable: true,
         trim: true,
         match: [/.+\@.+\..+/, "please use a valid email address"],
+        index:true
     },
     password: {
         type: String,
@@ -76,11 +77,13 @@ const UserSchema = new Schema<IUser>({
     },
     firstName: {
         type: String,
-        required: true
+        required: true,
+        index:true
     },
     lastName: {
         type: String,
-        required: true
+        required: true,
+        index:true
     },
     bio: {
         type: String,
