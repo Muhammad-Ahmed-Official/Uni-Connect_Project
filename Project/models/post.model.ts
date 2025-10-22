@@ -12,6 +12,7 @@ const PostSchema = new Schema<IPost>(
     likes_count: { type: Number, default: 0 },
     comment_count: { type: Number, default: 0 },
     views: { type: Number, default: 0 },
+    isPinned: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

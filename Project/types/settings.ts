@@ -45,13 +45,9 @@ export interface PlatformSettings {
 }
 
 export interface SecuritySettings {
-    passwordMinLength: string;
-    requireSpecialChars: boolean;
-    requireNumbers: boolean;
-    requireUppercase: boolean;
+    newPassword: string;
+    confirmPassword: string;
     twoFactorEnabled: boolean;
-    loginAttemptLimit: string;
-    accountLockoutDuration: string;
 }
 
 export interface NotificationSettings {

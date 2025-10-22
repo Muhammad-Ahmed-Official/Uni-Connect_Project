@@ -178,12 +178,6 @@ const RegistrationForm = () => {
                             <SelectValue placeholder="Select department" />
                         </SelectTrigger>
                         <SelectContent>
-                            {/* {departments && departments.map((dept) => (
-                                <SelectItem key={dept._id} value={dept.departmentName}>
-                                    {dept.departmentName}
-                                </SelectItem>
-                            ))} */}
-
                             {isFetchingDeparts ? (
                                 <SelectItem value="loading" disabled>Loading departments...</SelectItem>
                             ) : (

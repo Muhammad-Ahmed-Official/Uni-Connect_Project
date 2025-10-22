@@ -2,9 +2,9 @@
 
 import type React from "react"
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import Link from "next/link"
-import { redirect, usePathname, useRouter } from "next/navigation"
+import { redirect, usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
@@ -16,7 +16,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { Badge } from "@/components/ui/badge"
 import {
   LayoutDashboard,
   Users,
@@ -91,7 +90,6 @@ export default function AdminLayout({
   const role = session?.data?.user?.role;
   if (!session) redirect("/login");
   if (role !== "admin") redirect("/dashboard");
-  const router = useRouter();
   const handleLogout = () => {
     signOut()
   }
@@ -247,8 +245,10 @@ export default function AdminLayout({
                       <span>Profile</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem className="cursor-pointer">
-                      <Settings className="mr-2 h-4 w-4" />
-                      <span>Settings</span>
+                      <Link href="/admin/settings" className="items-center w-full flex gap-2">
+                        <Settings className="mr-2 h-4 w-4" />
+                        <span>Settings</span>
+                      </Link>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem className="cursor-pointer" onClick={handleLogout}>

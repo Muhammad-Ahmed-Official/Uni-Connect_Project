@@ -5,14 +5,8 @@ declare module "next-auth" {
         user: {
             id: string;
             email: string;
-<<<<<<< HEAD
-            firstName?: string;
-            lastName?: string;
-            name: string;
-=======
             firstName: string;
             lastName: string;
->>>>>>> c37aabf43a09e3478023a7b496284f084e2c4e25
             isVerified: boolean;
             profilePic?: string;
             role: "user" | "admin" | "department_Student_Advisor" | "university_Student_Advisor" | "student";
