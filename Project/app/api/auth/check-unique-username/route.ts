@@ -12,7 +12,7 @@ const usernameValidation = z.object({
 
 export const POST = asyncHandler(async (req: NextRequest): Promise<NextResponse> => {
 
-    const { username } = await req.json();
+    const { username } =  await req.json();
 
     if (!username) {
         return nextError(400, "Please Enter a username");
