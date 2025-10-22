@@ -22,7 +22,7 @@ export const DepartmentHeader = ({ department, postCount }: DepartmentHeaderProp
                     <div className="flex items-center space-x-4 mt-2 text-sm text-gray-500">
                         <span className="flex items-center space-x-1">
                             <Users className="h-4 w-4" />
-                            <span>{department.followers_count.toLocaleString()} members</span>
+                            <span>{department.followers_count} members</span>
                         </span>
                         <span className="flex items-center space-x-1">
                             <MessageSquare className="h-4 w-4" />

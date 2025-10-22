@@ -11,6 +11,8 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog"
 import { Plus, Send } from "lucide-react"
+import { postSchema } from "@/schemas/post.schema"
+import { useToast } from "@/hooks/use-toast"
 
 interface CreatePostDialogProps {
     departmentName: string
@@ -22,20 +24,35 @@ export const CreatePostDialog = ({ departmentName, onCreatePost }: CreatePostDia
     const [newPostContent, setNewPostContent] = useState("")
     const [newPostTags, setNewPostTags] = useState("")
     const [open, setOpen] = useState(false)
+    const { toast } = useToast();
 
-    const handleCreatePost = () => {
-        if (!newPostTitle.trim() || !newPostContent.trim()) return
-        onCreatePost(newPostTitle, newPostContent, newPostTags)
-        setNewPostTitle("")
-        setNewPostContent("")
-        setNewPostTags("")
-        setOpen(false)
+    const handleCreatePost = async () => {
+        const result = await postSchema.safeParseAsync({ title: newPostTitle, content: newPostContent, tags: newPostTags.split(",").map((tag) => tag.trim()).filter(Boolean) });
+        if (!result.success) {
+            const error = result.error.format();
+            const firstError = Object.values(error).find((err: any) => err?._errors?.length);
+            const errorMessage = firstError && Array.isArray((firstError as any)._errors)
+                ? (firstError as any)._errors[0]
+                : "Invalid request data";
+
+            toast({
+                title: "Error",
+                description: errorMessage as string,
+                variant: "destructive",
+            });
+        } else {
+            onCreatePost(newPostTitle, newPostContent, newPostTags)
+            setNewPostTitle("")
+            setNewPostContent("")
+            setNewPostTags("")
+            setOpen(false)
+        }
     }
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button className="bg-blue-600 hover:bg-blue-700">
+                <Button className="bg-blue-600 hover:bg-blue-700 cursor-pointer">
                     <Plus className="h-4 w-4 mr-2" />
                     New Post
                 </Button>

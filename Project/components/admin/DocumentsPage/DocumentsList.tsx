@@ -15,7 +15,7 @@ interface DocumentsListProps {
 export default function DocumentsList({
     pastPapers,
     policyDocs,
-    onApprove,
+    // onApprove,
     onReject,
     onDelete,
 }: DocumentsListProps) {
@@ -47,7 +47,7 @@ export default function DocumentsList({
                             key={paper.id}
                             document={paper}
                             type="past-paper"
-                            onApprove={onApprove}
+                            // onApprove={onApprove}
                             onReject={onReject}
                             onDelete={onDelete}
                         />
@@ -62,7 +62,6 @@ export default function DocumentsList({
                             key={doc.id}
                             document={doc}
                             type="policy-doc"
-                            onApprove={onApprove}
                             onReject={onReject}
                             onDelete={onDelete}
                         />

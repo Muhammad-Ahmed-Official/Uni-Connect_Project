@@ -2,9 +2,9 @@
 
 import type React from "react"
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import Link from "next/link"
-import { redirect, usePathname, useRouter } from "next/navigation"
+import { redirect, usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
@@ -16,7 +16,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { Badge } from "@/components/ui/badge"
 import {
   LayoutDashboard,
   Users,
@@ -36,6 +35,7 @@ import {
 import { Suspense } from "react"
 import { signOut, useSession } from "next-auth/react"
 import { Input } from "@/components/ui/input"
+import { ComingSoonWrapper } from "@/components/shared/ComingSoonWrapper"
 
 const navigation = [
   { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
@@ -91,7 +91,6 @@ export default function AdminLayout({
   const role = session?.data?.user?.role;
   if (!session) redirect("/login");
   if (role !== "admin") redirect("/dashboard");
-  const router = useRouter();
   const handleLogout = () => {
     signOut()
   }
@@ -113,6 +112,22 @@ export default function AdminLayout({
         {navigation.map((item) => {
           const isActive = pathname === item.href
           return (
+            item?.name === "Escalation Monitoring" || item?.name === "Advisor Management" ? 
+            <ComingSoonWrapper>
+              <Link
+              key={item.name}
+              href={item.href}
+              className={`group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors ${isActive ? "bg-blue-100 text-blue-700" : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                }`}
+              onClick={() => setSidebarOpen(false)}
+            >
+              <item.icon
+                className={`mr-3 h-5 w-5 ${isActive ? "text-blue-700" : "text-gray-400 group-hover:text-gray-500"}`}
+              />
+              {item.name}
+            </Link>  
+            </ComingSoonWrapper>
+            :
             <Link
               key={item.name}
               href={item.href}
@@ -197,12 +212,14 @@ export default function AdminLayout({
                 {/* Notifications */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
+                <ComingSoonWrapper>
                     <Button variant="ghost" size="sm" className="relative">
                       <Bell className="h-5 w-5" />
                       <span className="absolute -top-1 -right-1 h-5 w-5 bg-red-500 rounded-full text-xs text-white flex items-center justify-center">
                         3
                       </span>
                     </Button>
+                </ComingSoonWrapper>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-80">
                     <DropdownMenuLabel>Notifications</DropdownMenuLabel>
@@ -247,8 +264,10 @@ export default function AdminLayout({
                       <span>Profile</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem className="cursor-pointer">
-                      <Settings className="mr-2 h-4 w-4" />
-                      <span>Settings</span>
+                      <Link href="/admin/settings" className="items-center w-full flex gap-2">
+                        <Settings className="mr-2 h-4 w-4" />
+                        <span>Settings</span>
+                      </Link>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem className="cursor-pointer" onClick={handleLogout}>
