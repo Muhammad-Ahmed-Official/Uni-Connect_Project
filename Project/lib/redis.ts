@@ -7,12 +7,13 @@ if (!configs.redisUrl) {
 
 let redis: Redis;
 
-redis = new Redis({
-    username: "default",
-    password: configs.redisPassword,
-    host: configs.redisUrl.replace('redis://', '').split(':')[0],
-    port: parseInt(configs.redisPort || "6379", 10),
-});
+// redis = new Redis({
+//     username: "default",
+//     password: configs.redisPassword,
+//     host: configs.redisUrl.replace('redis://', '').split(':')[0],
+//     port: parseInt(configs.redisPort || "6379", 10),
+// });
+redis = new Redis(configs.redisUrl);
 
 export { redis };
 
