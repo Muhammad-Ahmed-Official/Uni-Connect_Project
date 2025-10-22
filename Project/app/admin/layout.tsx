@@ -35,6 +35,7 @@ import {
 import { Suspense } from "react"
 import { signOut, useSession } from "next-auth/react"
 import { Input } from "@/components/ui/input"
+import { ComingSoonWrapper } from "@/components/shared/ComingSoonWrapper"
 
 const navigation = [
   { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
@@ -111,6 +112,22 @@ export default function AdminLayout({
         {navigation.map((item) => {
           const isActive = pathname === item.href
           return (
+            item?.name === "Escalation Monitoring" || item?.name === "Advisor Management" ? 
+            <ComingSoonWrapper>
+              <Link
+              key={item.name}
+              href={item.href}
+              className={`group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors ${isActive ? "bg-blue-100 text-blue-700" : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                }`}
+              onClick={() => setSidebarOpen(false)}
+            >
+              <item.icon
+                className={`mr-3 h-5 w-5 ${isActive ? "text-blue-700" : "text-gray-400 group-hover:text-gray-500"}`}
+              />
+              {item.name}
+            </Link>  
+            </ComingSoonWrapper>
+            :
             <Link
               key={item.name}
               href={item.href}
