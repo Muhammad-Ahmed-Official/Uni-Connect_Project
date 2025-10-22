@@ -5,10 +5,10 @@ import { asyncHandler } from "@/utils/asyncHandler";
 import { nextResponse } from "@/utils/Response";
 import { NextRequest, NextResponse } from "next/server";
 
-export const GET = asyncHandler(async (req:NextRequest): Promise<NextResponse> => {
+export const GET = asyncHandler(async (req: NextRequest): Promise<NextResponse> => {
   await connectDB()
 
-    const cacheKey = "departments:sorted";
+  const cacheKey = "departments:sorted";
 
   // 🔹 1. Try fetching from cache
   const cachedData = await safeGet(cacheKey);
@@ -22,14 +22,14 @@ export const GET = asyncHandler(async (req:NextRequest): Promise<NextResponse> =
 
   const sort = sortBy;
 
-    const departments=await departmentModel.find()
+  const departments = await departmentModel.find()
     .sort(sort === "followers" ? { followers_count: -1 } : { departmentName: 1 })
     .lean();
 
-    const { success } = await safeSet(cacheKey, JSON.stringify(departments), 300);
+  const { success } = await safeSet(cacheKey, JSON.stringify(departments), 300);
   if (!success) {
     console.warn("⚠️ Failed to set Redis cache for departments");
   }
 
-    return nextResponse(200, "Departments fetched successfully", departments);
+  return nextResponse(200, "Departments fetched successfully", departments);
 });

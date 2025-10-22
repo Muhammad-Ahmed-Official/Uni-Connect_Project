@@ -31,6 +31,16 @@ const EditDeparmentDialog = ({ isEditDialogOpen, setIsEditDialogOpen, editForm, 
                                 onChange={(e) => setEditForm({ ...editForm, departmentName: e.target.value })}
                             />
                         </div>
+                        <div>
+                            <Label className='mb-2' htmlFor="new-name">Established Year</Label>
+                            <Input
+                                id="new-name"
+                                type='number'
+                                value={editForm.established}
+                                onChange={(e) => setEditForm({ ...editForm, established: e.target.value })}
+                                placeholder="e.g., 1991"
+                            />
+                        </div>
                     </div>
                     <div>
                         <Label className="mb-2" htmlFor="description">Description</Label>
@@ -49,8 +59,6 @@ const EditDeparmentDialog = ({ isEditDialogOpen, setIsEditDialogOpen, editForm, 
                                 onChange={(e) => setEditForm({ ...editForm, departmentChairman: e.target.value })}
                             />
                         </div>
-                    </div>
-                    <div className="grid grid-cols-2 gap-4">
                         <div>
                             <Label className="mb-2" htmlFor="email">Email</Label>
                             <Input
@@ -61,6 +69,7 @@ const EditDeparmentDialog = ({ isEditDialogOpen, setIsEditDialogOpen, editForm, 
                             />
                         </div>
                     </div>
+
                 </div>
                 <DialogFooter>
                     <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>
