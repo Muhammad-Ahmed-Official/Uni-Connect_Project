@@ -43,7 +43,7 @@ const navigation = [
   { name: "Advisor Management", href: "/admin/advisors", icon: UserCheck },
   { name: "Department Management", href: "/admin/departments", icon: Building2 },
   { name: "Event Management", href: "/admin/events", icon: Calendar },
-  { name: "Document Management", href: "/admin/documents", icon: FileText },
+  // { name: "Document Management", href: "/admin/documents", icon: FileText },
   { name: "Escalation Monitoring", href: "/admin/escalations", icon: MessageSquareMore },
   { name: "Settings", href: "/admin/settings", icon: Settings },
 ]
@@ -197,14 +197,14 @@ export default function AdminLayout({
             <div className="px-4 flex justify-between items-center w-full">
               {/* Search Bar */}
               <div className="relative flex-1 max-w-md">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                {/* <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                 <Input
                   type="search"
                   placeholder="Search departments, events, papers..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="pl-10 pr-4 py-2 w-full"
-                />
+                /> */}
               </div>
 
               {/* Right side */}
@@ -258,11 +258,11 @@ export default function AdminLayout({
                         <p className="text-xs text-gray-500 truncate">{session?.data?.user?.firstName! + session?.data?.user?.lastName}</p>
                       </div>
                     </DropdownMenuLabel>
-                    <DropdownMenuSeparator />
+                    {/* <DropdownMenuSeparator />
                     <DropdownMenuItem className="cursor-pointer">
                       <User className="mr-2 h-4 w-4" />
                       <span>Profile</span>
-                    </DropdownMenuItem>
+                    </DropdownMenuItem> */}
                     <DropdownMenuItem className="cursor-pointer">
                       <Link href="/admin/settings" className="items-center w-full flex gap-2">
                         <Settings className="mr-2 h-4 w-4" />

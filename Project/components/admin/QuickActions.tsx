@@ -20,20 +20,20 @@ const quickActions: Actions[] = [
         icon: Calendar,
         color: "bg-purple-600 hover:bg-purple-700",
     },
-    {
-        title: "Upload Document",
-        description: "Add new past papers or policy documents",
-        href: "/admin/documents",
-        icon: FileText,
-        color: "bg-teal-600 hover:bg-teal-700",
-    },
-    {
-        title: "Review Escalations",
-        description: "Monitor and assign pending escalations",
-        href: "/admin/escalations",
-        icon: MessageSquareMore,
-        color: "bg-orange-600 hover:bg-orange-700",
-    },
+    // {
+    //     title: "Upload Document",
+    //     description: "Add new past papers or policy documents",
+    //     href: "/admin/documents",
+    //     icon: FileText,
+    //     color: "bg-teal-600 hover:bg-teal-700",
+    // },
+    // {
+    //     title: "Review Escalations",
+    //     description: "Monitor and assign pending escalations",
+    //     href: "/admin/escalations",
+    //     icon: MessageSquareMore,
+    //     color: "bg-orange-600 hover:bg-orange-700",
+    // },
 ]
 
 const QuickActionsItem = ({ action }: { action: Actions }) => {

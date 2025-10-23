@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card'
 import { AlertCircle, Calendar, CheckCircle, Clock, Edit, MapPin, Trash2, Users, XCircle } from 'lucide-react'
 import React from 'react'
+import EventSkeleton from './EventSkelton'
 
 interface EventTableCardProps {
     event: AdminEvent
@@ -10,6 +11,7 @@ interface EventTableCardProps {
     handleRejectEvent: (eventId: string) => void
     handleDeleteEvent: (eventId: string) => void
     handleEditEvent: (event: AdminEvent) => void
+    loading2:boolean
 }
 
 const formatDate = (dateString: string) => {
@@ -23,34 +25,39 @@ const formatDate = (dateString: string) => {
 };
 
 
-const EventTableCard = ({ event, handleEditEvent, handleApproveEvent, handleRejectEvent, handleDeleteEvent }: EventTableCardProps) => {
-    const getStatusBadge = (status: string) => {
-        switch (status) {
-            case "approved":
-                return (
-                    <Badge className="bg-green-100 text-green-800">
-                        <CheckCircle className="w-3 h-3 mr-1" />
-                        Approved
-                    </Badge>
-                )
-            case "pending":
-                return (
-                    <Badge className="bg-yellow-100 text-yellow-800">
-                        <AlertCircle className="w-3 h-3 mr-1" />
-                        Pending
-                    </Badge>
-                )
-            case "rejected":
-                return (
-                    <Badge className="bg-red-100 text-red-800">
-                        <XCircle className="w-3 h-3 mr-1" />
-                        Rejected
-                    </Badge>
-                )
-            default:
-                return <Badge variant="secondary">{status}</Badge>
-        }
+const EventTableCard = ({ event, handleEditEvent, handleApproveEvent, handleRejectEvent, handleDeleteEvent, loading2 }: EventTableCardProps) => {
+    
+    if(loading2){
+        return <EventSkeleton />
     }
+
+    // const getStatusBadge = (status: string) => {
+    //     switch (status) {
+    //         case "approved":
+    //             return (
+    //                 <Badge className="bg-green-100 text-green-800">
+    //                     <CheckCircle className="w-3 h-3 mr-1" />
+    //                     Approved
+    //                 </Badge>
+    //             )
+    //         case "pending":
+    //             return (
+    //                 <Badge className="bg-yellow-100 text-yellow-800">
+    //                     <AlertCircle className="w-3 h-3 mr-1" />
+    //                     Pending
+    //                 </Badge>
+    //             )
+    //         case "rejected":
+    //             return (
+    //                 <Badge className="bg-red-100 text-red-800">
+    //                     <XCircle className="w-3 h-3 mr-1" />
+    //                     Rejected
+    //                 </Badge>
+    //             )
+    //         default:
+    //             return <Badge variant="secondary">{status}</Badge>
+    //     }
+    // }
 
     const getCategoryBadge = (category: string) => {
         const colors: Record<string, string> = {
@@ -72,7 +79,7 @@ const EventTableCard = ({ event, handleEditEvent, handleApproveEvent, handleReje
             alt={event.title}
             className="w-full h-48 object-cover"
             />
-            <div className="absolute top-2 right-2">{getStatusBadge(event.status)}</div>
+            {/* <div className="absolute top-2 right-2">{getStatusBadge(event.status)}</div> */}
         </div>
 
         {/* Content */}

@@ -6,13 +6,15 @@ import EditDeparmentDialog from './EditDeparmentDialog'
 import DeleteDepartmentDialog from './DeleteDepartmentDialog'
 import DepartmentTableCard from './DepartmentTableCard'
 import { apiClient } from '@/lib/api-client'
+import DepartmentSkeleton from './DepartmentSkleton'
 
 interface DepartmentsTableProps {
     filteredDepartments: AdminDepartment[]
     setDepartments: React.Dispatch<React.SetStateAction<AdminDepartment[]>>
+    loading2: boolean
 }
 
-const DepartmentsTable = ({ filteredDepartments, setDepartments }: DepartmentsTableProps) => {
+const DepartmentsTable = ({ filteredDepartments, setDepartments, loading2 }: DepartmentsTableProps) => {
     const [isViewDialogOpen, setIsViewDialogOpen] = useState(false)
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
@@ -27,7 +29,10 @@ const DepartmentsTable = ({ filteredDepartments, setDepartments }: DepartmentsTa
         deaprtmentchairmanEmail: "",
         // established: "",
     })
-    const { toast } = useToast()
+    const { toast } = useToast();
+    if (loading2) {
+        return <DepartmentSkeleton count={3} />
+    }
 
     const handleViewDepartment = (department: AdminDepartment) => {
         setSelectedDepartment(department)

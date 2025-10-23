@@ -14,9 +14,10 @@ interface FiltersAndSearchesProps {
     setCategoryFilter: React.Dispatch<React.SetStateAction<string>>
     setEvents: React.Dispatch<React.SetStateAction<AdminEvent[]>>
     events: AdminEvent[]
+    loading2:boolean
 }
 
-const FiltersAndSearches = ({ filteredEvents, searchTerm, setSearchTerm, statusFilter, setStatusFilter, categoryFilter, setCategoryFilter, setEvents, events }: FiltersAndSearchesProps) => {
+const FiltersAndSearches = ({ filteredEvents, searchTerm, setSearchTerm, statusFilter, setStatusFilter, categoryFilter, setCategoryFilter, loading2, setEvents, events }: FiltersAndSearchesProps) => {
     return (
         <Card>
             <CardHeader>
@@ -55,7 +56,7 @@ const FiltersAndSearches = ({ filteredEvents, searchTerm, setSearchTerm, statusF
                 </div>
 
                 {/* Events Grid */}
-                <EventTable filteredEvents={filteredEvents} setEvents={setEvents} events={events} />
+                <EventTable loading2={loading2} filteredEvents={filteredEvents} setEvents={setEvents} events={events} />
             </CardContent>
         </Card>
     )

@@ -37,7 +37,7 @@ const FiltersAndSearches = ({ users }: { users: User[] }) => {
                             <SelectItem value="all">All Roles</SelectItem>
                             <SelectItem value="student">Students</SelectItem>
                             <SelectItem value="advisor">Advisors</SelectItem>
-                            <SelectItem value="admin">Administrators</SelectItem>
+                            {/* <SelectItem value="admin">Administrators</SelectItem> */}
                         </SelectContent>
                     </Select>
                     {/* <Select value={statusFilter} onValueChange={setStatusFilter}>

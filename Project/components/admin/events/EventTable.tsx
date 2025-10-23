@@ -11,11 +11,13 @@ import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import EditEventDialog from './EditEventDialog'
 import { apiClient } from '@/lib/api-client'
+import EventSkeleton from './EventSkelton'
 
 interface EventTableProps {
     filteredEvents: AdminEvent[]
     setEvents: React.Dispatch<React.SetStateAction<AdminEvent[]>>
     events: AdminEvent[]
+    loading2:boolean
 }
 
 export interface EventFormValues {
@@ -32,8 +34,7 @@ export interface EventFormValues {
 
 }
 
-const EventTable = ({ filteredEvents, setEvents, events }: EventTableProps) => {
-    console.log(events)
+const EventTable = ({ filteredEvents, setEvents, events, loading2 }: EventTableProps) => {
     const [selectedEvent, setSelectedEvent] = useState<AdminEvent | null>(null)
     const [isEditDialogOpen, setIsEditDialogOpen] = useState<boolean>(false)
     const [loading, setLoading] = useState<boolean>(false)
@@ -49,6 +50,8 @@ const EventTable = ({ filteredEvents, setEvents, events }: EventTableProps) => {
         // status: "",
         // image: "",
     })
+
+
 
     const handleApproveEvent = (eventId:string) => {
         setEvents(events.map((event) => (event._id === eventId ? { ...event, status: "approved" } : event)))
@@ -157,11 +160,11 @@ const EventTable = ({ filteredEvents, setEvents, events }: EventTableProps) => {
         <div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
                 {filteredEvents.map((event) => (
-                    <EventTableCard key={event._id} event={event} handleEditEvent={handleEditEvent} handleApproveEvent={handleApproveEvent} handleRejectEvent={handleRejectEvent} handleDeleteEvent={handleDeleteEvent} />
+                    <EventTableCard loading2={loading2} key={event._id} event={event} handleEditEvent={handleEditEvent} handleApproveEvent={handleApproveEvent} handleRejectEvent={handleRejectEvent} handleDeleteEvent={handleDeleteEvent} />
                 ))}
             </div>
 
-            {filteredEvents.length === 0 && (
+            {loading2 === false && filteredEvents.length === 0 && (
                 <Card>
                     <CardContent className="text-center py-12">
                         <Calendar className="w-12 h-12 text-gray-400 mx-auto mb-4" />

@@ -8,8 +8,8 @@ import { Badge } from '@/components/ui/badge'
 
 interface DepartmentTableCardProps {
     department: AdminDepartment
-    isDropdownOpen: number | null
-    setIsDropdownOpen: (open: number | null) => void
+    isDropdownOpen: any
+    setIsDropdownOpen: (open: any) => void
     handleViewDepartment: (department: AdminDepartment) => void
     handleEditDepartment: (department: AdminDepartment) => void
     setDeleteDialogOpen: (open: boolean) => void

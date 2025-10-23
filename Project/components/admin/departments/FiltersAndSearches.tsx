@@ -8,9 +8,10 @@ import { useState } from 'react'
 interface FiltersAndSearchesProps {
     departments: AdminDepartment[]
     setDepartments: React.Dispatch<React.SetStateAction<AdminDepartment[]>>
+    loading2: boolean
 }
 
-const FiltersAndSearches = ({ departments, setDepartments }: FiltersAndSearchesProps) => {
+const FiltersAndSearches = ({ departments, setDepartments, loading2 }: FiltersAndSearchesProps) => {
     const [searchTerm, setSearchTerm] = useState("");
     return (
         <Card className="border-0 shadow-sm">
@@ -32,7 +33,7 @@ const FiltersAndSearches = ({ departments, setDepartments }: FiltersAndSearchesP
                 </div>
 
                 {/* Departments Grid */}
-                <DepartmentsTable filteredDepartments={departments} setDepartments={setDepartments} />
+                <DepartmentsTable loading2={loading2} filteredDepartments={departments} setDepartments={setDepartments} />
             </CardContent>
         </Card>
     )

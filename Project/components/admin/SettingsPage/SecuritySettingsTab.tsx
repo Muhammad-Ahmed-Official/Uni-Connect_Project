@@ -6,6 +6,7 @@ import SettingsCard from "@/components/shared/SettingsCard";
 import SettingsSwitch from "@/components/shared/SettingsSwitch";
 import { SecuritySettings } from "@/types/settings";
 import { useState } from "react";
+import { ComingSoonWrapper } from "@/components/shared/ComingSoonWrapper";
 
 interface SecuritySettingsTabProps {
     settings: SecuritySettings;
@@ -82,16 +83,18 @@ export default function SecuritySettingsTab({
                     </div>
                 </div>
 
-                <div className="space-y-4">
-                    <SettingsSwitch
-                        id="twoFactorEnabled"
-                        label="Two-Factor Authentication"
-                        description="Enable 2FA for admin accounts"
-                        checked={settings.twoFactorEnabled}
-                        onCheckedChange={(checked) => updateSetting('twoFactorEnabled', checked)}
-                        disabled={true}
-                    />
-                </div>
+                <ComingSoonWrapper>
+                    <div className="space-y-4">
+                        <SettingsSwitch
+                            id="twoFactorEnabled"
+                            label="Two-Factor Authentication"
+                            description="Enable 2FA for admin accounts"
+                            checked={settings.twoFactorEnabled}
+                            onCheckedChange={(checked) => updateSetting('twoFactorEnabled', checked)}
+                            // disabled={true}
+                        />
+                    </div>
+                </ComingSoonWrapper>
 
                 <Button onClick={onSave}>
                     <Save className="h-4 w-4 mr-2" />

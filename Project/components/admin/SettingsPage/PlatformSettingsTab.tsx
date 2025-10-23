@@ -50,7 +50,7 @@ export default function PlatformSettingsTab({
                         />
                     </div>
 
-                    <div className="space-y-4"> 
+                    {/* <div className="space-y-4"> 
                         <SettingsSwitch
                             id="maintenanceMode"
                             label="Maintenance Mode"
@@ -59,7 +59,7 @@ export default function PlatformSettingsTab({
                             onCheckedChange={(checked) => updateSetting('maintenanceMode', checked)}
                             disabled={true}
                         />
-                    </div>
+                    </div> */}
 
                     <Button onClick={onSave}>
                         <Save className="h-4 w-4 mr-2" />

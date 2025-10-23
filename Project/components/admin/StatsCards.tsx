@@ -27,13 +27,13 @@ const StatsCards = ({ stat }: any) => {
       color: "text-purple-600",
       bgColor: "bg-purple-100",
     },
-    {
-      title: "Total Documents",
-      value: stat.totalDocuments ?? 0,
-      icon: FileText,
-      color: "text-teal-600",
-      bgColor: "bg-teal-100",
-    },
+    // {
+    //   title: "Total Documents",
+    //   value: stat.totalDocuments ?? 0,
+    //   icon: FileText,
+    //   color: "text-teal-600",
+    //   bgColor: "bg-teal-100",
+    // },
     {
       title: "Total Events",
       value: stat.totalEvents ?? 0,
@@ -44,7 +44,7 @@ const StatsCards = ({ stat }: any) => {
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
       {stats.map((statItem, index) => (
         <StatsCardsItem key={index} statItem={statItem} />
       ))}

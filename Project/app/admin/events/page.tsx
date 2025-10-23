@@ -28,6 +28,7 @@ export default function AdminEventsPage() {
   const [statusFilter, setStatusFilter] = useState<string>("all")
   const [categoryFilter, setCategoryFilter] = useState<string>("all")
   const [loading, setLoading] = useState<boolean>(false);
+  const [loading2, setLoading2] = useState<boolean>(false);
   const [eventStats, setEventStats] = useState({
     totalEvents: 0,
     totalLikes: 0,
@@ -46,6 +47,19 @@ export default function AdminEventsPage() {
   })
 
   const handleSaveEvent = async () => {
+    const { title, content, departmentName, eventDetails } = editEvent;
+    if (
+      !title.trim() ||
+      !content.trim() ||
+      !departmentName.trim() ||
+      !eventDetails.location.trim() ||
+      !eventDetails.start_date.trim() ||
+      !eventDetails.end_date.trim()
+    ) {
+      toast("All fields are required.");
+      return;
+    };
+
     setLoading(true);
     try {
       const newEvent:any =  await apiClient.createEvent(editEvent);
@@ -81,8 +95,10 @@ export default function AdminEventsPage() {
   }
 
   const getEvents = async() => {
+    setLoading2(true);
     const response:any = await apiClient.getEvents();
     setEvents(response?.data);
+    setLoading2(false);
   }
 
   useEffect(() => {
@@ -112,7 +128,7 @@ export default function AdminEventsPage() {
       <StatsCards eventStats={eventStats} approvedEvents={approvedEvents} pendingEvents={pendingEvents} />
 
       {/* Filters and Search */}
-      <FiltersAndSearches filteredEvents={filteredEvents} searchTerm={searchTerm} setSearchTerm={setSearchTerm} statusFilter={statusFilter} setStatusFilter={setStatusFilter} categoryFilter={categoryFilter} setCategoryFilter={setCategoryFilter} setEvents={setEvents} events={events} />
+      <FiltersAndSearches loading2={loading2} filteredEvents={filteredEvents} searchTerm={searchTerm} setSearchTerm={setSearchTerm} statusFilter={statusFilter} setStatusFilter={setStatusFilter} categoryFilter={categoryFilter} setCategoryFilter={setCategoryFilter} setEvents={setEvents} events={events} />
     </div>
   )
 }

@@ -106,7 +106,7 @@ const UsersTable = ({ usersData }: { usersData: User[] }) => {
                             <TableHead>Role</TableHead>
                             <TableHead>Department</TableHead>
                             <TableHead>Status</TableHead>
-                            <TableHead>Last Active</TableHead>
+                            {/* <TableHead>Last Active</TableHead> */}
                             <TableHead className="text-right">Actions</TableHead>
                         </TableRow>
                     </TableHeader>
