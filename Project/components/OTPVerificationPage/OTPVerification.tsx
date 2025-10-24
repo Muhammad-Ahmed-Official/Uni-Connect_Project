@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card"
 import axios from "axios"
 import { useToast } from "@/hooks/use-toast"
 import { redirect, useRouter } from "next/navigation"
+import { ApiErrorResponse } from "@/types/ApiErrorResponse"
 
 export function OTPVerification({ email }: { email: string | null }) {
     const [otp, setOtp] = useState<string[]>(["", "", "", "", "", ""])
@@ -71,12 +72,16 @@ export function OTPVerification({ email }: { email: string | null }) {
             await axios.post("/api/auth/verifyCode", { code: otpCode, email: email as string })
 
             toast({ title: 'Verification successful!', description: 'Your account has been verified successfully.', variant: "success" });
+            setError("")
             router.push('/login')
-        } catch (err) {
-            setError("Verification failed. Please try again.")
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                const serverError = error.response?.data as ApiErrorResponse;
+                setError(serverError?.message || "Verification failed. Please try again.")
+                setTimeout(() => setError(""), 3000);
+            }
         } finally {
             setIsLoading(false)
-            setError("")
         }
     }
 

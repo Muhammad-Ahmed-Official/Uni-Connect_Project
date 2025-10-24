@@ -16,7 +16,7 @@ const handleStudentRegistration = async (data: any, department_id: string) => {
   }
 
   const existingUserVerifiedByStudentId = await User.findOne({ studentId, isVerified: true });
-  if (existingUserVerifiedByStudentId) return nextError(400, "Student already exists");
+  if (existingUserVerifiedByStudentId) return nextError(400, "Student already exists with this student ID!");
 
   const verifyCode = generateOTP();
   const redisKey = `otp:${email}`;
@@ -35,7 +35,7 @@ const handleStudentRegistration = async (data: any, department_id: string) => {
 
   if (user) {
     if (user.isVerified) {
-      return nextError(400, "User already exists with this email");
+      return nextError(400, "User already exists with this email!");
     }
     Object.assign(user, userPayload);
     await user.save();
@@ -43,7 +43,7 @@ const handleStudentRegistration = async (data: any, department_id: string) => {
     await User.create(userPayload);
   }
 
-  const { success, error } = await safeSet(redisKey, verifyCode, 60 * 3);
+  const { success, error } = await safeSet(redisKey, verifyCode, 60 * 5);
 
   if (!success) {
     return nextError(500, "Failed to save OTP. Please try again.", error);

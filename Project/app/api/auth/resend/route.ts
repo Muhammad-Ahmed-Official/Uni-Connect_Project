@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { generateOTP } from "@/helpers/generateOTP";
 import { sendEmailOTP } from "@/lib/nodemailer";
 
-export const POST = asyncHandler(async (request: NextRequest):Promise<NextResponse> => {
+export const POST = asyncHandler(async (request: NextRequest): Promise<NextResponse> => {
   const { email } = await request.json();
   const redisKey = `otp:${email}`;
 
@@ -16,13 +16,12 @@ export const POST = asyncHandler(async (request: NextRequest):Promise<NextRespon
 
   const code = generateOTP();
 
-   const {success,error} = await safeSet(redisKey, code, 60 * 3);
+  const { success, error } = await safeSet(redisKey, code, 60 * 5);
 
   if (!success) {
-    return nextError(500, "Failed to save OTP. Please try again.",error);
+    return nextError(500, "Failed to save OTP. Please try again.", error);
   }
 
-  
   try {
     const emailResponse = await sendEmailOTP(email, code);
     if (!emailResponse.success) {

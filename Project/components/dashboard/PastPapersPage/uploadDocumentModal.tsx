@@ -48,8 +48,6 @@ export default function UploadDocumentModal({ isOpen, onOpenChange, onUpload }: 
         fetchDepartments();
     }, [])
 
-    console.log(departments)
-
     return (
         <Dialog open={isOpen} onOpenChange={onOpenChange}>
             <DialogTrigger asChild>
