@@ -170,3 +170,177 @@
 //         </div>
 //     );
 // }
+
+
+import { useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+interface CreateNotificationDialogProps {
+  isOpen: boolean;
+  onOpenChange: (open: boolean) => void;
+  onCreate: (notification: Omit<Notification, 'id' | 'createdAt' | 'readCount'>) => any;
+}
+
+
+export interface Notification {
+  id: string;
+  title: string;
+  message: string;
+  type: "message";
+  createdBy: string;
+  createdAt: string;
+  sentAt?: string;
+}
+
+const CreateNotification = ({
+  isOpen,
+  onOpenChange,
+  onCreate,
+}: CreateNotificationDialogProps) => {
+  const [formData, setFormData] = useState({
+    title: "",
+    message: "",
+    targetAudience: "all",
+    scheduledFor: "",
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onCreate({
+      title: formData.title,
+      message: formData.message,
+      type: "message",
+      createdBy: "Admin User",
+    });
+    setFormData({
+      title: "",
+      message: "",
+      targetAudience: "all",
+      scheduledFor: "",
+    });
+  };
+
+  return (
+    <Dialog open={isOpen} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle>Create New Message</DialogTitle>
+          <DialogDescription>
+            Create a new notification message for users. You can send immediately or schedule for later.
+          </DialogDescription>
+        </DialogHeader>
+        
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="title">Message Title *</Label>
+            <Input
+              id="title"
+              placeholder="Enter message title"
+              value={formData.title}
+              onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+              required
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="message">Message Content *</Label>
+            <Textarea
+              id="message"
+              placeholder="Enter your message here..."
+              value={formData.message}
+              onChange={(e) => setFormData(prev => ({ ...prev, message: e.target.value }))}
+              rows={6}
+              required
+            />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* <div className="space-y-2">
+              <Label htmlFor="priority">Priority</Label>
+              <Select
+                value={formData.priority}
+                onValueChange={(value: Notification["priority"]) => 
+                  setFormData(prev => ({ ...prev, priority: value }))
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="low">Low Priority</SelectItem>
+                  <SelectItem value="medium">Medium Priority</SelectItem>
+                  <SelectItem value="high">High Priority</SelectItem>
+                </SelectContent>
+              </Select>
+            </div> */}
+
+            <div className="space-y-2">
+              <Label htmlFor="audience">Target Audience</Label>
+              <Select
+                value={formData.targetAudience}
+                onValueChange={(value) => 
+                  setFormData(prev => ({ ...prev, targetAudience: value }))
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Users</SelectItem>
+                  <SelectItem value="all_students">DCS Students</SelectItem>
+                  <SelectItem value="all_faculty">All Faculty</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="schedule">Schedule For (Optional)</Label>
+            <Input
+              id="schedule"
+              type="datetime-local"
+              value={formData.scheduledFor}
+              onChange={(e) => setFormData(prev => ({ ...prev, scheduledFor: e.target.value }))}
+            />
+            <p className="text-xs text-gray-500">
+              Leave empty to save as draft and send later
+            </p>
+          </div>
+
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => onOpenChange(false)}
+            >
+              Cancel
+            </Button>
+            <Button type="submit">
+              {formData.scheduledFor ? "Schedule Message" : "Save as Draft"}
+            </Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+export default CreateNotification;

@@ -249,3 +249,221 @@
 //     </div>
 //   );
 // }
+
+"use client"
+
+import { useState } from "react";
+import { toast } from "@/hooks/use-toast";
+import StatsCards from "@/components/admin/NotificationsPage/StatsCards";
+import CreateNotification from "@/components/admin/NotificationsPage/CreateNotification";
+import NotificationsList from "@/components/admin/NotificationsPage/NotificationsList";
+import { 
+  BellIcon, 
+  MessageSquareIcon, 
+  SendIcon, 
+  UsersIcon,
+  EyeIcon,
+  ClockIcon,
+  Plus
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+
+export interface Notification {
+  id: string;
+  title: string;
+  message: string;
+  type: "message";
+  // priority: "low" | "medium" | "high";
+  // status: "draft" | "scheduled" | "sent" | "cancelled";
+  // targetAudience: string;
+  createdBy?: string;
+  createdAt?: string;
+  // scheduledFor?: string;
+  sentAt?: string;
+  // readCount: number;
+  // totalRecipients: number;
+  // channels: ("in-app" | "email" | "sms" | "push")[];
+}
+
+export interface StatsCard {
+  title: string;
+  value: string | number;
+  // description: string;
+  icon: React.ElementType;
+  iconColor?: string;
+  trend?: string;
+}
+
+// Mock data for notifications
+const mockNotifications: Notification[] = [
+  {
+    id: "1",
+    title: "Welcome to the New Academic Year",
+    message: "We are excited to welcome all students and faculty to the new academic year. Check the updated academic calendar for important dates and events.",
+    type: "message",
+    // priority: "medium",
+    // status: "sent",
+    // targetAudience: "all",
+    createdBy: "Admin Office",
+    createdAt: "2024-03-15T10:30:00Z",
+    // scheduledFor: "2024-03-15T10:30:00Z",
+    sentAt: "2024-03-15T10:30:00Z",
+    // readCount: 1245,
+    // totalRecipients: 1500,
+    // channels: ["in-app"],
+  },
+  {
+    id: "2",
+    title: "Library Hours Update",
+    message: "The main library will have extended hours during finals week. New timings: 7:00 AM to 11:00 PM from Monday to Sunday.",
+    type: "message",
+    // priority: "medium",
+    // status: "sent",
+    // targetAudience: "all_students",
+    createdBy: "Library Department",
+    createdAt: "2024-03-14T14:20:00Z",
+    // scheduledFor: "2024-03-14T14:20:00Z",
+    sentAt: "2024-03-14T14:20:00Z",
+    // readCount: 890,
+    // totalRecipients: 1200,
+    // channels: ["in-app"],
+  },
+];
+
+export default function AdminNotificationsPage() {
+  const [notifications, setNotifications] = useState<Notification[]>(mockNotifications);
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+
+  // Stats calculation
+  const totalNotifications = notifications.length;
+  // const sentNotifications = notifications.filter(n => n.status === "sent").length;
+  // const scheduledNotifications = notifications.filter(n => n.status === "scheduled").length;
+  // const draftNotifications = notifications.filter(n => n.status === "draft").length;
+  // const totalRecipients = notifications.reduce((sum, item) => sum + item.totalRecipients, 0);
+  // const totalReads = notifications.reduce((sum, item) => sum + item.readCount, 0);
+  // const readRate = totalRecipients > 0 ? Math.round((totalReads / totalRecipients) * 100) : 0;
+
+  const stats: StatsCard[] = [
+    {
+      title: "Total Notifications",
+      value: totalNotifications,
+      // description: `${sentNotifications} sent`,
+      icon: BellIcon,
+    },
+    // {
+    //   title: "Scheduled",
+    //   value: scheduledNotifications,
+    //   description: "Waiting to send",
+    //   icon: ClockIcon,
+    //   iconColor: "text-orange-600",
+    // },
+    // {
+    //   title: "Drafts",
+    //   value: draftNotifications,
+    //   description: "In progress",
+    //   icon: MessageSquareIcon,
+    //   iconColor: "text-blue-600",
+    // },
+    {
+      title: "Total Recipients",
+      value: "",
+      // description: "All notifications",
+      icon: UsersIcon,
+    },
+  ];
+
+  // Notification actions
+  const handleSendNotification = (id: string) => {
+    setNotifications(notifications =>
+      notifications.map(notification =>
+        notification.id === id 
+          ? { 
+              ...notification, 
+              status: "sent", 
+              sentAt: new Date().toISOString() 
+            } 
+          : notification
+      )
+    );
+    toast({
+      title: "Notification Sent",
+      description: "The message has been sent to all recipients.",
+    });
+  };
+
+  const handleEditNotification = (id: string, updates: Partial<Notification>) => {
+    setNotifications(notifications =>
+      notifications.map(notification =>
+        notification.id === id 
+          ? { ...notification, ...updates } 
+          : notification
+      )
+    );
+    toast({
+      title: "Notification Updated",
+      description: "The message has been successfully updated.",
+    });
+  };
+
+  const handleDeleteNotification = (id: string) => {
+    setNotifications(notifications => notifications.filter(notification => notification.id !== id));
+    toast({
+      title: "Notification Deleted",
+      description: "The message has been permanently deleted.",
+    });
+  };
+
+  const handleCreateNotification = (newNotification: Omit<Notification, 'id' | 'createdAt' | 'readCount'>) => {
+    const notification: Notification = {
+      ...newNotification,
+      id: Date.now().toString(),
+      // createdAt: new Date().toISOString(),
+      // readCount: 0,
+    };
+    
+    setNotifications(prev => [notification, ...prev]);
+    setIsCreateDialogOpen(false);
+    
+    toast({
+      title: "Notification Created",
+      description: "Your message has been created successfully.",
+    });
+  };
+
+  return (
+    <div className="p-2 sm:p-6 space-y-6">
+      {/* Header */}
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">Message Center</h1>
+          <p className="text-gray-600">Create and manage notifications for users</p>
+        </div>
+     {/* This button opens the dialog */}
+        <Button 
+          onClick={() => setIsCreateDialogOpen(true)}
+          className="flex items-center gap-2"
+        >
+          <Plus className="h-4 w-4" />
+          Create Message
+        </Button>
+      </div>
+
+      {/* Stats Cards */}
+      <StatsCards stats={stats} />
+
+      {/* Notifications List */}
+      <NotificationsList
+        notifications={notifications}
+        onSend={handleSendNotification}
+        onEdit={handleEditNotification}
+        onDelete={handleDeleteNotification}
+      />
+
+      <CreateNotification
+        isOpen={isCreateDialogOpen}
+        onOpenChange={setIsCreateDialogOpen}
+        onCreate={handleCreateNotification}
+      />
+    </div>
+  );
+}
