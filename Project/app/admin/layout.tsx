@@ -43,7 +43,7 @@ const navigation = [
   { name: "Advisor Management", href: "/admin/advisors", icon: UserCheck },
   { name: "Department Management", href: "/admin/departments", icon: Building2 },
   { name: "Event Management", href: "/admin/events", icon: Calendar },
-  // { name: "Document Management", href: "/admin/documents", icon: FileText },
+  { name: "Notification Management", href: "/admin/notifications", icon: FileText },
   { name: "Escalation Monitoring", href: "/admin/escalations", icon: MessageSquareMore },
   { name: "Settings", href: "/admin/settings", icon: Settings },
 ]
