@@ -161,7 +161,7 @@ export default function AdminLayout({
           const isActive = pathname === item.href
           return (
             item?.name === "Escalation Monitoring" || item?.name === "Advisor Management" ?
-              <ComingSoonWrapper>
+              <ComingSoonWrapper key={item.name}>
                 <Link
                   key={item.name}
                   href={item.href}

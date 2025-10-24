@@ -16,12 +16,6 @@ export const metadata: Metadata = {
 }
 
 export default async function LoginPage() {
-  // const session = await getServerSession(authOptions);
-  // const role = session?.user?.role;
-
-  // if (role === "admin") redirect("/admin");
-  // if (role === "user") redirect("/dashboard");
-
   const session = await getServerSession(authOptions);
   const role = session?.user?.role;
 
@@ -54,7 +48,7 @@ export default async function LoginPage() {
 
           <CardContent className="space-y-4">
             {/* Social Login Buttons */}
-            <SocialLoginButtons />
+            {/* <SocialLoginButtons /> */}
 
             <div className="relative">
               <div className="absolute inset-0 flex items-center">

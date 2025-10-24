@@ -35,8 +35,6 @@ export const POST = asyncHandler(async (req: NextRequest): Promise<NextResponse>
     return nextError(400, "Bad Request: No body found");
   }
 
-  console.log("Request Body:", body);
-
   // ✅ Validate data using Zod schema
   const result = eventSchema.safeParse(body);
   if (!result.success) {
@@ -46,7 +44,6 @@ export const POST = asyncHandler(async (req: NextRequest): Promise<NextResponse>
 
   const { departmentName } = result.data as { departmentName?: string };
 
-  // ✅ Fetch department by name (using short form like "CS")
   const department = departmentName
     ? (await departmentModel.findOne({ departmentName }).lean().exec()) as { _id: string } | null
     : null;
@@ -57,20 +54,12 @@ export const POST = asyncHandler(async (req: NextRequest): Promise<NextResponse>
 
   const department_id = department._id.toString();
 
-  // ✅ Check if an event for this department already exists (optional logic)
-  const existingEvent = await Event.findOne({ department_id });
-  if (existingEvent) {
-    return nextError(400, "An event for this department already exists");
-  }
-
-  // ✅ Create payload for event creation
   const payload = {
     ...result.data,
     user_id,
     department_id,
   };
 
-  // ✅ Create the event
   const event = await Event.create(payload);
   if (!event) {
     return nextError(500, "Internal Server Error: Failed to create event");

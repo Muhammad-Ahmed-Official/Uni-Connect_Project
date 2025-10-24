@@ -91,6 +91,8 @@ declare global {
         }
         status: string
         departmentName: string,
+        tags: string[]
+        // attendees: number
         // category: string
         // rsvps: number
         // capacity: number

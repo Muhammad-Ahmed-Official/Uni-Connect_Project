@@ -17,21 +17,18 @@ interface EventTableProps {
     filteredEvents: AdminEvent[]
     setEvents: React.Dispatch<React.SetStateAction<AdminEvent[]>>
     events: AdminEvent[]
-    loading2:boolean
+    loading2: boolean
 }
 
 export interface EventFormValues {
     title: string
     content: string
-    departmentName:string
+    departmentName: string
     eventDetails: {
         start_date: string,
         end_date: string
         location: string
     }
-    // image: string
-    // status: string
-
 }
 
 const EventTable = ({ filteredEvents, setEvents, events, loading2 }: EventTableProps) => {
@@ -46,14 +43,10 @@ const EventTable = ({ filteredEvents, setEvents, events, loading2 }: EventTableP
             start_date: "",
             end_date: "",
             location: "",
-        }
-        // status: "",
-        // image: "",
+        },
     })
 
-
-
-    const handleApproveEvent = (eventId:string) => {
+    const handleApproveEvent = (eventId: string) => {
         setEvents(events.map((event) => (event._id === eventId ? { ...event, status: "approved" } : event)))
         toast({
             title: "Event Approved",
@@ -69,7 +62,7 @@ const EventTable = ({ filteredEvents, setEvents, events, loading2 }: EventTableP
         })
     }
 
-    const handleDeleteEvent = async(eventId: string) => {
+    const handleDeleteEvent = async (eventId: string) => {
         setEvents(events.filter((event) => event?._id !== eventId))
         await apiClient.deleteEvent(eventId);
         toast({
@@ -78,9 +71,10 @@ const EventTable = ({ filteredEvents, setEvents, events, loading2 }: EventTableP
         })
     }
 
-    const handleSaveEvent = async() => {
+    const handleSaveEvent = async () => {
         setLoading(true);
         if (selectedEvent) {
+            console.log("selectedEvent ==>", selectedEvent);
             setEvents(
                 filteredEvents.map((event) =>
                     event?._id === selectedEvent?._id
@@ -92,8 +86,6 @@ const EventTable = ({ filteredEvents, setEvents, events, loading2 }: EventTableP
                             start_date: editForm?.eventDetails?.start_date,
                             end_date: editForm?.eventDetails?.end_date,
                             location: editForm?.eventDetails.location,
-                            // image: editForm.image,
-                            // status: editForm.status,
                         }
                         : event
                 )
@@ -101,36 +93,35 @@ const EventTable = ({ filteredEvents, setEvents, events, loading2 }: EventTableP
             setEvents((prev) =>
                 prev.map((event) =>
                     event._id === selectedEvent?._id
-                    ? {
-                        ...event,
-                        title: editForm?.title,
-                        content: editForm?.content,
-                        departmentName: editForm?.departmentName,
-                        eventDetails: {
-                            ...event.eventDetails,
-                            start_date: editForm?.eventDetails?.start_date,
-                            end_date: editForm?.eventDetails?.end_date,
-                            location: editForm.eventDetails?.location,
-                        },
-                        // image: newImage,
-                        // status: newStatus,
+                        ? {
+                            ...event,
+                            title: editForm?.title,
+                            content: editForm?.content,
+                            departmentName: editForm?.departmentName,
+                            eventDetails: {
+                                ...event.eventDetails,
+                                start_date: editForm?.eventDetails?.start_date,
+                                end_date: editForm?.eventDetails?.end_date,
+                                location: editForm.eventDetails?.location,
+                            },
                         }
-                    : event
+                        : event
                 )
             );
             try {
+                console.log("editForm in handleSaveEvent ==>", editForm);
                 await apiClient.updateEvent(editForm, selectedEvent?._id)
                 toast({
                     title: "Event Updated",
                     description: "The event has been successfully updated.",
                 })
             } catch (error) {
-                 toast({
+                toast({
                     title: "Update Failed",
                     description: "Something went wrong while updating the event. Please try again.",
                     variant: "destructive",
                 });
-            }finally{
+            } finally {
                 setIsEditDialogOpen(false);
                 setLoading(false);
             }
@@ -145,13 +136,11 @@ const EventTable = ({ filteredEvents, setEvents, events, loading2 }: EventTableP
             title: event?.title || "",
             content: event?.content || "",
             departmentName: "",
-              eventDetails: {
+            eventDetails: {
                 start_date: event?.eventDetails?.start_date || "",
                 end_date: event?.eventDetails?.end_date || "",
                 location: event?.eventDetails?.location || "",
             },
-            // image: event?.image || "",
-            // status: event?.status || "",
         })
     }
 

@@ -32,27 +32,6 @@ const FiltersAndSearches = ({ filteredEvents, searchTerm, setSearchTerm, statusF
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
                     </div>
-                    {/* <Select value={statusFilter} onValueChange={setStatusFilter}>
-                        <SelectTrigger className="w-full md:w-[180px]">
-                            <SelectValue placeholder="Filter by status" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="all">All Status</SelectItem>
-                            <SelectItem value="approved">Approved</SelectItem>
-                            <SelectItem value="pending">Pending</SelectItem>
-                            <SelectItem value="rejected">Rejected</SelectItem>
-                        </SelectContent>
-                    </Select> */}
-                    {/* <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-                        <SelectTrigger className="w-full md:w-[180px]">
-                            <SelectValue placeholder="Filter by category" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="all">All Categories</SelectItem>
-                            <SelectItem value="University-wide">University-wide</SelectItem>
-                            <SelectItem value="Department">Department</SelectItem>
-                        </SelectContent>
-                    </Select> */}
                 </div>
 
                 {/* Events Grid */}

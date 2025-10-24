@@ -1,44 +1,33 @@
 import CalendarView from "@/components/dashboard/EventsPage/CalendarView";
 import EventsList from "@/components/dashboard/EventsPage/EventsList";
 import EmptyState from "@/components/dashboard/EventsPage/EmptyState";
-
-interface Event {
-    id: number;
-    title: string;
-    description: string;
-    date: string;
-    time: string;
-    endTime: string;
-    location: string;
-    organizer: string;
-    category: string;
-    attendees: number;
-    maxAttendees: number;
-    isRSVPed: boolean;
-    tags: string[];
-    image: string;
-}
+import { Event } from "@/app/dashboard/events/page";
+import { EventsSkeletonGrid } from "./EventsSkeletonGrid";
 
 interface EventsContentProps {
     viewMode: "calendar" | "list";
     events: Event[];
     onEventClick: (event: Event) => void;
-    onRSVP: (eventId: number) => void;
+    loading: boolean
 }
 
 export default function EventsContent({
     viewMode,
     events,
     onEventClick,
-    onRSVP
+    loading
 }: EventsContentProps) {
-    if (events.length === 0) {
+    if (loading) {
+        return <EventsSkeletonGrid count={6} />;
+    }
+
+    if (events.length === 0 && !loading) {
         return <EmptyState />;
     }
 
     return viewMode === "calendar" ? (
         <CalendarView events={events} onEventClick={onEventClick} />
     ) : (
-        <EventsList events={events} onRSVP={onRSVP} />
+        <EventsList events={events} onEventClick={onEventClick} />
     );
 }

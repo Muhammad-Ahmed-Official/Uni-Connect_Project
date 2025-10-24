@@ -6,6 +6,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { EventFormValues } from './EventTable'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Loader } from 'lucide-react'
+import { useState } from 'react'
 
 interface EditEventDialogProps {
     isEditDialogOpen: boolean
@@ -40,7 +41,7 @@ const EditEventDialog = ({ isEditDialogOpen, setIsEditDialogOpen, editForm, setE
                                 value={editForm?.departmentName}
                                 onValueChange={(value) =>
                                     setEditForm({ ...editForm, departmentName: value })
-                            }>
+                                }>
                                 <SelectTrigger
                                     id="department-select"
                                     className="w-full cursor-pointer border-gray-300 hover:border-blue-400 focus:ring-2 focus:ring-blue-500 transition-all"
@@ -52,27 +53,27 @@ const EditEventDialog = ({ isEditDialogOpen, setIsEditDialogOpen, editForm, setE
                                     <SelectItem value="Computer Science" className="cursor-pointer hover:bg-blue-100 transition-colors">Computer Science
                                     </SelectItem>
                                     <SelectItem
-                                    value="Political Science"
-                                    className="cursor-pointer hover:bg-blue-100 transition-colors">
-                                    Political Science
+                                        value="Political Science"
+                                        className="cursor-pointer hover:bg-blue-100 transition-colors">
+                                        Political Science
                                     </SelectItem>
                                     <SelectItem
-                                    value="Mass Communication"
-                                    className="cursor-pointer hover:bg-blue-100 transition-colors">
-                                    Mass Communication
+                                        value="Mass Communication"
+                                        className="cursor-pointer hover:bg-blue-100 transition-colors">
+                                        Mass Communication
                                     </SelectItem>
                                     <SelectItem
-                                    value="LAW"
-                                    className="cursor-pointer hover:bg-blue-100 transition-colors">
-                                    Law
+                                        value="LAW"
+                                        className="cursor-pointer hover:bg-blue-100 transition-colors">
+                                        Law
                                     </SelectItem>
                                     <SelectItem
-                                    value="Pharmacy"
-                                    className="cursor-pointer hover:bg-blue-100 transition-colors">
-                                    Pharmacy
+                                        value="Pharmacy"
+                                        className="cursor-pointer hover:bg-blue-100 transition-colors">
+                                        Pharmacy
                                     </SelectItem>
                                 </SelectContent>
-                                </Select>
+                            </Select>
                         </div>
                     </div>
                     <div className="space-y-2">
@@ -90,7 +91,7 @@ const EditEventDialog = ({ isEditDialogOpen, setIsEditDialogOpen, editForm, setE
                                 id="edit-start_date"
                                 type="date"
                                 value={editForm?.eventDetails?.start_date ? editForm?.eventDetails?.start_date.split("T")[0] : ""}
-                                onChange={(e) => setEditForm({ ...editForm, eventDetails: {...editForm.eventDetails, start_date: e.target.value} })}
+                                onChange={(e) => setEditForm({ ...editForm, eventDetails: { ...editForm.eventDetails, start_date: e.target.value } })}
                             />
                         </div>
                         <div className="space-y-2">
@@ -99,7 +100,7 @@ const EditEventDialog = ({ isEditDialogOpen, setIsEditDialogOpen, editForm, setE
                                 id="edit-start_date"
                                 type="date"
                                 value={editForm?.eventDetails.end_date ? editForm?.eventDetails?.end_date.split("T")[0] : ""}
-                                onChange={(e) => setEditForm({ ...editForm, eventDetails: {...editForm?.eventDetails, end_date: e.target.value} })}
+                                onChange={(e) => setEditForm({ ...editForm, eventDetails: { ...editForm?.eventDetails, end_date: e.target.value } })}
                             />
                         </div>
                     </div>
@@ -108,9 +109,17 @@ const EditEventDialog = ({ isEditDialogOpen, setIsEditDialogOpen, editForm, setE
                         <Input
                             id="edit-location"
                             value={editForm?.eventDetails?.location}
-                            onChange={(e) => setEditForm({ ...editForm, eventDetails: {...editForm?.eventDetails, location: e.target.value} })}
+                            onChange={(e) => setEditForm({ ...editForm, eventDetails: { ...editForm?.eventDetails, location: e.target.value } })}
                         />
                     </div>
+                    {/* <div className="space-y-2">
+                        <Label htmlFor="edit-tags">Tags</Label>
+                        <Input
+                            id="edit-tags"
+                            value={editPostTags}
+                            onChange={(e) => setEditPostTags(e.target.value)}
+                        />
+                    </div> */}
                 </div>
                 <DialogFooter>
                     <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>
@@ -119,7 +128,7 @@ const EditEventDialog = ({ isEditDialogOpen, setIsEditDialogOpen, editForm, setE
                     <Button
                         onClick={handleSaveEvent}
                     >
-                        {loading? <span className='flex items-center gap-2'><Loader className='animate-spin' /> updating...</span> : "Save Changes"}
+                        {loading ? <span className='flex items-center gap-2'><Loader className='animate-spin' /> updating...</span> : "Save Changes"}
                     </Button>
                 </DialogFooter>
             </DialogContent>

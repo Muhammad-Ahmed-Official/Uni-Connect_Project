@@ -17,9 +17,9 @@ export default function EventsHeader({
     eventsCount
 }: EventsHeaderProps) {
     return (
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
             <Filters
-                options={["All Categories", "University-wise", "Department", "Club Events"]}
+                options={["All", "Computer Science", "Pharmacy", "Mass Communication", "Law"]}
                 currentFilter={categoryFilter}
                 setCurrentFilter={onCategoryFilterChange}
                 count={eventsCount}

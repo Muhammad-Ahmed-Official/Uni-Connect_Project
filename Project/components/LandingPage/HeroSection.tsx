@@ -39,7 +39,7 @@ const HeroSection = () => {
                                 <ArrowRight className="ml-2 w-5 h-5" />
                             </Link>
                         </Button>
-                        <Button asChild variant="outline" size="lg" className="text-lg px-8 py-3 bg-transparent">
+                        <Button asChild variant="outline" size="lg" className="text-lg px-8 py-3 bg-white">
                             <Link href="/login">Sign In</Link>
                         </Button>
                     </div>
