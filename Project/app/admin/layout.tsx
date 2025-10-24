@@ -93,6 +93,13 @@ export default function AdminLayout({
   if (!session) redirect("/login");
   if (role !== "admin") redirect("/dashboard");
   const handleLogout = async () => {
+    if ('caches' in window) {
+      const cacheNames = await caches.keys();
+      await Promise.all(
+        cacheNames.map(cacheName => caches.delete(cacheName))
+      );
+    }
+
     await signOut({ redirect: false });
     router.push('/login');
   }

@@ -82,6 +82,13 @@ const Userlayout = ({
     if (user?.role === "admin") redirect("/admin");
 
     const handleLogout = async () => {
+        if ('caches' in window) {
+            const cacheNames = await caches.keys();
+            await Promise.all(
+                cacheNames.map(cacheName => caches.delete(cacheName))
+            );
+        }
+
         await signOut({ redirect: false });
         router.push('/login');
     }

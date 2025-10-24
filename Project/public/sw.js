@@ -44,6 +44,16 @@ self.addEventListener('fetch', event => {
 
   const url = new URL(event.request.url);
 
+  if (url.pathname.startsWith('/api/') ||
+    url.pathname.startsWith('/_next/') ||
+    url.pathname.includes('/auth/') ||
+    url.pathname === '/login' ||
+    url.pathname === '/admin' ||
+    url.pathname.startsWith('/dashboard')) {
+
+    return fetch(event.request);
+  }
+
   if (url.protocol !== 'http:' && url.protocol !== 'https:') {
     return;
   }
