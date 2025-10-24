@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Link from "next/link"
 import { redirect, usePathname, useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
@@ -86,22 +86,61 @@ export default function AdminLayout({
 }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [isLoading, setIsLoading] = useState(true);
   const pathname = usePathname();
   const session = useSession();
   const router = useRouter();
   const role = session?.data?.user?.role;
-  if (!session) redirect("/login");
-  if (role !== "admin") redirect("/dashboard");
-  const handleLogout = async () => {
-    if ('caches' in window) {
-      const cacheNames = await caches.keys();
-      await Promise.all(
-        cacheNames.map(cacheName => caches.delete(cacheName))
-      );
+
+  useEffect(() => {
+    if (session.status !== "loading") {
+      setIsLoading(false);
+    }
+  }, [session.status]);
+
+  useEffect(() => {
+    if (session.status === "loading") return;
+
+    if (!session.data) {
+      router.push("/login");
+      return;
     }
 
-    await signOut({ redirect: false });
-    router.push('/login');
+    if (role !== "admin") {
+      router.push("/dashboard");
+      return;
+    }
+  }, [session.data, session.status, role, router]);
+
+  const handleLogout = async () => {
+    try {
+      if ('caches' in window) {
+        const cacheNames = await caches.keys();
+        await Promise.all(
+          cacheNames.map(cacheName => caches.delete(cacheName))
+        );
+      }
+
+      await signOut({ redirect: false });
+      router.push('/login');
+      router.refresh();
+    } catch (error) {
+      console.error('Logout error:', error);
+      router.push('/login');
+    }
+  }
+
+  if (isLoading) {
+    return (
+      <div className="h-screen flex bg-gray-50">
+        <div className="flex-1 flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+            <p className="text-gray-600">Loading...</p>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   const SidebarContent = () => (

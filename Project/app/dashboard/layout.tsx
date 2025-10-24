@@ -58,41 +58,6 @@ const Userlayout = ({
 }: {
     children: React.ReactNode
 }) => {
-    // const [searchQuery, setSearchQuery] = useState("");
-    // const [sidebarOpen, setSidebarOpen] = useState(false)
-    // const pathname = usePathname();
-    // const router = useRouter();
-    // const { data: session, status } = useSession();
-    // const user = session?.user;
-
-    // if (status === "loading") {
-    //     return (
-    //         <div className="h-screen flex bg-gray-50">
-    //             <div className="flex-1 flex items-center justify-center">
-    //                 <div className="text-center">
-    //                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-    //                     <p className="text-gray-600">Loading...</p>
-    //                 </div>
-    //             </div>
-    //         </div>
-    //     )
-    // }
-
-    // if (!session) redirect("/login");
-    // if (user?.role === "admin") redirect("/admin");
-
-    // const handleLogout = async () => {
-    //     if ('caches' in window) {
-    //         const cacheNames = await caches.keys();
-    //         await Promise.all(
-    //             cacheNames.map(cacheName => caches.delete(cacheName))
-    //         );
-    //     }
-
-    //     await signOut({ redirect: false });
-    //     router.push('/login');
-    // }
-
     const [searchQuery, setSearchQuery] = useState("");
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
@@ -123,7 +88,6 @@ const Userlayout = ({
 
     const handleLogout = async () => {
         try {
-            // Service Worker cache clear
             if (typeof window !== 'undefined' && 'caches' in window) {
                 const cacheNames = await caches.keys();
                 await Promise.all(
