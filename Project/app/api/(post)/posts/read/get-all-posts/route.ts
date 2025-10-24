@@ -10,8 +10,6 @@ export const GET = asyncHandler(async (req: NextRequest): Promise<NextResponse> 
 
     const posts = await PostModel.find().populate("user_id", "-password -department_id -isVerified -role -privacy_settings -notification_preferences").sort({ createdAt: -1 });
 
-    console.log("Fetched Posts:", posts);
-
     if (!posts || posts.length === 0) {
         return nextError(404, "No posts found for this department");
     }
