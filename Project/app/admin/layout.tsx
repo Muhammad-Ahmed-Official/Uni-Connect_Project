@@ -2,9 +2,9 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Link from "next/link"
-import { redirect, usePathname } from "next/navigation"
+import { redirect, usePathname, useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
@@ -86,13 +86,61 @@ export default function AdminLayout({
 }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [isLoading, setIsLoading] = useState(true);
   const pathname = usePathname();
   const session = useSession();
+  const router = useRouter();
   const role = session?.data?.user?.role;
-  if (!session) redirect("/login");
-  if (role !== "admin") redirect("/dashboard");
-  const handleLogout = () => {
-    signOut()
+
+  useEffect(() => {
+    if (session.status !== "loading") {
+      setIsLoading(false);
+    }
+  }, [session.status]);
+
+  useEffect(() => {
+    if (session.status === "loading") return;
+
+    if (!session.data) {
+      router.push("/login");
+      return;
+    }
+
+    if (role !== "admin") {
+      router.push("/dashboard");
+      return;
+    }
+  }, [session.data, session.status, role, router]);
+
+  const handleLogout = async () => {
+    try {
+      if ('caches' in window) {
+        const cacheNames = await caches.keys();
+        await Promise.all(
+          cacheNames.map(cacheName => caches.delete(cacheName))
+        );
+      }
+
+      await signOut({ redirect: false });
+      router.push('/login');
+      router.refresh();
+    } catch (error) {
+      console.error('Logout error:', error);
+      router.push('/login');
+    }
+  }
+
+  if (isLoading) {
+    return (
+      <div className="h-screen flex bg-gray-50">
+        <div className="flex-1 flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+            <p className="text-gray-600">Loading...</p>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   const SidebarContent = () => (
@@ -112,34 +160,34 @@ export default function AdminLayout({
         {navigation.map((item) => {
           const isActive = pathname === item.href
           return (
-            item?.name === "Escalation Monitoring" || item?.name === "Advisor Management" ? 
-            <ComingSoonWrapper>
+            item?.name === "Escalation Monitoring" || item?.name === "Advisor Management" ?
+              <ComingSoonWrapper>
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className={`group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors ${isActive ? "bg-blue-100 text-blue-700" : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                    }`}
+                  onClick={() => setSidebarOpen(false)}
+                >
+                  <item.icon
+                    className={`mr-3 h-5 w-5 ${isActive ? "text-blue-700" : "text-gray-400 group-hover:text-gray-500"}`}
+                  />
+                  {item.name}
+                </Link>
+              </ComingSoonWrapper>
+              :
               <Link
-              key={item.name}
-              href={item.href}
-              className={`group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors ${isActive ? "bg-blue-100 text-blue-700" : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                }`}
-              onClick={() => setSidebarOpen(false)}
-            >
-              <item.icon
-                className={`mr-3 h-5 w-5 ${isActive ? "text-blue-700" : "text-gray-400 group-hover:text-gray-500"}`}
-              />
-              {item.name}
-            </Link>  
-            </ComingSoonWrapper>
-            :
-            <Link
-              key={item.name}
-              href={item.href}
-              className={`group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors ${isActive ? "bg-blue-100 text-blue-700" : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                }`}
-              onClick={() => setSidebarOpen(false)}
-            >
-              <item.icon
-                className={`mr-3 h-5 w-5 ${isActive ? "text-blue-700" : "text-gray-400 group-hover:text-gray-500"}`}
-              />
-              {item.name}
-            </Link>
+                key={item.name}
+                href={item.href}
+                className={`group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors ${isActive ? "bg-blue-100 text-blue-700" : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                  }`}
+                onClick={() => setSidebarOpen(false)}
+              >
+                <item.icon
+                  className={`mr-3 h-5 w-5 ${isActive ? "text-blue-700" : "text-gray-400 group-hover:text-gray-500"}`}
+                />
+                {item.name}
+              </Link>
           )
         })}
       </nav>
@@ -212,14 +260,14 @@ export default function AdminLayout({
                 {/* Notifications */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                <ComingSoonWrapper>
-                    <Button variant="ghost" size="sm" className="relative">
-                      <Bell className="h-5 w-5" />
-                      <span className="absolute -top-1 -right-1 h-5 w-5 bg-red-500 rounded-full text-xs text-white flex items-center justify-center">
-                        3
-                      </span>
-                    </Button>
-                </ComingSoonWrapper>
+                    <ComingSoonWrapper>
+                      <Button variant="ghost" size="sm" className="relative">
+                        <Bell className="h-5 w-5" />
+                        <span className="absolute -top-1 -right-1 h-5 w-5 bg-red-500 rounded-full text-xs text-white flex items-center justify-center">
+                          3
+                        </span>
+                      </Button>
+                    </ComingSoonWrapper>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-80">
                     <DropdownMenuLabel>Notifications</DropdownMenuLabel>

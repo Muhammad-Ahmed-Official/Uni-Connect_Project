@@ -11,23 +11,30 @@ export default function AppShell({ children }: AppShellProps) {
   useEffect(() => {
     if (process.env.NODE_ENV === 'production') {
       if ("serviceWorker" in navigator) {
-        navigator.serviceWorker
-          .register("/sw.js", {
-            scope: "/",
-            updateViaCache: "none",
+        navigator.serviceWorker.getRegistrations()
+          .then(registrations => {
+            for (let registration of registrations) {
+              registration.unregister();
+              console.log("Unregistered old Service Worker");
+            }
           })
-          .then((registration) => {
-            console.log(
-              "Service Worker registered (PRODUCTION):",
-              registration.scope
-            );
+          .then(() => {
+            return navigator.serviceWorker
+              .register("/sw.js", {
+                scope: "/",
+                updateViaCache: "none",
+              })
+              .then((registration) => {
+                console.log("New Service Worker registered:", registration.scope);
+              });
           })
           .catch((error) => {
-            console.error("Service Worker registration failed:", error);
+            console.error("Service Worker setup failed:", error);
           });
       }
     }
   }, []);
+
   return (
     <div>
       <OfflineIndicator />

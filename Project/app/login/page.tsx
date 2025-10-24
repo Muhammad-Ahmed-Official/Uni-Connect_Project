@@ -16,11 +16,21 @@ export const metadata: Metadata = {
 }
 
 export default async function LoginPage() {
+  // const session = await getServerSession(authOptions);
+  // const role = session?.user?.role;
+
+  // if (role === "admin") redirect("/admin");
+  // if (role === "user") redirect("/dashboard");
+
   const session = await getServerSession(authOptions);
   const role = session?.user?.role;
 
-  if (role === "admin") redirect("/admin");
-  if (role === "user") redirect("/dashboard");
+  if (role === "admin") {
+    redirect("/admin");
+  }
+  if (role === "user") {
+    redirect("/dashboard");
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center p-4">
