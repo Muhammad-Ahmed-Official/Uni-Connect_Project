@@ -74,7 +74,7 @@
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -100,16 +100,9 @@ export interface Notification {
   title: string;
   message: string;
   type: "message";
-//   priority: "low" | "medium" | "high";
-//   status: "draft" | "scheduled" | "sent" | "cancelled";
-//   targetAudience: string;
   createdBy?: string;
   createdAt?: string;
-//   scheduledFor?: string;
   sentAt?: string;
-//   readCount: number;
-//   totalRecipients: number;
-//   channels: ("in-app" | "email" | "sms" | "push")[];
 }
 
 interface NotificationsListProps {
@@ -134,34 +127,6 @@ const NotificationsList = ({
       minute: "2-digit",
     });
   };
-
-//   const getStatusColor = (status: Notification["status"]) => {
-//     switch (status) {
-//       case "sent":
-//         return "bg-green-100 text-green-800";
-//       case "scheduled":
-//         return "bg-orange-100 text-orange-800";
-//       case "draft":
-//         return "bg-blue-100 text-blue-800";
-//       case "cancelled":
-//         return "bg-red-100 text-red-800";
-//       default:
-//         return "bg-gray-100 text-gray-800";
-//     }
-//   };
-
-//   const getPriorityColor = (priority: Notification["priority"]) => {
-//     switch (priority) {
-//       case "high":
-//         return "bg-red-100 text-red-800";
-//       case "medium":
-//         return "bg-yellow-100 text-yellow-800";
-//       case "low":
-//         return "bg-green-100 text-green-800";
-//       default:
-//         return "bg-gray-100 text-gray-800";
-//     }
-//   };
 
   if (notifications.length === 0) {
     return (
