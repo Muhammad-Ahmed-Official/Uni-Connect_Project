@@ -108,7 +108,7 @@ export function OTPVerification({ email }: { email: string | null }) {
                 </div>
 
                 {/* OTP Input Fields */}
-                <div className="flex justify-center gap-3">
+                <div className="flex justify-center gap-3 flex-wrap">
                     {otp.map((digit, index) => (
                         <input
                             key={index}

@@ -8,7 +8,6 @@ import ResultsHeader from "@/components/dashboard/PastPapersPage/ResultsHeader";
 import PapersGrid from "@/components/dashboard/PastPapersPage/PapersGrid";
 import { PastPaper } from "@/types/past-paper";
 import UploadDocumentModal from "@/components/dashboard/PastPapersPage/uploadDocumentModal";
-import { set } from "mongoose";
 
 const pastPapers: PastPaper[] = [
   {
@@ -131,8 +130,8 @@ export default function PastPapersPage() {
       {/* Header */}
       <div className="flex justify-between items-center">
         <Header
-          title="Past Papers Repository"
-          description="Access previous exam papers, assignments, and study materials"
+          title="Study Materials Repository"
+          description="Access previous assignments, and study materials"
         />
         <UploadDocumentModal
           isOpen={isUploadModalDocumentOpen}

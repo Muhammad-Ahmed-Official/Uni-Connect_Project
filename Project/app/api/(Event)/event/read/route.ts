@@ -21,7 +21,5 @@ export const GET = asyncHandler(async (req: NextRequest): Promise<NextResponse> 
     return nextError(404, "No upcoming events found");
   }
 
-  console.log("events ==>", events);
-
   return nextResponse(200, "Upcoming events fetched successfully", events);
 });

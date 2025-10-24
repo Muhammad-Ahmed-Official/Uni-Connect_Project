@@ -17,7 +17,7 @@ const sidebarItems = [
     { icon: Users, label: "Departments", href: "/dashboard/departments" },
     { icon: Calendar, label: "Events", href: "/dashboard/events" },
     { icon: MessageSquare, label: "Advisors", href: "/dashboard/advisors" },
-    { icon: FileText, label: "Past Papers", href: "/dashboard/past-papers" },
+    { icon: FileText, label: "Study Materials", href: "/dashboard/study-materials" },
     { icon: BookOpen, label: "Docs", href: "/dashboard/docs" },
     { icon: Settings, label: "Settings", href: "/dashboard/settings" },
 ]
