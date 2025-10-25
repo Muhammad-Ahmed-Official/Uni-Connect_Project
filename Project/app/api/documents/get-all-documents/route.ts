@@ -15,7 +15,5 @@ export const GET = asyncHandler(async (req: NextRequest): Promise<NextResponse> 
         return nextError(404, "No documents found for this department");
     }
 
-    console.log("documents are: ", documents);
-
     return nextResponse(201, "Post Fetched successfully", documents);
 })
