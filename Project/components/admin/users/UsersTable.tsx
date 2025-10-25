@@ -37,7 +37,7 @@ const UsersTable = ({ usersData }: { usersData: User[] }) => {
     const [searchTerm] = useState("")
     const [roleFilter] = useState("all")
     const [statusFilter] = useState("all")
-    const [isDropdownOpen, setIsDropdownOpen] = useState<number | null>(null);
+    const [isDropdownOpen, setIsDropdownOpen] = useState<string | null>(null);
     const [users, setUsers] = useState(usersData)
     const [currentPage, setCurrentPage] = useState(1)
     const [selectedUser, setSelectedUser] = useState<User | null>(null)
@@ -52,9 +52,9 @@ const UsersTable = ({ usersData }: { usersData: User[] }) => {
     // Filter users based on search and filters
     const filteredUsers = users.filter((user) => {
         const matchesSearch =
-            user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            user.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
             user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            user?.department?.toLowerCase().includes(searchTerm.toLowerCase())
+            user?.departmentName?.toLowerCase().includes(searchTerm.toLowerCase())
         const matchesRole = roleFilter === "all" || user.role === roleFilter
         const matchesStatus = statusFilter === "all" || user.status === statusFilter
         return matchesSearch && matchesRole && matchesStatus
@@ -65,10 +65,10 @@ const UsersTable = ({ usersData }: { usersData: User[] }) => {
     const startIndex = (currentPage - 1) * usersPerPage
     const paginatedUsers = filteredUsers.slice(startIndex, startIndex + usersPerPage)
 
-    const handleSuspendUser = (userId: number) => {
+    const handleSuspendUser = (userId: string) => {
         setUsers(
             users.map((user) =>
-                user.id === userId ? { ...user, status: user.status === "suspended" ? "active" : "suspended" } : user,
+                user._id === userId ? { ...user, status: user.status === "suspended" ? "active" : "suspended" } : user,
             ),
         )
         toast({
@@ -77,8 +77,8 @@ const UsersTable = ({ usersData }: { usersData: User[] }) => {
         })
     }
 
-    const handleDeleteUser = (userId: number) => {
-        setUsers(users.filter((user) => user.id !== userId))
+    const handleDeleteUser = (userId: string) => {
+        setUsers(users.filter((user) => user._id !== userId))
         toast({
             title: "User Deleted",
             description: "User has been successfully deleted from the system.",
@@ -105,15 +105,15 @@ const UsersTable = ({ usersData }: { usersData: User[] }) => {
                             <TableHead>User</TableHead>
                             <TableHead>Role</TableHead>
                             <TableHead>Department</TableHead>
-                            <TableHead>Status</TableHead>
+                            {/* <TableHead>Status</TableHead> */}
                             {/* <TableHead>Last Active</TableHead> */}
                             <TableHead className="text-right">Actions</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {paginatedUsers.map((user) => (
+                        {usersData?.map((user) => (
                             <UserTableRow
-                                key={user.id}
+                                key={user?._id}
                                 user={user}
                                 isDropdownOpen={isDropdownOpen}
                                 roleColors={roleColors}
@@ -143,7 +143,7 @@ const UsersTable = ({ usersData }: { usersData: User[] }) => {
             <DeleteUserDialog isOpen={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}
                 onConfirm={() => {
                     if (userToDelete) {
-                        handleDeleteUser(userToDelete.id)
+                        handleDeleteUser(userToDelete._id)
                     }
                     setDeleteDialogOpen(false)
                 }}

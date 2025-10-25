@@ -11,8 +11,8 @@ interface UserTableRowProps {
     user: User;
     roleColors: Record<string, string>
     statusColors: Record<string, string>
-    isDropdownOpen: number | null
-    setIsDropdownOpen: React.Dispatch<React.SetStateAction<number | null>>;
+    isDropdownOpen: string | null
+    setIsDropdownOpen: React.Dispatch<React.SetStateAction<string | null>>;
     handleViewUser: (user: User) => void;
     handleEditUser: (user: User) => void;
     // handleSuspendUser: (userId: number) => void;
@@ -22,42 +22,42 @@ interface UserTableRowProps {
 
 const UserTableRow = ({ user, isDropdownOpen, roleColors, statusColors, setIsDropdownOpen, handleViewUser, handleEditUser, setUserToDelete, setDeleteDialogOpen }: UserTableRowProps) => {
     return (
-        <TableRow key={user.id}>
+        <TableRow key={user?._id}>
             <TableCell>
                 <div className="flex items-center space-x-3">
                     <Avatar className="h-8 w-8">
-                        <AvatarImage src={user.avatar || "/placeholder.svg"} />
+                        <AvatarImage src={user?.profilePic || "/placeholder.svg"} />
                         <AvatarFallback>
-                            {user.name
+                            {user?.firstName
                                 .split(" ")
-                                .map((n) => n[0])
+                                .map((n:any) => n[0])
                                 .join("")}
                         </AvatarFallback>
                     </Avatar>
                     <div>
-                        <div className="font-medium text-gray-900">{user.name}</div>
-                        <div className="text-sm text-gray-500">{user.email}</div>
+                        <div className="font-medium text-gray-900">{user?.firstName}</div>
+                        <div className="text-sm text-gray-500">{user?.email}</div>
                     </div>
                 </div>
             </TableCell>
             <TableCell>
-                <Badge className={`${roleColors[user.role]} border-0`}>
-                    {getRoleIcon(user.role)}
-                    <span className="ml-1 capitalize">{user.role}</span>
+                <Badge className={`${roleColors[user?.role]} border-0`}>
+                    {getRoleIcon(user?.role)}
+                    <span className="ml-1 capitalize">{user?.role}</span>
                 </Badge>
             </TableCell>
-            <TableCell className="text-gray-600">{user.department}</TableCell>
-            <TableCell>
-                <Badge className={`${statusColors[user.status]} border-0`}>
+            <TableCell className="text-gray-600">{user?.departmentName}</TableCell>
+            {/* <TableCell>
+                <Badge className={`${statusColors[user?.status]} border-0`}>
                     {user.status === "active" ? "●" : user.status === "suspended" ? "⏸" : "○"}
                     <span className="ml-1 capitalize">{user.status}</span>
                 </Badge>
-            </TableCell>
+            </TableCell> */}
             {/* <TableCell className="text-gray-600">{user.lastActive}</TableCell> */}
             <TableCell className="text-right">
                 <DropdownMenu
-                    open={isDropdownOpen === user.id}
-                    onOpenChange={(open) => setIsDropdownOpen(open ? user.id : null)}
+                    open={isDropdownOpen === user?._id}
+                    onOpenChange={(open) => setIsDropdownOpen(open ? user?._id : null)}
                 >
                     <DropdownMenuTrigger asChild>
                         <Button variant="ghost" className="h-8 w-8 p-0">

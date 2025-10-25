@@ -34,16 +34,16 @@ declare global {
     }
 
     interface User {
-        id: number
-        name: string
+        _id: string
+        firstName: string
         email: string
         role: string
-        department?: string
+        departmentName: string
         status: string
         status: string
         joinDate: string
         lastActive: string
-        avatar: string
+        profilePic: string
     }
 
     interface Department {
