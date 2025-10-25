@@ -10,6 +10,10 @@ import departmentModel from "@/models/department.model";
 export const GET = asyncHandler(async (req: NextRequest): Promise<NextResponse> => {
   await connectDB();
 
+
+
+
+  
     const session = await getServerSession(authOptions);
     if (!session) {
       return nextError(401, "Unauthorized: Please login to view users data");
