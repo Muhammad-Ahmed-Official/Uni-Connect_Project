@@ -13,7 +13,7 @@ export default function ResultsHeader({ filteredCount, totalCount, papers }: Res
     return (
         <div className="mb-4 flex items-center justify-between">
             <p className="text-gray-600">
-                Showing {filteredCount} of {totalCount} papers
+                Showing {filteredCount} of {totalCount}
             </p>
             <div className="flex items-center gap-2">
                 <FileText className="h-4 w-4 text-gray-400" />

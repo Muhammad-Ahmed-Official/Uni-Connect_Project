@@ -34,6 +34,7 @@ class ApiClient {
     }
 
 
+
     async createEvent(data:object){
         return this.fetch("event/create", {
             method: "POST",
@@ -41,17 +42,17 @@ class ApiClient {
         })
     };
 
-    
     async getEvents(){
         return this.fetch("event/read")
     };
 
-
-    async updateEvent(){
-        return this.fetch("event/")
+    async updateEvent(data:any, eventId:string){
+        return this.fetch(`event/update?eventId=${eventId}`, {
+            method: "PUT",
+            body: data
+        })
     }
     
-
     async deleteEvent(eventId:string){
         return this.fetch(`event/delete?eventId=${eventId}`, {
             method: "DELETE"
@@ -70,18 +71,18 @@ class ApiClient {
             body: data,
         })
     };
-
     
     async getDepartments(){
         return this.fetch("admin/deaprtment-management")
     };
 
-
-    async updateDepartment(){
-        return this.fetch("admin/")
+    async updateDepartment(departmentId:string, data:any){
+        return this.fetch(`admin/add-department/update?departmentId=${departmentId}`, {
+            method: "PUT",
+            body: data
+        })
     };
     
-
     async deleteDepartment(departmentId:string){
         return this.fetch(`admin/add-department/delete?departmentId=${departmentId}`, {
             method: "DELETE"

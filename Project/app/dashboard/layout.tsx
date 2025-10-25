@@ -8,15 +8,16 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { Bell, BookOpen, Calendar, FileText, GraduationCap, Home, LogOut, Menu, MessageSquare, Search, Settings, User, Users } from 'lucide-react'
 import { signOut, useSession } from 'next-auth/react'
 import Link from 'next/link'
-import { redirect, usePathname } from 'next/navigation'
-import React, { Suspense, useState } from 'react'
+import { redirect, usePathname, useRouter } from 'next/navigation'
+import React, { Suspense, useEffect, useState } from 'react'
+import { ComingSoonWrapper } from '@/components/shared/ComingSoonWrapper'
 
 const sidebarItems = [
     { icon: Home, label: "Home", href: "/dashboard", active: true },
     { icon: Users, label: "Departments", href: "/dashboard/departments" },
     { icon: Calendar, label: "Events", href: "/dashboard/events" },
     { icon: MessageSquare, label: "Advisors", href: "/dashboard/advisors" },
-    { icon: FileText, label: "Past Papers", href: "/dashboard/past-papers" },
+    { icon: FileText, label: "Study Materials", href: "/dashboard/study-materials" },
     { icon: BookOpen, label: "Docs", href: "/dashboard/docs" },
     { icon: Settings, label: "Settings", href: "/dashboard/settings" },
 ]
@@ -58,29 +59,49 @@ const Userlayout = ({
     children: React.ReactNode
 }) => {
     const [searchQuery, setSearchQuery] = useState("");
-    const [sidebarOpen, setSidebarOpen] = useState(false)
+    const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const pathname = usePathname();
+    const router = useRouter();
     const { data: session, status } = useSession();
     const user = session?.user;
 
-    if (status === "loading") {
-        return (
-            <div className="h-screen flex bg-gray-50">
-                <div className="flex-1 flex items-center justify-center">
-                    <div className="text-center">
-                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-                        <p className="text-gray-600">Loading...</p>
-                    </div>
-                </div>
-            </div>
-        )
-    }
+    useEffect(() => {
+        if (status !== "loading") {
+            setIsLoading(false);
+        }
+    }, [status]);
 
-    if (!session) redirect("/login");
-    if (user?.role === "admin") redirect("/admin");
+    useEffect(() => {
+        if (status === "loading") return;
 
-    const handleLogout = () => {
-        signOut()
+        if (!session) {
+            router.push('/login');
+            return;
+        }
+
+        if (session.user?.role === "admin") {
+            router.push('/admin');
+            return;
+        }
+    }, [session, status, router]);
+
+    const handleLogout = async () => {
+        try {
+            if (typeof window !== 'undefined' && 'caches' in window) {
+                const cacheNames = await caches.keys();
+                await Promise.all(
+                    cacheNames.map(cacheName => caches.delete(cacheName))
+                );
+            }
+
+            await signOut({ redirect: false });
+            router.push('/login');
+            router.refresh();
+        } catch (error) {
+            console.error('Logout error:', error);
+            router.push('/login');
+        }
     }
 
     const Sidebar = () => {
@@ -151,7 +172,7 @@ const Userlayout = ({
 
                 {/* Mobile Sidebar */}
                 <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
-                    <SheetContent side="left" className="p-0 w-64">
+                    <SheetContent side="left" className="p-0 w-64" aria-label="Sidebar Menu">
                         <Sidebar />
                     </SheetContent>
                 </Sheet>
@@ -190,12 +211,14 @@ const Userlayout = ({
                                 {/* Notifications */}
                                 <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
-                                        <Button variant="ghost" size="sm" className="relative">
-                                            <Bell className="h-5 w-5" />
-                                            <span className="absolute -top-1 -right-1 h-5 w-5 bg-red-500 rounded-full text-xs text-white flex items-center justify-center">
-                                                3
-                                            </span>
-                                        </Button>
+                                        <ComingSoonWrapper>
+                                            <Button variant="ghost" size="sm" className="relative">
+                                                <Bell className="h-5 w-5" />
+                                                <span className="absolute -top-1 -right-1 h-5 w-5 bg-red-500 rounded-full text-xs text-white flex items-center justify-center">
+                                                    3
+                                                </span>
+                                            </Button>
+                                        </ComingSoonWrapper>
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent align="end" className="w-80">
                                         <DropdownMenuLabel>Notifications</DropdownMenuLabel>
@@ -246,8 +269,10 @@ const Userlayout = ({
                                             <span>Profile</span>
                                         </DropdownMenuItem>
                                         <DropdownMenuItem>
-                                            <Settings className="mr-2 h-4 w-4" />
-                                            <span>Settings</span>
+                                            <Link href="/dashboard/settings" className="flex items-center w-full gap-2">
+                                                <Settings className="mr-2 h-4 w-4" />
+                                                <span>Settings</span>
+                                            </Link>
                                         </DropdownMenuItem>
                                         <DropdownMenuSeparator />
                                         <DropdownMenuItem onClick={handleLogout}>

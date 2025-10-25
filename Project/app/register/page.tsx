@@ -34,7 +34,7 @@ export default function RegisterPage() {
 
           <CardContent className="space-y-4">
             {/* Social Login Buttons */}
-            <SocialLoginButtons />
+            {/* <SocialLoginButtons /> */}
 
             <div className="relative">
               <div className="absolute inset-0 flex items-center">

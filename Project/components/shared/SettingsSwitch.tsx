@@ -7,6 +7,8 @@ interface SettingsSwitchProps {
     description: string;
     checked: boolean;
     onCheckedChange: (checked: boolean) => void;
+    className?: string;
+    disabled?: boolean;
 }
 
 export default function SettingsSwitch({
@@ -15,6 +17,8 @@ export default function SettingsSwitch({
     description,
     checked,
     onCheckedChange,
+    className,
+    disabled = false,
 }: SettingsSwitchProps) {
     return (
         <div className="flex items-center justify-between">
@@ -26,6 +30,8 @@ export default function SettingsSwitch({
                 id={id}
                 checked={checked}
                 onCheckedChange={onCheckedChange}
+                className={`${disabled ? 'cursor-not-allowed' : ''} ${className}`}
+                disabled={disabled}
             />
         </div>
     );

@@ -9,11 +9,11 @@ import FiltersAndSearches from "@/components/admin/departments/FiltersAndSearche
 import { apiClient } from "@/lib/api-client"
 
 export interface DepartmentFormValues {
-  departmentName: string
+  departmentName?: string
   departmentBio: string
   departmentChairman: string
   deaprtmentchairmanEmail: string
-  established: string,
+  established?: string,
 }
 
 
@@ -23,6 +23,7 @@ export default function DepartmentManagement() {
   const [searchTerm] = useState("")
   const { toast } = useToast();
   const [loading, setLoading] = useState<boolean>(false);
+  const [loading2, setLoading2] = useState<boolean>(false);
   const [departmentStats, setDepartmentStats] = useState('');
   const [editForm, setEditForm] = useState<DepartmentFormValues>({
     departmentName: "",
@@ -33,8 +34,10 @@ export default function DepartmentManagement() {
   })
 
   const getDaprtment = async() => {
+    setLoading2(true);
     const respones:any = await apiClient.getDepartments();
     setDepartments(respones?.data?.departments)
+    setLoading2(false);
   }
 
   const getDaprtmentStats = async() => {
@@ -56,7 +59,6 @@ export default function DepartmentManagement() {
   )
 
   const handleSaveDepartment = async() => {
-    setLoading(true)
     const newDepartment = {
       ...editForm,
       totalStudents: 0,
@@ -65,10 +67,15 @@ export default function DepartmentManagement() {
       totalEvents: 0,
       advisors: [],
     }
+    if (!editForm.departmentName || !editForm.established || !editForm.departmentBio || !editForm.departmentChairman || !editForm.deaprtmentchairmanEmail) {
+      toast({ title: "Error", description: "All fields are required.", variant:"destructive" });
+      return;
+    }
+    setLoading(true)
+
     try {
       const response = await apiClient.createDepartment(newDepartment);
-      
-      setDepartments([...filteredDepartments, newDepartment])
+      setDepartments([...filteredDepartments as any, newDepartment])
       
       toast({
         title: "Department Added",
@@ -96,7 +103,7 @@ export default function DepartmentManagement() {
       <StatsCards departments={departmentStats} />
 
       {/* Search and Department Grid */}
-      <FiltersAndSearches departments={filteredDepartments} setDepartments={setDepartments} />
+      <FiltersAndSearches departments={filteredDepartments} setDepartments={setDepartments} loading2={loading2} />
 
       {/* Add Department Dialog */}
       <AddDepartmentDialog isAddDialogOpen={isAddDialogOpen} loading={loading} setIsAddDialogOpen={setIsAddDialogOpen} editForm={editForm} setEditForm={setEditForm} handleSaveDepartment={handleSaveDepartment} />

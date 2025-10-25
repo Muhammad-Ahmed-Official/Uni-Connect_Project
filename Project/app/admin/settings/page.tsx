@@ -10,9 +10,16 @@ import UserManagementSettingsTab from "@/components/admin/SettingsPage/UserManag
 import SystemSettingsTab from "@/components/admin/SettingsPage/SystemSettingsTab";
 import { useToast } from "@/hooks/use-toast";
 import { PlatformSettings, SecuritySettings, NotificationSettings, UserSettings } from "@/types/settings";
+import axios from "axios";
+import { useSession } from "next-auth/react";
+import { ComingSoonWrapper } from "@/components/shared/ComingSoonWrapper";
 
 export default function AdminSettingsPage() {
+  const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const { data: session } = useSession();
+  const userId = session?.user?.id;
+
 
   // Platform settings
   const [platformSettings, setPlatformSettings] = useState<PlatformSettings>({
@@ -27,13 +34,9 @@ export default function AdminSettingsPage() {
 
   // Security settings
   const [securitySettings, setSecuritySettings] = useState<SecuritySettings>({
-    passwordMinLength: "8",
-    requireSpecialChars: true,
-    requireNumbers: true,
-    requireUppercase: true,
+    newPassword: "",
+    confirmPassword: "",
     twoFactorEnabled: false,
-    loginAttemptLimit: "5",
-    accountLockoutDuration: "30",
   });
 
   // Notification settings
@@ -65,11 +68,39 @@ export default function AdminSettingsPage() {
     });
   };
 
-  const handleSecuritySave = () => {
-    toast({
-      title: "Security Settings Updated",
-      description: "Security configuration has been saved successfully.",
-    });
+  const handleSecuritySave = async () => {
+    setIsLoading(true);
+    if (securitySettings.newPassword !== securitySettings.confirmPassword) {
+      toast({
+        title: "Error",
+        description: "New Password and Confirm Password do not match.",
+        variant: "destructive"
+      });
+      return;
+    }
+    try {
+      const res = await axios.put("/api/auth/update-password", {
+        userId,
+        newPassword: securitySettings.newPassword
+      });
+      toast({
+        title: "Settings Updated",
+        description: res.data.message || "Security configuration has been saved successfully.",
+        variant: "success"
+      });
+
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to update password. Please try again.",
+        variant: "destructive"
+      });
+      return;
+    } finally {
+      setIsLoading(false);
+    }
+    securitySettings.newPassword = "";
+    securitySettings.confirmPassword = "";
   };
 
   const handleNotificationSave = () => {
@@ -110,11 +141,20 @@ export default function AdminSettingsPage() {
 
       <Tabs defaultValue="platform" className="space-y-6">
         <TabsList className="grid w-full grid-cols-5">
-          <TabsTrigger value="platform">Platform</TabsTrigger>
-          <TabsTrigger value="security">Security</TabsTrigger>
-          <TabsTrigger value="notifications">Notifications</TabsTrigger>
-          <TabsTrigger value="users">User Management</TabsTrigger>
-          <TabsTrigger value="system">System</TabsTrigger>
+          <TabsTrigger className="cursor-pointer" value="platform">Platform</TabsTrigger>
+          <TabsTrigger className="cursor-pointer" value="security">Security</TabsTrigger>
+
+          <ComingSoonWrapper>
+            <TabsTrigger value="notifications" disabled>Notifications</TabsTrigger>
+          </ComingSoonWrapper>
+
+          <ComingSoonWrapper>
+            <TabsTrigger value="users" disabled>User Management</TabsTrigger>
+          </ComingSoonWrapper>
+
+          <ComingSoonWrapper>
+            <TabsTrigger value="system" disabled>System</TabsTrigger>
+          </ComingSoonWrapper>
         </TabsList>
 
         {/* Platform Settings */}
@@ -132,6 +172,8 @@ export default function AdminSettingsPage() {
             settings={securitySettings}
             onSettingsChange={setSecuritySettings}
             onSave={handleSecuritySave}
+            errors={{ newPassword: "", confirmPassword: "" }}
+            loading={isLoading}
           />
         </TabsContent>
 

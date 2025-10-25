@@ -30,6 +30,7 @@ const AddDepartmentDialog = ({ isAddDialogOpen, setIsAddDialogOpen, editForm, se
                         <div>
                             <Label className='mb-2' htmlFor="new-name">Department Name</Label>
                             <Select
+                                required
                                 value={editForm.departmentName}
                                 onValueChange={(value) =>
                                     setEditForm({ ...editForm, departmentName: value })
@@ -70,6 +71,7 @@ const AddDepartmentDialog = ({ isAddDialogOpen, setIsAddDialogOpen, editForm, se
                         <div>
                             <Label className='mb-2' htmlFor="new-name">Established Year</Label>
                             <Input
+                                required
                                 id="new-name"
                                 type='number'
                                 value={editForm.established}
@@ -92,6 +94,7 @@ const AddDepartmentDialog = ({ isAddDialogOpen, setIsAddDialogOpen, editForm, se
                             <Label className='mb-2' htmlFor="new-head">Department Chairman</Label>
                             <Input
                                 id="new-head"
+                                required
                                 value={editForm.departmentChairman}
                                 onChange={(e) => setEditForm({ ...editForm, departmentChairman: e.target.value })}
                                 placeholder="e.g., Dr. John Smith"
@@ -102,6 +105,7 @@ const AddDepartmentDialog = ({ isAddDialogOpen, setIsAddDialogOpen, editForm, se
                             <Input
                                 id="new-email"
                                 type="email"
+                                required
                                 value={editForm.deaprtmentchairmanEmail}
                                 onChange={(e) => setEditForm({ ...editForm, deaprtmentchairmanEmail: e.target.value })}
                                 placeholder="Dr. John Smith.edu"

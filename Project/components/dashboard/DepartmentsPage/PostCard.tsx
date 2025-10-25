@@ -1,4 +1,3 @@
-import { useState } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -10,22 +9,24 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Pin, Clock, Heart, MessageCircle, Share2, MoreHorizontal } from "lucide-react"
-import { ForumPost } from "@/app/dashboard/departments/[id]/page"
+import { Post } from "@/types/post"
+import { format } from "timeago.js"
+import { ComingSoonWrapper } from "@/components/shared/ComingSoonWrapper"
 
 interface PostCardProps {
-    post: ForumPost
+    post: Post
     onLike: (postId: number) => void
 }
 
 export const PostCard = ({ post, onLike }: PostCardProps) => {
     return (
-        <Card key={post.id} className="hover:shadow-md transition-shadow">
+        <Card key={post._id} className="hover:shadow-md transition-shadow">
             <CardContent className="p-6">
                 <div className="flex items-start space-x-4">
                     <Avatar className="w-10 h-10">
-                        <AvatarImage src={post.author.avatar || "/placeholder.svg"} alt={post.author.name} />
+                        <AvatarImage src={post.user_id.profilePic || "/student-avatar.png"} alt={post.user_id.firstName} />
                         <AvatarFallback>
-                            {post.author.name
+                            {post.user_id.firstName + " " + post.user_id.lastName
                                 .split(" ")
                                 .map((n) => n[0])
                                 .join("")}
@@ -37,13 +38,12 @@ export const PostCard = ({ post, onLike }: PostCardProps) => {
                             <h3 className="font-semibold text-lg text-gray-900">{post.title}</h3>
                         </div>
                         <div className="flex items-center space-x-2 text-sm text-gray-500 mb-3">
-                            <span className="font-medium">{post.author.name}</span>
-                            <span>•</span>
-                            <span>{post.author.year}</span>
+                            <span className="font-medium">{post.user_id.firstName + " " + post.user_id.lastName}</span>
+                            <span>{post.user_id.year ?? ""}</span>
                             <span>•</span>
                             <span className="flex items-center space-x-1">
                                 <Clock className="h-3 w-3" />
-                                <span>{post.timestamp}</span>
+                                <span>{format(post.createdAt)}</span>
                             </span>
                         </div>
                         <p className="text-gray-700 mb-4 leading-relaxed">{post.content}</p>
@@ -56,23 +56,31 @@ export const PostCard = ({ post, onLike }: PostCardProps) => {
                         </div>
                         <div className="flex items-center justify-between">
                             <div className="flex items-center space-x-4">
-                                <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    onClick={() => onLike(post.id)}
-                                    className={`flex items-center space-x-1 ${post.isLiked ? "text-red-600" : "text-gray-500"}`}
-                                >
-                                    <Heart className={`h-4 w-4 ${post.isLiked ? "fill-current" : ""}`} />
-                                    <span>{post.likes}</span>
-                                </Button>
-                                <Button variant="ghost" size="sm" className="flex items-center space-x-1 text-gray-500">
-                                    <MessageCircle className="h-4 w-4" />
-                                    <span>{post.replies}</span>
-                                </Button>
-                                <Button variant="ghost" size="sm" className="flex items-center space-x-1 text-gray-500">
-                                    <Share2 className="h-4 w-4" />
-                                    <span>Share</span>
-                                </Button>
+                                <ComingSoonWrapper>
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        // onClick={() => onLike(post.)}
+                                        // className={`flex items-center space-x-1 ${post. ? "text-red-600" : "text-gray-500"}`}
+                                        className={`flex items-center space-x-1 text-gray-500`}
+                                    >
+                                        {/* <Heart className={`h-4 w-4 ${post.isLiked ? "fill-current" : ""}`} /> */}
+                                        <Heart className={`h-4 w-4 fill-current`} />
+                                        <span>{post.likes_count}</span>
+                                    </Button>
+                                </ComingSoonWrapper>
+                                <ComingSoonWrapper>
+                                    <Button variant="ghost" size="sm" className="flex items-center space-x-1 text-gray-500">
+                                        <MessageCircle className="h-4 w-4" />
+                                        <span>{post.comment_count}</span>
+                                    </Button>
+                                </ComingSoonWrapper>
+                                <ComingSoonWrapper>
+                                    <Button variant="ghost" size="sm" className="flex items-center space-x-1 text-gray-500">
+                                        <Share2 className="h-4 w-4" />
+                                        <span>Share</span>
+                                    </Button>
+                                </ComingSoonWrapper>
                             </div>
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
@@ -81,9 +89,21 @@ export const PostCard = ({ post, onLike }: PostCardProps) => {
                                     </Button>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent align="end">
-                                    <DropdownMenuItem>Save Post</DropdownMenuItem>
-                                    <DropdownMenuItem>Report</DropdownMenuItem>
-                                    <DropdownMenuItem>Hide</DropdownMenuItem>
+                                    <DropdownMenuItem>
+                                        <ComingSoonWrapper>
+                                            Save Post
+                                        </ComingSoonWrapper>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem>
+                                        <ComingSoonWrapper>
+                                            Report
+                                        </ComingSoonWrapper>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem>
+                                        <ComingSoonWrapper>
+                                            Hide
+                                        </ComingSoonWrapper>
+                                    </DropdownMenuItem>
                                 </DropdownMenuContent>
                             </DropdownMenu>
                         </div>

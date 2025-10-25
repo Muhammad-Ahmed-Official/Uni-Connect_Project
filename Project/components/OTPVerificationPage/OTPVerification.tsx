@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import axios from "axios"
 import { useToast } from "@/hooks/use-toast"
-import { redirect } from "next/navigation"
+import { redirect, useRouter } from "next/navigation"
+import { ApiErrorResponse } from "@/types/ApiErrorResponse"
 
 export function OTPVerification({ email }: { email: string | null }) {
     const [otp, setOtp] = useState<string[]>(["", "", "", "", "", ""])
@@ -13,6 +14,7 @@ export function OTPVerification({ email }: { email: string | null }) {
     const [isResending, setIsResending] = useState(false)
     const [error, setError] = useState("");
     const { toast } = useToast();
+    const router = useRouter();
 
 
     const handleInputChange = (index: number, value: string) => {
@@ -61,22 +63,23 @@ export function OTPVerification({ email }: { email: string | null }) {
 
     const handleVerify = async () => {
         const otpCode = otp.join("")
-
+        setIsLoading(true);
         if (otpCode.length !== 6) {
             setError("Please enter all 6 digits")
             return
         }
-
-        setError("")
-        setIsLoading(true)
-
         try {
             await axios.post("/api/auth/verifyCode", { code: otpCode, email: email as string })
 
-            toast({ title: 'Verification successful!', description: 'Your account has been verified successfully.', variant: "success"});
-            redirect('/login');
-        } catch (err) {
-            setError("Verification failed. Please try again.")
+            toast({ title: 'Verification successful!', description: 'Your account has been verified successfully.', variant: "success" });
+            setError("")
+            router.push('/login')
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                const serverError = error.response?.data as ApiErrorResponse;
+                setError(serverError?.message || "Verification failed. Please try again.")
+                setTimeout(() => setError(""), 3000);
+            }
         } finally {
             setIsLoading(false)
         }
@@ -105,7 +108,7 @@ export function OTPVerification({ email }: { email: string | null }) {
                 </div>
 
                 {/* OTP Input Fields */}
-                <div className="flex justify-center gap-3">
+                <div className="flex justify-center gap-3 flex-wrap">
                     {otp.map((digit, index) => (
                         <input
                             key={index}

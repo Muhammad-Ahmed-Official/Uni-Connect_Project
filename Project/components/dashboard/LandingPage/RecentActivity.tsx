@@ -1,39 +1,35 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import axios from "axios"
 import { ArrowRight, Clock } from "lucide-react"
+import { useEffect, useState } from "react"
+import RecentActivitySkeleton from "./RecentActivitySkeleton"
 
-const recentActivity = [
-    {
-        type: "forum",
-        title: "New post in Computer Science",
-        description: "Help needed with Data Structures assignment",
-        time: "2 hours ago",
-        unread: true,
-    },
-    {
-        type: "event",
-        title: "Tech Talk: AI in Healthcare",
-        description: "Tomorrow at 3:00 PM in Main Auditorium",
-        time: "5 hours ago",
-        unread: true,
-    },
-    {
-        type: "advisor",
-        title: "Response from Dr. Smith",
-        description: "Your course selection query has been answered",
-        time: "1 day ago",
-        unread: false,
-    },
-    {
-        type: "paper",
-        title: "New past papers uploaded",
-        description: "Database Systems - Fall 2023 papers available",
-        time: "2 days ago",
-        unread: false,
-    },
-]
+interface Activity {
+    title: string;
+    description?: string;
+    time: string;
+    unread: boolean;
+}
 
 const RecentActivity = () => {
+    const [recentActivity, setRecentActivity] = useState<Activity[]>([]);
+    const [loading, setLoading] = useState(true);
+    useEffect(() => {
+        const getDashboardActivity = async () => {
+            setLoading(true);
+            const res = await axios.get("/api/dashboard/recent-activity");
+            setRecentActivity(res.data.data);
+            setLoading(false);
+        }
+
+        getDashboardActivity();
+    }, [])
+
+    if (loading) {
+        return <RecentActivitySkeleton />;
+    }
+
     return (
         <div>
             <Card>

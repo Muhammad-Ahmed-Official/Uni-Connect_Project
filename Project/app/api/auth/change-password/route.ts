@@ -8,8 +8,6 @@ import bcrypt from "bcryptjs";
 
 export const PUT = asyncHandler(async (request: NextRequest): Promise<NextResponse> => {
     const { resetToken, newPassword } = await request.json();
-    console.log("resetToken ==>", resetToken);
-    console.log("newPassword ==>", newPassword);
 
     if (!resetToken || !newPassword) return nextError(400, "Missing fields");
 

@@ -19,8 +19,12 @@ export default async function LoginPage() {
   const session = await getServerSession(authOptions);
   const role = session?.user?.role;
 
-  if (role === "admin") redirect("/admin");
-  if (role === "user") redirect("/dashboard");
+  if (role === "admin") {
+    redirect("/admin");
+  }
+  if (role === "user") {
+    redirect("/dashboard");
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center p-4">
@@ -44,7 +48,7 @@ export default async function LoginPage() {
 
           <CardContent className="space-y-4">
             {/* Social Login Buttons */}
-            <SocialLoginButtons />
+            {/* <SocialLoginButtons /> */}
 
             <div className="relative">
               <div className="absolute inset-0 flex items-center">

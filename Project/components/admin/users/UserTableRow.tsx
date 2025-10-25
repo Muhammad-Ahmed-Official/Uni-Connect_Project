@@ -53,7 +53,7 @@ const UserTableRow = ({ user, isDropdownOpen, roleColors, statusColors, setIsDro
                     <span className="ml-1 capitalize">{user.status}</span>
                 </Badge>
             </TableCell>
-            <TableCell className="text-gray-600">{user.lastActive}</TableCell>
+            {/* <TableCell className="text-gray-600">{user.lastActive}</TableCell> */}
             <TableCell className="text-right">
                 <DropdownMenu
                     open={isDropdownOpen === user.id}
