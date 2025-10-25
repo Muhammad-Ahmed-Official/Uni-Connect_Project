@@ -88,12 +88,12 @@ export default function UserManagement() {
 
   const getUsers = async() => {
     const response:any = await apiClient.getUsers();
-    console.log(response?.data);
-    // setUsers(response.data);
+    // console.log(response?.data);
+    setUsers(response.data);
   }
   
   useEffect(() => {
-    // getUsers();
+    getUsers();
     getUserStats();
   }, [])
 
