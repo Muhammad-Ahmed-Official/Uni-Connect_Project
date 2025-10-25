@@ -74,7 +74,6 @@ export const GET = asyncHandler(async (req: NextRequest): Promise<NextResponse> 
     });
 });
 
-
 export const POST = asyncHandler(async (req: NextRequest): Promise<NextResponse> => {
     await connectDB();
 
@@ -91,63 +90,81 @@ export const POST = asyncHandler(async (req: NextRequest): Promise<NextResponse>
     const body = await req.json();
     const {
         title,
-        document,
-        departmentName,
-        year,
-        semester,
-        document_type,
-        teacher,
-    } = body;
-
-    // Validate required fields
-    if (
-        !title ||
-        !document ||
-        !departmentName ||
-        !year ||
-        !semester ||
-        !document_type ||
-        !teacher
-    ) {
-        return nextError(400, "Missing required fields");
-    }
-
-    const allowedTypes = ["final", "midterms", "repeater"];
-    if (!allowedTypes.includes(document_type)) {
-        return nextError(400, "Invalid document type");
-    }
-
-    if (session.user.role === "admin") {
-
-        const newDoc = await DocumentSchema.create({
-            title,
-            document,
-            year,
-            semester,
-            document_type,
-            teacher,
-            userId,
-        });
-        return nextResponse(201, "Document uploaded successfully", newDoc);
-
-    }
-    const department = await departmentModel.findOne({ departmentName });
-    if (!department) {
-        return nextError(400, "Invalid department name");
-    }
-
-    const department_id = department._id;
-
-
-    const newDoc = await DocumentSchema.create({
-        title,
-        document,
+        document_url,
         department_id,
         year,
         semester,
+        exam_type,
+        teacher_name,
+        subject_name,
+        document_type
+    } = body;
+
+    console.log("body is: ", body);
+
+    if (
+        !title ||
+        !document_url ||
+        !department_id ||
+        !semester ||
+        !exam_type ||
+        !subject_name ||
+        !document_type
+    ) {
+        return nextError(400, "Missing required fields: " + JSON.stringify({
+            title: !title,
+            document_url: !document_url,
+            department_id: !department_id,
+            semester: !semester,
+            exam_type: !exam_type,
+            subject_name: !subject_name,
+            document_type: !document_type
+        }));
+    }
+
+    const allowedExamTypes = ["final", "midterm", "quiz"];
+    if (!allowedExamTypes.includes(exam_type)) {
+        return nextError(400, "Invalid exam type. Allowed: final, midterm, quiz");
+    }
+
+    const allowedDocTypes = ["past-paper", "study-material"];
+    if (!allowedDocTypes.includes(document_type)) {
+        return nextError(400, "Invalid document type. Allowed: past-paper, policy-doc");
+    }
+
+    if (session.user.role === "admin") {
+        const newDoc = await DocumentSchema.create({
+            title,
+            document_url,
+            year: year || new Date().getFullYear().toString(),
+            semester,
+            exam_type,
+            teacher_name,
+            subject_name,
+            document_type,
+            userId,
+        });
+        return nextResponse(201, "Document uploaded successfully", newDoc);
+    }
+
+    const department = await departmentModel.findById(department_id);
+    if (!department) {
+        return nextError(400, "Invalid department ID");
+    }
+
+    console.log("department is: ", department);
+
+    const newDoc = await DocumentSchema.create({
+        title,
+        document_url,
+        department_id,
+        year: year || new Date().getFullYear().toString(),
+        semester,
+        exam_type,
+        teacher_name,
+        subject_name,
         document_type,
-        teacher,
-        userId,
+        user_id: userId,
     });
 
     return nextResponse(201, "Document uploaded successfully", newDoc);
@@ -193,7 +210,7 @@ export const PUT = asyncHandler(async (req: NextRequest): Promise<NextResponse> 
     const { title, document, year, semester, document_type, teacher } = body;
 
 
-    const existingDoc = await DocumentSchema.findById({_id:documentId});
+    const existingDoc = await DocumentSchema.findById({ _id: documentId });
     if (!existingDoc) return nextError(404, "Document not found");
 
     const isAdmin = session.user.role === "admin";

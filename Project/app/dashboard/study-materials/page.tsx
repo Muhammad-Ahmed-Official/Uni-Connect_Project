@@ -8,6 +8,7 @@ import ResultsHeader from "@/components/dashboard/PastPapersPage/ResultsHeader";
 import PapersGrid from "@/components/dashboard/PastPapersPage/PapersGrid";
 import { PastPaper } from "@/types/past-paper";
 import UploadDocumentModal from "@/components/dashboard/PastPapersPage/uploadDocumentModal";
+import axios from "axios";
 
 const pastPapers: PastPaper[] = [
   {
@@ -116,15 +117,6 @@ export default function PastPapersPage() {
     console.log(`Downloading paper: ${title}`);
   };
 
-  // Document actions 
-  const handleUploadDocument = () => {
-    setIsUploadModalDocumentOpen(false);
-    toast({
-      title: "Document Uploaded",
-      description: "Document has been uploaded and is pending approval.",
-    });
-  };
-
   return (
     <div className="p-2 sm:p-6 space-y-6">
       {/* Header */}
@@ -136,7 +128,6 @@ export default function PastPapersPage() {
         <UploadDocumentModal
           isOpen={isUploadModalDocumentOpen}
           onOpenChange={setIsUploadModalDocumentOpen}
-          onUpload={handleUploadDocument}
         />
       </div>
 
