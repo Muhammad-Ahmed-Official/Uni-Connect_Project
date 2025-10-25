@@ -122,18 +122,35 @@ const Userlayout = ({
                             ? pathname === "/dashboard"
                             : pathname === item.href || pathname.startsWith(item.href + "/")
                         return (
-                            <Link
-                                key={item.href}
-                                href={item.href}
-                                className={`group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors ${isActive ? "bg-blue-100 text-blue-700" : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                                    }`}
-                                onClick={() => setSidebarOpen(false)}
-                            >
-                                <item.icon
-                                    className={`mr-3 h-5 w-5 ${isActive ? "text-blue-700" : "text-gray-400 group-hover:text-gray-500"}`}
-                                />
-                                {item.label}
-                            </Link>
+                            item.label === "Advisors" || item.label === "Docs" ? (
+                                <ComingSoonWrapper key={item.href}>
+                                    <Link
+                                        key={item.href}
+                                        href={item.href}
+                                        className={`group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors ${isActive ? "bg-blue-100 text-blue-700" : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                                            }`}
+                                        onClick={() => setSidebarOpen(false)}
+                                    >
+                                        <item.icon
+                                            className={`mr-3 h-5 w-5 ${isActive ? "text-blue-700" : "text-gray-400 group-hover:text-gray-500"}`}
+                                        />
+                                        {item.label}
+                                    </Link>
+                                </ComingSoonWrapper>
+                            ) : (
+                                <Link
+                                    key={item.href}
+                                    href={item.href}
+                                    className={`group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors ${isActive ? "bg-blue-100 text-blue-700" : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                                        }`}
+                                    onClick={() => setSidebarOpen(false)}
+                                >
+                                    <item.icon
+                                        className={`mr-3 h-5 w-5 ${isActive ? "text-blue-700" : "text-gray-400 group-hover:text-gray-500"}`}
+                                    />
+                                    {item.label}
+                                </Link>
+                            )
                         )
                     })}
                 </nav>
@@ -156,7 +173,7 @@ const Userlayout = ({
                         </div>
                     </div>
                 </div>
-            </div>
+            </div >
         )
     }
 

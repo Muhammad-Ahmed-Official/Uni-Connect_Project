@@ -21,6 +21,7 @@ import { ApiErrorResponse } from "@/types/ApiErrorResponse";
 interface UploadDocumentModalProps {
     isOpen: boolean;
     onOpenChange: (open: boolean) => void;
+    fetchDocuments: () => void;
 }
 
 interface Department {
@@ -40,7 +41,7 @@ interface FormData {
     exam_type: string;
 }
 
-export default function UploadDocumentModal({ isOpen, onOpenChange }: UploadDocumentModalProps) {
+export default function UploadDocumentModal({ isOpen, onOpenChange, fetchDocuments }: UploadDocumentModalProps) {
     const [uploadType, setUploadType] = useState("past-paper");
     const [departments, setDepartments] = useState<Department[]>([]);
     const [isFetchingDeparts, setIsFetchingDeparts] = useState(false);
@@ -92,6 +93,7 @@ export default function UploadDocumentModal({ isOpen, onOpenChange }: UploadDocu
             setLoading(true);
             const res = await axios.post("/api/documents", data);
             toast({ title: 'Success', description: res.data.message, variant: "success" });
+            fetchDocuments();
         } catch (error) {
             console.error("Error uploading document:", error);
             if (axios.isAxiosError(error)) {

@@ -1,6 +1,5 @@
 "use client";
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "@/hooks/use-toast";
 import Header from "@/components/dashboard/common/Header";
 import SearchFilters from "@/components/dashboard/PastPapersPage/SearchFilters";
@@ -9,113 +8,59 @@ import PapersGrid from "@/components/dashboard/PastPapersPage/PapersGrid";
 import { PastPaper } from "@/types/past-paper";
 import UploadDocumentModal from "@/components/dashboard/PastPapersPage/uploadDocumentModal";
 import axios from "axios";
-
-const pastPapers: PastPaper[] = [
-  {
-    id: 1,
-    title: "Data Structures and Algorithms",
-    subject: "Computer Science",
-    year: "2023",
-    semester: "Fall",
-    examType: "Final",
-    professor: "Dr. Smith",
-    downloads: 245,
-    uploadDate: "2023-12-15",
-    fileSize: "2.4 MB",
-  },
-  {
-    id: 2,
-    title: "Calculus II",
-    subject: "Mathematics",
-    year: "2023",
-    semester: "Spring",
-    examType: "Midterm",
-    professor: "Prof. Johnson",
-    downloads: 189,
-    uploadDate: "2023-05-20",
-    fileSize: "1.8 MB",
-  },
-  {
-    id: 3,
-    title: "Organic Chemistry",
-    subject: "Chemistry",
-    year: "2022",
-    semester: "Fall",
-    examType: "Final",
-    professor: "Dr. Williams",
-    downloads: 156,
-    uploadDate: "2022-12-10",
-    fileSize: "3.1 MB",
-  },
-  {
-    id: 4,
-    title: "Microeconomics",
-    subject: "Economics",
-    year: "2023",
-    semester: "Spring",
-    examType: "Quiz",
-    professor: "Prof. Brown",
-    downloads: 98,
-    uploadDate: "2023-04-15",
-    fileSize: "1.2 MB",
-  },
-  {
-    id: 5,
-    title: "Physics Mechanics",
-    subject: "Physics",
-    year: "2023",
-    semester: "Fall",
-    examType: "Final",
-    professor: "Dr. Davis",
-    downloads: 203,
-    uploadDate: "2023-12-08",
-    fileSize: "2.7 MB",
-  },
-  {
-    id: 6,
-    title: "Database Systems",
-    subject: "Computer Science",
-    year: "2022",
-    semester: "Spring",
-    examType: "Midterm",
-    professor: "Prof. Wilson",
-    downloads: 167,
-    uploadDate: "2022-04-22",
-    fileSize: "2.1 MB",
-  },
-];
-
-const subjects = ["All Subjects", "Computer Science", "Mathematics", "Chemistry", "Economics", "Physics"];
-const years = ["All Years", "2023", "2022", "2021", "2020"];
-const semesters = ["All Semesters", "Fall", "Spring", "Summer"];
-const examTypes = ["All Types", "Final", "Midterm", "Quiz", "Assignment"];
+import PaperCardSkeleton from "@/components/dashboard/PastPapersPage/PaperCardSkeleton";
+import ResultsHeaderSkeleton from "@/components/dashboard/PastPapersPage/ResultsHeaderSkeleton";
 
 export default function PastPapersPage() {
   const [isUploadModalDocumentOpen, setIsUploadModalDocumentOpen] = useState(false);
+  const [documents, setDocuments] = useState<PastPaper[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [departments, setDepartments] = useState<string[]>([]);
 
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedSubject, setSelectedSubject] = useState("All Subjects");
-  const [selectedYear, setSelectedYear] = useState("All Years");
-  const [selectedSemester, setSelectedSemester] = useState("All Semesters");
+  const [selectedDepartment, setSelectedDepartment] = useState("All Departments");
   const [selectedExamType, setSelectedExamType] = useState("All Types");
 
-  const filteredPapers = pastPapers.filter((paper) => {
-    const matchesSearch =
-      paper.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      paper.professor.toLowerCase().includes(searchTerm.toLowerCase());
+  const fetchDocuments = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get('/api/documents/get-all-documents');
+      setDocuments(response.data.data || []);
 
-    const matchesSubject = selectedSubject === "All Subjects" || paper.subject === selectedSubject;
-    const matchesYear = selectedYear === "All Years" || paper.year === selectedYear;
-    const matchesSemester = selectedSemester === "All Semesters" || paper.semester === selectedSemester;
-    const matchesExamType = selectedExamType === "All Types" || paper.examType === selectedExamType;
+      const deptSet = new Set<string>((response.data.data?.map((doc: PastPaper) =>
+        doc.department_id.departmentName
+      ) || []) as string[]);
+      setDepartments(["All Departments", ...Array.from(deptSet)]);
 
-    return matchesSearch && matchesSubject && matchesYear && matchesSemester && matchesExamType;
-  });
-
-  const handleDownload = (paperId: number, title: string) => {
-    // Simulate download
-    console.log(`Downloading paper: ${title}`);
+    } catch (error) {
+      console.error("Error fetching documents:", error);
+      toast({
+        title: "Error",
+        description: "Failed to load documents",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
+
+  useEffect(() => {
+    fetchDocuments();
+  }, []);
+  
+  const filteredPapers = documents.filter((paper) => {
+    const matchesSearch = paper.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      paper.subject_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (paper.teacher_name && paper.teacher_name.toLowerCase().includes(searchTerm.toLowerCase()));
+
+    const matchesDepartment = selectedDepartment === "All Departments" ||
+      paper.department_id.departmentName === selectedDepartment;
+
+    const matchesExamType = selectedExamType === "All Types" ||
+      paper.exam_type === selectedExamType;
+
+    return matchesSearch && matchesDepartment && matchesExamType;
+  });
 
   return (
     <div className="p-2 sm:p-6 space-y-6">
@@ -123,44 +68,59 @@ export default function PastPapersPage() {
       <div className="flex justify-between items-center">
         <Header
           title="Study Materials Repository"
-          description="Access previous assignments, and study materials"
+          description="Access past papers, assignments, and study materials"
         />
         <UploadDocumentModal
           isOpen={isUploadModalDocumentOpen}
           onOpenChange={setIsUploadModalDocumentOpen}
+          fetchDocuments={fetchDocuments}
         />
       </div>
 
       {/* Search and Filters */}
-      <SearchFilters
-        searchTerm={searchTerm}
-        onSearchChange={setSearchTerm}
-        selectedSubject={selectedSubject}
-        onSubjectChange={setSelectedSubject}
-        selectedYear={selectedYear}
-        onYearChange={setSelectedYear}
-        selectedSemester={selectedSemester}
-        onSemesterChange={setSelectedSemester}
-        selectedExamType={selectedExamType}
-        onExamTypeChange={setSelectedExamType}
-        subjects={subjects}
-        years={years}
-        semesters={semesters}
-        examTypes={examTypes}
-      />
+      {
+        loading ? (
+          <ResultsHeaderSkeleton />
+        ) : (      
+          <SearchFilters
+            searchTerm={searchTerm}
+            onSearchChange={setSearchTerm}
+            selectedDepartment={selectedDepartment}
+            onDepartmentChange={setSelectedDepartment}
+            selectedExamType={selectedExamType}
+            onExamTypeChange={setSelectedExamType}
+            departments={departments}
+            examTypes={["All Types", "final", "midterms", "quiz"]}
+            loading={loading}
+          />
+        )
+      }
 
       {/* Results Header */}
-      <ResultsHeader
-        filteredCount={filteredPapers.length}
-        totalCount={pastPapers.length}
-        papers={pastPapers}
-      />
+      {
+        loading ? (
+          <ResultsHeaderSkeleton />
+        ) : (
+          <ResultsHeader
+            filteredCount={filteredPapers.length}
+            totalCount={documents.length}
+            papers={filteredPapers}
+          />
+        )
+      }
 
       {/* Papers Grid */}
-      <PapersGrid
-        papers={filteredPapers}
-        onDownload={handleDownload}
-      />
+      {loading ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {Array.from({ length: 6 }).map((_, index) => (
+            <PaperCardSkeleton key={index} />
+          ))}
+        </div>
+      ) : (
+        <PapersGrid
+          papers={filteredPapers}
+        />
+      )}
     </div>
   );
 }
