@@ -28,9 +28,6 @@ export const GET = asyncHandler(async (req: NextRequest): Promise<NextResponse> 
 
     // Fetch user by ID
 
-
-
-
     const user = await User.findById(userId).select("-password");
 
     if(!user){
