@@ -160,7 +160,7 @@ export const POST = asyncHandler(async (request: NextRequest): Promise<NextRespo
 
   await connectDB();
 
-  const department_id = await departmentModel.findOne({ deapartmentName: data.departmentName }).select("_id")
+  const department_id = await departmentModel.findOne({ departmentName: data.departmentName }).select("_id")
   if (!department_id) return nextError(400, "Department not found")
 
   switch (data?.role) {

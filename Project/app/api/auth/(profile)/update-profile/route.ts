@@ -16,7 +16,7 @@ export const PUT = asyncHandler(async (req: NextRequest): Promise<NextResponse> 
   // validate with Zod
   const result = profileUpdateSchema.safeParse(body);
   if (!result.success) {
-    return nextError(400, result.error.issues[0].message)|| "Invalid Fields!";
+    return nextError(400, result.error.issues[0].message || "Invalid Fields!");
   }
 
   await connectDB();
