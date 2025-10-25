@@ -19,7 +19,8 @@ export const GET = asyncHandler(async (req: NextRequest): Promise<NextResponse> 
       return nextError(403, "Forbidden: You are not allowed to view user data");
     }
 
-    const {userId} =await req.json();
+    const { searchParams } = new URL(req.url);
+    const userId = searchParams.get("userId");
 
     if(!userId){
       return nextError(400, "Bad Request: User ID is required");
