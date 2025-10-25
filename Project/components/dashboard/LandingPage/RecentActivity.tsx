@@ -55,10 +55,6 @@ const RecentActivity = () => {
                             </div>
                         ))}
                     </div>
-                    <Button variant="ghost" className="w-full mt-4 text-blue-600">
-                        View all activity
-                        <ArrowRight className="w-4 h-4 ml-2" />
-                    </Button>
                 </CardContent>
             </Card>
         </div>

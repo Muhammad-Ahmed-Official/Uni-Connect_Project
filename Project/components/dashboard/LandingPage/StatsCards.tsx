@@ -14,17 +14,15 @@ const StatsCards = () => {
         const fetchData = async () => {
             try {
                 setLoading(true);
-
-                // const [discussionsRes, eventsRes, materialsRes] = await Promise.all([
-                const [discussionsRes, eventsRes, ] = await Promise.all([
+                const [discussionsRes, eventsRes, materialsRes] = await Promise.all([
                     axios.get("/api/posts/read/get-all-posts"),
                     axios.get("/api/event/read"),
-                    // axios.get("/api/materials/read/get-all-materials")
+                    axios.get("/api/documents/get-all-documents"),
                 ]);
 
                 setDiscussions(discussionsRes.data.data.length);
                 setEvents(eventsRes.data.data.length);
-                // setMaterials(materialsRes.data.data.length);
+                setMaterials(materialsRes.data.data.length);
 
             } catch (error) {
                 console.error("Error fetching stats:", error);

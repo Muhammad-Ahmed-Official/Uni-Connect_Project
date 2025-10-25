@@ -1,12 +1,23 @@
 export interface PastPaper {
-    id: number;
+    _id: string;
     title: string;
-    subject: string;
-    year: string;
+    document_url: string;
+    subject_name: string;
+    department_id: {
+        _id: string;
+        departmentName: string;
+    };
+    year?: string;
     semester: string;
-    examType: string;
-    professor: string;
-    downloads: number;
-    uploadDate: string;
-    fileSize: string;
+    document_type: string;
+    exam_type: string;
+    teacher_name?: string;
+    totalDownloads: number;
+    view: number;
+    createdAt: string;
+    user_id?: {
+        firstName: string;
+        lastName: string;
+        email: string;
+    };
 }
