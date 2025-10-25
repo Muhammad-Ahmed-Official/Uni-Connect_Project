@@ -27,13 +27,13 @@ export const GET = asyncHandler(async (req: NextRequest): Promise<NextResponse> 
         return nextError(400, "Bad Request: Post ID is required");
     }
 
-    const post = await PostModel.findById(postId).populate("user_id").select("_id password");
+    const post = await PostModel.findById(postId).populate("user_id").select("-password");
 
     if (!post) {
-        return nextError(404, "Post not found");
+        return nextResponse(404, "Post not found", null, false);
     }
 
 
-    return nextResponse(201, "Single Post Fetched successfully");
+    return nextResponse(200, "Single Post Fetched successfully", post);
 
 })

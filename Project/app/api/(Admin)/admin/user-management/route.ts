@@ -56,7 +56,7 @@ export const GET = asyncHandler(async (req: NextRequest): Promise<NextResponse> 
     .sort({ [sortBy]: sortOrder })
     .skip(skip)
     .limit(limit)
-    .select("-password")
+    .select("-password -isVerified -notification_preferences -social_links -privacy_settings -bio -year")
     .lean();
 
       const departments = await departmentModel.find({

@@ -10,6 +10,10 @@ import departmentModel from "@/models/department.model";
 export const GET = asyncHandler(async (req: NextRequest): Promise<NextResponse> => {
   await connectDB();
 
+
+
+
+  
     const session = await getServerSession(authOptions);
     if (!session) {
       return nextError(401, "Unauthorized: Please login to view users data");
@@ -19,12 +23,14 @@ export const GET = asyncHandler(async (req: NextRequest): Promise<NextResponse> 
       return nextError(403, "Forbidden: You are not allowed to view user data");
     }
 
-    const {userId} =await req.json();
+    const { searchParams } = new URL(req.url);
+    const userId = searchParams.get("userId");
 
     if(!userId){
       return nextError(400, "Bad Request: User ID is required");
     }
 
+    // Fetch user by ID
 
     const user = await User.findById(userId).select("-password");
 

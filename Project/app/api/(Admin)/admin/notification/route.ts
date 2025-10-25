@@ -21,31 +21,52 @@ export const POST = asyncHandler(async (req: NextRequest): Promise<NextResponse>
   if(!title || !content) {
     return nextError(400, "Title and content are required");
   }
-
-  let recipients = [];
-  let department_id = null;
-
-  if (user.role === "admin") {
-    recipients = await User.find({}, "_id");
-  }
-  else if (user.role === "department_Student_Advisor") {
-    department_id = user.department_id;
-    recipients = await User.find(
-      { department_id: user.department_id, role: "student" },
-      "_id"
-    );
-  } else {
+if (user.role !== "admin" && user.role !== "department_Student_Advisor") {
     return nextError(403, "Only admin or advisor can send messages");
   }
 
+  let recipients = [];
+  let department_id = null;
+  let targetAudience = "All Users";
+
+  // 🔹 Admin → all users
+  if (user.role === "admin") {
+    const allUsers = await User.find({}, "_id");
+    recipients = allUsers.map(u => u._id);
+    targetAudience = "All Users";
+  }
+
+  // 🔹 Advisor → only students in their department
+  else if (user.role === "department_Student_Advisor") {
+    const advisor = await User.findById(user.id);
+    if (!advisor?.department_id) {
+      return nextError(400, "Advisor has no department assigned");
+    }
+
+    department_id = advisor.department_id;
+
+    const students = await User.find(
+      { role: "student", department_id },
+      "_id"
+    );
+
+    if (!students.length) {
+      return nextError(404, "No students found in this department");
+    }
+
+    recipients = students.map(s => s._id);
+    targetAudience = "Students";
+  }
+
+   // 🔹 Create notification
   const newMessage = await Notification.create({
     title,
     content,
     scheduleFor,
     sender: user.id,
-    recipients: recipients.map((r) => r._id),
+    recipients,
     department_id,
-    targetAudience: user.role === "admin" ? "All Users" : "Students",
+    targetAudience,
   });
 
   return nextResponse(201, "Message created successfully", newMessage);
@@ -62,9 +83,6 @@ export const GET = asyncHandler(async (req: NextRequest): Promise<NextResponse> 
   if (!session) return nextError(401, "Unauthorized");
   const user = session.user;
 
-  // 🧠 Admin → gets all notifications
-  // 🧠 Advisor → gets only department notifications
-  // 🧠 Student → gets only notifications sent to them
   let notifications;
 
   if (user.role === "admin") {
@@ -88,8 +106,12 @@ export const PATCH = asyncHandler(async (req: NextRequest): Promise<NextResponse
   if (!session) return nextError(401, "Unauthorized");
   const user = session.user;
 
-  const { id, title, content, scheduleFor } = await req.json();
+  const { title, content, scheduleFor } = await req.json();
+  const { searchParams } = new URL(req.url);
+  const id = searchParams.get("notificationId");
   if (!id) return nextError(400, "Notification ID is required");
+
+
 
   const notification = await Notification.findById(id);
   if (!notification) return nextError(404, "Notification not found");
@@ -122,7 +144,8 @@ export const DELETE = asyncHandler(async (req: NextRequest): Promise<NextRespons
   if (!session) return nextError(401, "Unauthorized");
   const user = session.user;
 
-  const { notificationId } = await req.json();
+  const { searchParams } = new URL(req.url);
+  const notificationId = searchParams.get("notificationId");
   if (!notificationId) return nextError(400, "Notification ID is required");
 
   const notification = await Notification.findById(notificationId);
@@ -131,6 +154,7 @@ export const DELETE = asyncHandler(async (req: NextRequest): Promise<NextRespons
   if (
     user.role !== "admin" &&
     !(user.role === "department_Student_Advisor")
+    && String(notification.department_id) === String(user.department_id)
   ) {
     return nextError(403, "You are not authorized to delete this notification");
   }
