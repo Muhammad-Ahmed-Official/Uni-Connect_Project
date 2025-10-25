@@ -14,7 +14,9 @@ export const POST = asyncHandler(async (request: NextRequest): Promise<NextRespo
     return nextError(400, "Verification code not found or expired");
   }
 
-  const isCodeValid = data === code;
+  
+
+  const isCodeValid = data === code.toString();
 
   if (isCodeValid) {
     await redisDeleteKey(redisKey);
