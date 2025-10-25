@@ -104,9 +104,9 @@ export const DELETE = asyncHandler(async (req: NextRequest): Promise<NextRespons
   if (role !== "admin") {
     return nextError(403, "Forbidden: You are not allowed to delete users");
   }
-  // 🔹 Extract user IDs from request body
-  const { userId }= await req.json();
 
+  const { searchParams } = new URL(req.url);
+  const userId = searchParams.get("userId");
   if (!userId) {
     return nextError(400, "Bad Request: No user ID provided for deletion");
   }

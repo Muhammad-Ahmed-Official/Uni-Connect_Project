@@ -15,7 +15,6 @@ interface UserTableRowProps {
     setIsDropdownOpen: React.Dispatch<React.SetStateAction<string | null>>;
     handleViewUser: (user: User) => void;
     handleEditUser: (user: User) => void;
-    // handleSuspendUser: (userId: number) => void;
     setUserToDelete: (user: User) => void
     setDeleteDialogOpen: (open: boolean) => void
 }
@@ -47,13 +46,6 @@ const UserTableRow = ({ user, isDropdownOpen, roleColors, statusColors, setIsDro
                 </Badge>
             </TableCell>
             <TableCell className="text-gray-600">{user?.departmentName}</TableCell>
-            {/* <TableCell>
-                <Badge className={`${statusColors[user?.status]} border-0`}>
-                    {user.status === "active" ? "●" : user.status === "suspended" ? "⏸" : "○"}
-                    <span className="ml-1 capitalize">{user.status}</span>
-                </Badge>
-            </TableCell> */}
-            {/* <TableCell className="text-gray-600">{user.lastActive}</TableCell> */}
             <TableCell className="text-right">
                 <DropdownMenu
                     open={isDropdownOpen === user?._id}
@@ -75,25 +67,6 @@ const UserTableRow = ({ user, isDropdownOpen, roleColors, statusColors, setIsDro
                             <Eye className="mr-2 h-4 w-4" />
                             View Details
                         </DropdownMenuItem>
-                        {/* <DropdownMenuItem
-                            onClick={() => {
-                                handleEditUser(user);
-                                setIsDropdownOpen(null);
-                            }}
-                        >
-                            <Edit className="mr-2 h-4 w-4" />
-                            Edit User
-                        </DropdownMenuItem> */}
-                        {/* <DropdownMenuSeparator /> */}
-                        {/* <DropdownMenuItem
-                            onClick={() => {
-                                handleSuspendUser(user.id);
-                                setIsDropdownOpen(null);
-                            }}
-                        >
-                            <UserX className="mr-2 h-4 w-4" />
-                            {user.status === "suspended" ? "Activate" : "Suspend"} User
-                        </DropdownMenuItem> */}
                         <DropdownMenuItem
                             onClick={() => {
                                 setUserToDelete(user)

@@ -6,8 +6,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Search } from 'lucide-react'
 import React, { useState } from 'react'
 import UsersTable from './UsersTable'
-
-const FiltersAndSearches = ({ users }: { users: User[] }) => {
+// { users: User[] }
+const FiltersAndSearches = ({ users, setUsers }: any) => {
     const [searchTerm, setSearchTerm] = useState("")
     const [roleFilter, setRoleFilter] = useState("all")
     const [statusFilter, setStatusFilter] = useState("all")
@@ -37,24 +37,12 @@ const FiltersAndSearches = ({ users }: { users: User[] }) => {
                             <SelectItem value="all">All Roles</SelectItem>
                             <SelectItem value="student">Students</SelectItem>
                             <SelectItem value="advisor">Advisors</SelectItem>
-                            {/* <SelectItem value="admin">Administrators</SelectItem> */}
                         </SelectContent>
                     </Select>
-                    {/* <Select value={statusFilter} onValueChange={setStatusFilter}>
-                        <SelectTrigger className="w-full md:w-48">
-                            <SelectValue placeholder="Filter by status" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="all">All Status</SelectItem>
-                            <SelectItem value="active">Active</SelectItem>
-                            <SelectItem value="suspended">Suspended</SelectItem>
-                            <SelectItem value="inactive">Inactive</SelectItem>
-                        </SelectContent>
-                    </Select> */}
                 </div>
 
                 {/* Users Table */}
-                <UsersTable usersData={users} />
+                <UsersTable usersData={users} setUsers={setUsers} />
             </CardContent>
         </Card>
     )

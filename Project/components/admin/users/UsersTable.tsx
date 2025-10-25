@@ -7,6 +7,7 @@ import Pagination from './Pagination'
 import EditUserDialog from './EditUserDialog'
 import DeleteUserDialog from './DeleteUserDialog'
 import UserTableRow from './UserTableRow'
+import { apiClient } from '@/lib/api-client'
 
 const roleColors: Record<string, string> = {
     student: "bg-blue-100 text-blue-700",
@@ -33,12 +34,12 @@ export const getRoleIcon = (role: string) => {
     }
 }
 
-const UsersTable = ({ usersData }: { usersData: User[] }) => {
+const UsersTable = ({ usersData, setUsers }: any) => {
     const [searchTerm] = useState("")
     const [roleFilter] = useState("all")
     const [statusFilter] = useState("all")
     const [isDropdownOpen, setIsDropdownOpen] = useState<string | null>(null);
-    const [users, setUsers] = useState(usersData)
+    // const [users, setUsers] = useState(usersData)
     const [currentPage, setCurrentPage] = useState(1)
     const [selectedUser, setSelectedUser] = useState<User | null>(null)
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
@@ -50,7 +51,7 @@ const UsersTable = ({ usersData }: { usersData: User[] }) => {
     const usersPerPage = 10
 
     // Filter users based on search and filters
-    const filteredUsers = users.filter((user) => {
+    const filteredUsers = usersData.filter((user:any) => {
         const matchesSearch =
             user.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
             user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -65,25 +66,33 @@ const UsersTable = ({ usersData }: { usersData: User[] }) => {
     const startIndex = (currentPage - 1) * usersPerPage
     const paginatedUsers = filteredUsers.slice(startIndex, startIndex + usersPerPage)
 
-    const handleSuspendUser = (userId: string) => {
-        setUsers(
-            users.map((user) =>
-                user._id === userId ? { ...user, status: user.status === "suspended" ? "active" : "suspended" } : user,
-            ),
-        )
-        toast({
-            title: "User Status Updated",
-            description: "User status has been successfully updated.",
-        })
-    }
+    // const handleSuspendUser = (userId: string) => {
+    //     setUsers(
+    //         users.map((user) =>
+    //             user._id === userId ? { ...user, status: user.status === "suspended" ? "active" : "suspended" } : user,
+    //         ),
+    //     )
+    //     toast({
+    //         title: "User Status Updated",
+    //         description: "User status has been successfully updated.",
+    //     })
+    // }
 
-    const handleDeleteUser = (userId: string) => {
-        setUsers(users.filter((user) => user._id !== userId))
-        toast({
-            title: "User Deleted",
-            description: "User has been successfully deleted from the system.",
-            variant: "destructive",
-        })
+    const handleDeleteUser = async(userId: string) => {
+        try {
+            await apiClient.deleteUser(userId)
+            toast({
+                title: "User Deleted",
+                description: "User has been successfully deleted from the system.",
+            })
+            setUsers(usersData.filter((user:any) => user?._id !== userId))
+        } catch (error) {
+            toast({
+                title: "Error",
+                description: "Something went wrong",
+                variant: "destructive",
+            })
+        }
     }
 
     const handleEditUser = (user: User) => {
@@ -97,58 +106,84 @@ const UsersTable = ({ usersData }: { usersData: User[] }) => {
     }
 
     return (
-        <div>
-            <div className="border rounded-lg">
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead>User</TableHead>
-                            <TableHead>Role</TableHead>
-                            <TableHead>Department</TableHead>
-                            {/* <TableHead>Status</TableHead> */}
-                            {/* <TableHead>Last Active</TableHead> */}
-                            <TableHead className="text-right">Actions</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {usersData?.map((user) => (
-                            <UserTableRow
-                                key={user?._id}
-                                user={user}
-                                isDropdownOpen={isDropdownOpen}
-                                roleColors={roleColors}
-                                statusColors={statusColors}
-                                setIsDropdownOpen={setIsDropdownOpen}
-                                handleViewUser={handleViewUser}
-                                handleEditUser={handleEditUser}
-                                // handleSuspendUser={handleSuspendUser}
-                                setUserToDelete={setUserToDelete}
-                                setDeleteDialogOpen={setDeleteDialogOpen}
-                            />
-                        ))}
-                    </TableBody>
-                </Table>
-            </div>
+        <div className="w-full space-y-6">
+  {/* User Table */}
+  <div className="border rounded-lg shadow-sm overflow-hidden">
+    <Table className="w-full">
+      <TableHeader>
+        <TableRow className="bg-gray-50">
+          <TableHead className="text-left px-6 py-3 font-semibold text-gray-700">
+            User
+          </TableHead>
+          <TableHead className="text-left px-6 py-3 font-semibold text-gray-700">
+            Role
+          </TableHead>
+          <TableHead className="text-left px-6 py-3 font-semibold text-gray-700">
+            Department
+          </TableHead>
+          <TableHead className="text-right px-6 py-3 font-semibold text-gray-700">
+            Actions
+          </TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {usersData?.map((user:any) => (
+          <UserTableRow
+            key={user?._id}
+            user={user}
+            isDropdownOpen={isDropdownOpen}
+            roleColors={roleColors}
+            statusColors={statusColors}
+            setIsDropdownOpen={setIsDropdownOpen}
+            handleViewUser={handleViewUser}
+            handleEditUser={handleEditUser}
+            setUserToDelete={setUserToDelete}
+            setDeleteDialogOpen={setDeleteDialogOpen}
+          />
+        ))}
+      </TableBody>
+    </Table>
+  </div>
 
-            {/* Pagination */}
-            <Pagination filteredUsers={filteredUsers} currentPage={currentPage} setCurrentPage={setCurrentPage} usersPerPage={usersPerPage} totalPages={totalPages} startIndex={startIndex} />
+  {/* Pagination */}
+  <div className="flex justify-center">
+    <Pagination
+      filteredUsers={filteredUsers}
+      currentPage={currentPage}
+      setCurrentPage={setCurrentPage}
+      usersPerPage={usersPerPage}
+      totalPages={totalPages}
+      startIndex={startIndex}
+    />
+  </div>
 
-            {/* View User Dialog */}
-            <ViewUserDialog isViewDialogOpen={isViewDialogOpen} setIsViewDialogOpen={setIsViewDialogOpen} selectedUser={selectedUser} roleColors={roleColors} statusColors={statusColors} />
+  {/* View User Dialog */}
+  <ViewUserDialog
+    isViewDialogOpen={isViewDialogOpen}
+    setIsViewDialogOpen={setIsViewDialogOpen}
+    selectedUser={selectedUser}
+    roleColors={roleColors}
+    statusColors={statusColors}
+  />
 
-            {/* Edit User Dialog */}
-            <EditUserDialog isEditDialogOpen={isEditDialogOpen} setIsEditDialogOpen={setIsEditDialogOpen} selectedUser={selectedUser} />
+  {/* Edit User Dialog */}
+  <EditUserDialog
+    isEditDialogOpen={isEditDialogOpen}
+    setIsEditDialogOpen={setIsEditDialogOpen}
+    selectedUser={selectedUser}
+  />
 
-            {/* Delete Dialog */}
-            <DeleteUserDialog isOpen={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}
-                onConfirm={() => {
-                    if (userToDelete) {
-                        handleDeleteUser(userToDelete._id)
-                    }
-                    setDeleteDialogOpen(false)
-                }}
-            />
-        </div>
+  {/* Delete Dialog */}
+  <DeleteUserDialog
+    isOpen={deleteDialogOpen}
+    onClose={() => setDeleteDialogOpen(false)}
+    onConfirm={() => {
+      if (userToDelete) handleDeleteUser(userToDelete._id)
+      setDeleteDialogOpen(false)
+    }}
+  />
+</div>
+
     )
 }
 

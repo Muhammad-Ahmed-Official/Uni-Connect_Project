@@ -94,12 +94,19 @@ class ApiClient {
     }
 
 
+
     async userStats(){
         return this.fetch("admin/user-management/stats")
     }
 
     async getUsers(){
         return this.fetch("admin/user-management")
+    }
+
+    async deleteUser(userId:string){
+        return this.fetch(`admin/user-management?userId=${userId}`, {
+            method: "DELETE",
+        })
     }
 
 }
