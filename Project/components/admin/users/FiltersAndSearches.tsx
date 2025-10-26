@@ -7,11 +7,8 @@ import { Search } from 'lucide-react'
 import React, { useState } from 'react'
 import UsersTable from './UsersTable'
 // { users: User[] }
-const FiltersAndSearches = ({ users, setUsers, loading2 }: any) => {
-    const [searchTerm, setSearchTerm] = useState("")
+const FiltersAndSearches = ({ users, setUsers, loading2, searchTerm, setSearchTerm }: any) => {
     const [roleFilter, setRoleFilter] = useState("all")
-    const [statusFilter, setStatusFilter] = useState("all")
-
     return (
         <Card className="border-0 shadow-sm">
             <CardHeader>
@@ -29,7 +26,7 @@ const FiltersAndSearches = ({ users, setUsers, loading2 }: any) => {
                             className="pl-10"
                         />
                     </div>
-                    <Select value={roleFilter} onValueChange={setRoleFilter}>
+                    {/* <Select value={roleFilter} onValueChange={setRoleFilter}>
                         <SelectTrigger className="w-full md:w-48">
                             <SelectValue placeholder="Filter by role" />
                         </SelectTrigger>
@@ -38,7 +35,7 @@ const FiltersAndSearches = ({ users, setUsers, loading2 }: any) => {
                             <SelectItem value="student">Students</SelectItem>
                             <SelectItem value="advisor">Advisors</SelectItem>
                         </SelectContent>
-                    </Select>
+                    </Select> */}
                 </div>
 
                 {/* Users Table */}

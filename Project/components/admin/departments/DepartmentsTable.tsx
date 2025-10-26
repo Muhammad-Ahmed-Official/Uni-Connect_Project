@@ -9,12 +9,13 @@ import { apiClient } from '@/lib/api-client'
 import DepartmentSkeleton from './DepartmentSkleton'
 
 interface DepartmentsTableProps {
-    filteredDepartments: AdminDepartment[]
+    filteredDepartments: any
     setDepartments: React.Dispatch<React.SetStateAction<AdminDepartment[]>>
     loading2: boolean
+    departments: AdminDepartment[]
 }
 
-const DepartmentsTable = ({ filteredDepartments, setDepartments, loading2 }: DepartmentsTableProps) => {
+const DepartmentsTable = ({ filteredDepartments, setDepartments, loading2, departments }: DepartmentsTableProps) => {
     const [isViewDialogOpen, setIsViewDialogOpen] = useState(false)
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
@@ -53,7 +54,7 @@ const DepartmentsTable = ({ filteredDepartments, setDepartments, loading2 }: Dep
 
     const handleDeleteDepartment = async(departmentId: string) => {
         await apiClient.deleteDepartment(departmentId);
-        setDepartments(filteredDepartments.filter((dept) => dept._id !== departmentId))
+        setDepartments(filteredDepartments.filter((dept:any) => dept._id !== departmentId))
         toast({
             title: "Department Deleted",
             description: "Department has been successfully removed from the system.",
@@ -66,7 +67,7 @@ const DepartmentsTable = ({ filteredDepartments, setDepartments, loading2 }: Dep
         if (selectedDepartment) {
             // Edit existing department
             setDepartments(
-                filteredDepartments.map((dept) =>
+                filteredDepartments.map((dept:any) =>
                     dept._id === selectedDepartment._id
                         ? {
                             ...dept,
@@ -90,9 +91,20 @@ const DepartmentsTable = ({ filteredDepartments, setDepartments, loading2 }: Dep
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-            {filteredDepartments.map((department) => (
-                <DepartmentTableCard key={department._id} department={department} isDropdownOpen={isDropdownOpen} setIsDropdownOpen={setIsDropdownOpen} handleViewDepartment={handleViewDepartment} handleEditDepartment={handleEditDepartment} setDeleteDialogOpen={setDeleteDialogOpen} setDepartmentToDelete={setDepartmentToDelete} />
-            ))}
+            {(filteredDepartments?.length > 0 ? filteredDepartments : departments)?.map(
+            (department:any) => (
+                <DepartmentTableCard
+                key={department._id}
+                department={department}
+                isDropdownOpen={isDropdownOpen}
+                setIsDropdownOpen={setIsDropdownOpen}
+                handleViewDepartment={handleViewDepartment}
+                handleEditDepartment={handleEditDepartment}
+                setDeleteDialogOpen={setDeleteDialogOpen}
+                setDepartmentToDelete={setDepartmentToDelete}
+                />
+            )
+            )}
 
             {/* View Department Dialog */}
             <ViewDeparmentDialog isViewDialogOpen={isViewDialogOpen} setIsViewDialogOpen={setIsViewDialogOpen} selectedDepartment={selectedDepartment} />

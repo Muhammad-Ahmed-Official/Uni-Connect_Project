@@ -9,10 +9,11 @@ interface FiltersAndSearchesProps {
     departments: AdminDepartment[]
     setDepartments: React.Dispatch<React.SetStateAction<AdminDepartment[]>>
     loading2: boolean
+    setSearchTerm: (value:string) => void
+    searchTerm: string
 }
 
-const FiltersAndSearches = ({ departments, setDepartments, loading2 }: FiltersAndSearchesProps) => {
-    const [searchTerm, setSearchTerm] = useState("");
+const FiltersAndSearches = ({ departments, setDepartments, loading2, setSearchTerm, searchTerm }: FiltersAndSearchesProps) => {
     return (
         <Card className="border-0 shadow-sm">
             <CardHeader>
@@ -33,7 +34,7 @@ const FiltersAndSearches = ({ departments, setDepartments, loading2 }: FiltersAn
                 </div>
 
                 {/* Departments Grid */}
-                <DepartmentsTable loading2={loading2} filteredDepartments={departments} setDepartments={setDepartments} />
+                <DepartmentsTable loading2={loading2} filteredDepartments={departments} departments={departments} setDepartments={setDepartments} />
             </CardContent>
         </Card>
     )

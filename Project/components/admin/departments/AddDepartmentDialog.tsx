@@ -58,7 +58,7 @@ const AddDepartmentDialog = ({ isAddDialogOpen, setIsAddDialogOpen, editForm, se
                                     <SelectItem
                                     value="LAW"
                                     className="cursor-pointer hover:bg-blue-100 transition-colors">
-                                    Law
+                                    LAW
                                     </SelectItem>
                                     <SelectItem
                                     value="Pharmacy"

@@ -20,7 +20,7 @@ export interface DepartmentFormValues {
 export default function DepartmentManagement() {
   const [departments, setDepartments] = useState<AdminDepartment[]>([]);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
-  const [searchTerm] = useState("")
+  const [searchTerm, setSearchTerm] = useState("")
   const { toast } = useToast();
   const [loading, setLoading] = useState<boolean>(false);
   const [loading2, setLoading2] = useState<boolean>(false);
@@ -96,6 +96,7 @@ export default function DepartmentManagement() {
     }
   }
 
+
   return (
     <div className="p-2 sm:p-6 space-y-6">
       {/* Header */}
@@ -105,7 +106,7 @@ export default function DepartmentManagement() {
       <StatsCards departments={departmentStats} statsLoading={statsLoading} />
 
       {/* Search and Department Grid */}
-      <FiltersAndSearches departments={filteredDepartments} setDepartments={setDepartments} loading2={loading2} />
+      <FiltersAndSearches departments={filteredDepartments.length > 0 ? filteredDepartments : departments} setDepartments={setDepartments} loading2={loading2} setSearchTerm={setSearchTerm} searchTerm={searchTerm} />
 
       {/* Add Department Dialog */}
       <AddDepartmentDialog isAddDialogOpen={isAddDialogOpen} loading={loading} setIsAddDialogOpen={setIsAddDialogOpen} editForm={editForm} setEditForm={setEditForm} handleSaveDepartment={handleSaveDepartment} />
