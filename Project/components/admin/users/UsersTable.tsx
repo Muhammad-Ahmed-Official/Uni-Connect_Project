@@ -8,6 +8,7 @@ import EditUserDialog from './EditUserDialog'
 import DeleteUserDialog from './DeleteUserDialog'
 import UserTableRow from './UserTableRow'
 import { apiClient } from '@/lib/api-client'
+import TableSkeleton from './Skelton'
 
 const roleColors: Record<string, string> = {
     student: "bg-blue-100 text-blue-700",
@@ -34,15 +35,15 @@ export const getRoleIcon = (role: string) => {
     }
 }
 
-const UsersTable = ({ usersData, setUsers }: any) => {
+const UsersTable = ({ usersData, setUsers, loading2 }: any) => {
     const [searchTerm] = useState("")
     const [roleFilter] = useState("all")
     const [statusFilter] = useState("all")
     const [isDropdownOpen, setIsDropdownOpen] = useState<string | null>(null);
     // const [users, setUsers] = useState(usersData)
+    // const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
     const [currentPage, setCurrentPage] = useState(1)
     const [selectedUser, setSelectedUser] = useState<User | null>(null)
-    const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
     const [isViewDialogOpen, setIsViewDialogOpen] = useState(false)
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
     const [userToDelete, setUserToDelete] = useState<User | null>(null)
@@ -95,96 +96,103 @@ const UsersTable = ({ usersData, setUsers }: any) => {
         }
     }
 
-    const handleEditUser = (user: User) => {
-        setSelectedUser(user)
-        setIsEditDialogOpen(true)
+    // const handleEditUser = (user: User) => {
+    //     setSelectedUser(user)
+    //     setIsEditDialogOpen(true)
+    // }
+
+    const handleViewUser = async(user: User) => {
+      try {
+        console.log(user);
+        // await apiClient.getUser()
+          setSelectedUser(user)
+          setIsViewDialogOpen(true)
+      } catch (error) {
+          toast({
+            title: "Error",
+            description: "Something went wrong",
+            variant: "destructive",
+          })  
+      }
     }
 
-    const handleViewUser = (user: User) => {
-        setSelectedUser(user)
-        setIsViewDialogOpen(true)
+    if(loading2){
+      return <TableSkeleton />
     }
 
     return (
         <div className="w-full space-y-6">
-  {/* User Table */}
-  <div className="border rounded-lg shadow-sm overflow-hidden">
-    <Table className="w-full">
-      <TableHeader>
-        <TableRow className="bg-gray-50">
-          <TableHead className="text-left px-6 py-3 font-semibold text-gray-700">
-            User
-          </TableHead>
-          <TableHead className="text-left px-6 py-3 font-semibold text-gray-700">
-            Role
-          </TableHead>
-          <TableHead className="text-left px-6 py-3 font-semibold text-gray-700">
-            Department
-          </TableHead>
-          <TableHead className="text-right px-6 py-3 font-semibold text-gray-700">
-            Actions
-          </TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {usersData?.map((user:any) => (
-          <UserTableRow
-            key={user?._id}
-            user={user}
-            isDropdownOpen={isDropdownOpen}
-            roleColors={roleColors}
-            statusColors={statusColors}
-            setIsDropdownOpen={setIsDropdownOpen}
-            handleViewUser={handleViewUser}
-            handleEditUser={handleEditUser}
-            setUserToDelete={setUserToDelete}
-            setDeleteDialogOpen={setDeleteDialogOpen}
+        <div className="border rounded-lg shadow-sm overflow-hidden">
+          <Table className="w-full">
+            <TableHeader>
+              <TableRow className="bg-gray-50">
+                <TableHead className="text-left px-6 py-3 font-semibold text-gray-700">
+                  User
+                </TableHead>
+                <TableHead className="text-left px-6 py-3 font-semibold text-gray-700">
+                  Role
+                </TableHead>
+                <TableHead className="text-left px-6 py-3 font-semibold text-gray-700">
+                  Department
+                </TableHead>
+                <TableHead className="text-right px-6 py-3 font-semibold text-gray-700">
+                  Actions
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {usersData?.map((user:any) => (
+                <UserTableRow
+                  key={user?._id}
+                  user={user}
+                  isDropdownOpen={isDropdownOpen}
+                  roleColors={roleColors}
+                  statusColors={statusColors}
+                  setIsDropdownOpen={setIsDropdownOpen}
+                  handleViewUser={handleViewUser}
+                  setUserToDelete={setUserToDelete}
+                  setDeleteDialogOpen={setDeleteDialogOpen}
+                />
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+
+        <div className="flex justify-center">
+          <Pagination
+            filteredUsers={filteredUsers}
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+            usersPerPage={usersPerPage}
+            totalPages={totalPages}
+            startIndex={startIndex}
           />
-        ))}
-      </TableBody>
-    </Table>
-  </div>
+        </div>
 
-  {/* Pagination */}
-  <div className="flex justify-center">
-    <Pagination
-      filteredUsers={filteredUsers}
-      currentPage={currentPage}
-      setCurrentPage={setCurrentPage}
-      usersPerPage={usersPerPage}
-      totalPages={totalPages}
-      startIndex={startIndex}
-    />
-  </div>
+        <ViewUserDialog
+          isViewDialogOpen={isViewDialogOpen}
+          setIsViewDialogOpen={setIsViewDialogOpen}
+          selectedUser={selectedUser}
+          roleColors={roleColors}
+          statusColors={statusColors}
+        />
 
-  {/* View User Dialog */}
-  <ViewUserDialog
-    isViewDialogOpen={isViewDialogOpen}
-    setIsViewDialogOpen={setIsViewDialogOpen}
-    selectedUser={selectedUser}
-    roleColors={roleColors}
-    statusColors={statusColors}
-  />
 
-  {/* Edit User Dialog */}
-  <EditUserDialog
-    isEditDialogOpen={isEditDialogOpen}
-    setIsEditDialogOpen={setIsEditDialogOpen}
-    selectedUser={selectedUser}
-  />
-
-  {/* Delete Dialog */}
-  <DeleteUserDialog
-    isOpen={deleteDialogOpen}
-    onClose={() => setDeleteDialogOpen(false)}
-    onConfirm={() => {
-      if (userToDelete) handleDeleteUser(userToDelete._id)
-      setDeleteDialogOpen(false)
-    }}
-  />
-</div>
-
+        <DeleteUserDialog
+          isOpen={deleteDialogOpen}
+          onClose={() => setDeleteDialogOpen(false)}
+          onConfirm={() => {
+            if (userToDelete) handleDeleteUser(userToDelete._id)
+              setDeleteDialogOpen(false)
+          }}
+        />
+      </div>
     )
 }
 
+{/* <EditUserDialog
+  isEditDialogOpen={isEditDialogOpen}
+  setIsEditDialogOpen={setIsEditDialogOpen}
+  selectedUser={selectedUser}
+/> */}
 export default UsersTable

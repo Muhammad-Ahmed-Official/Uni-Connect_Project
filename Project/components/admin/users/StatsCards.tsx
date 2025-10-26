@@ -1,8 +1,13 @@
+import StatsCardsSkeleton from '@/components/dashboard/LandingPage/StatsCardsSkeleton';
 import { Card, CardContent } from '@/components/ui/card'
 import { UserCheck, Users, UserX } from 'lucide-react'
 import React from 'react'
 
-const StatsCards = ({ stats } : any) => {
+const StatsCards = ({ stats, loading } : any) => {
+    if (loading) {
+        return <StatsCardsSkeleton />;
+    }
+
     return (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <Card className="border-0 shadow-sm">

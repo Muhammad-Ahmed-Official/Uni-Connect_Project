@@ -27,7 +27,7 @@ export const GET = asyncHandler(async (req: NextRequest): Promise<NextResponse> 
 
   // 🔹 Fetch recent records (sorted by time)
   const [recentUsers, recentDocuments, recentEvents, recentDepartments] = await Promise.all([
-    User?.find().sort({ createdAt: -1 }).limit(3),
+    User?.find().populate("department_id", "departmentName").sort({ createdAt: -1 }).limit(3),
     DocumentSchema?.find().sort({ createdAt: -1 }).limit(3),
     Event?.find().sort({ createdAt: -1 }).limit(3),
     DepartmentModel?.find().sort({ createdAt: -1 }).limit(3),
@@ -38,7 +38,7 @@ export const GET = asyncHandler(async (req: NextRequest): Promise<NextResponse> 
     ...recentUsers.map((u:any) =>
       formatActivity(
         "user",
-        `New student registered: ${u.firstName} ${u.lastName} (${u.department_id?.departmentName || "Department"})`,
+        `New student registered: ${u.firstName} ${u.lastName} (${u.department_id?.departmentName})`,
         u.createdAt
       )
     ),

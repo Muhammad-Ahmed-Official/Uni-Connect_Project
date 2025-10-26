@@ -1,14 +1,19 @@
+import StatsCardsSkeleton from '@/components/dashboard/LandingPage/StatsCardsSkeleton'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Calendar, Heart, MessageCircle } from 'lucide-react'
 import React from 'react'
 
 interface StatsCardsProps {
     eventStats: any
-    approvedEvents: number
-    pendingEvents: number
+    statsLoading:boolean
+    // approvedEvents: number
+    // pendingEvents: number
 }
 
-const StatsCards = ({ eventStats, approvedEvents, pendingEvents }: StatsCardsProps) => {
+const StatsCards = ({ eventStats, statsLoading }: StatsCardsProps) => {
+    if(statsLoading){
+        return <StatsCardsSkeleton />
+    }
     return (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <Card>

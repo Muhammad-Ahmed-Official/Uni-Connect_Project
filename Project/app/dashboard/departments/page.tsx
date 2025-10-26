@@ -24,6 +24,7 @@ export default function DepartmentsPage() {
   const [sortBy, setSortBy] = useState("members");
   const [isFetchingDeparts, setIsFetchingDeparts] = useState<boolean>(true);
   const [departments, setDepartments] = useState<Department[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchDepartments = async () => {

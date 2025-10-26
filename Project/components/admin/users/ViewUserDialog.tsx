@@ -1,75 +1,110 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Badge } from '@/components/ui/badge'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { Label } from '@/components/ui/label'
-import React from 'react'
-import { getRoleIcon } from './UsersTable'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { Card, CardContent } from "@/components/ui/card";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Label } from "@/components/ui/label";
+import { Mail, IdCard, Clock } from "lucide-react";
+import { format, formatDistanceToNow } from "date-fns";
 
-interface ViewUserDialogProps {
-    isViewDialogOpen: boolean
-    setIsViewDialogOpen: React.Dispatch<React.SetStateAction<boolean>>
-    selectedUser: User | null
-    roleColors: { [key: string]: string }
-    statusColors: { [key: string]: string }
-}
+export default function ViewUserDialog({
+  isViewDialogOpen,
+  setIsViewDialogOpen,
+  selectedUser,
+}: any) {
+  const roleColors: Record<string, string> = {
+    student: "bg-blue-100 text-blue-800",
+    advisor: "bg-green-100 text-green-800",
+    admin: "bg-purple-100 text-purple-800",
+  };
 
-const ViewUserDialog = ({ isViewDialogOpen, setIsViewDialogOpen, selectedUser, roleColors, statusColors }: ViewUserDialogProps) => {
-    return (
-        <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen} >
-            <DialogContent className="max-w-2xl">
-                <DialogHeader>
-                    <DialogTitle>User Details</DialogTitle>
-                    <DialogDescription>Complete information about the selected user</DialogDescription>
-                </DialogHeader>
-                {selectedUser && (
-                    <div className="space-y-6">
-                        <div className="flex items-center space-x-4">
-                            <Avatar className="h-16 w-16">
-                                <AvatarImage src={selectedUser.avatar || "/placeholder.svg"} />
-                                <AvatarFallback className="text-lg">
-                                    {selectedUser.name
-                                        .split(" ")
-                                        .map((n) => n[0])
-                                        .join("")}
-                                </AvatarFallback>
-                            </Avatar>
-                            <div>
-                                <h3 className="text-xl font-semibold">{selectedUser.name}</h3>
-                                <p className="text-gray-600">{selectedUser.email}</p>
-                                <div className="flex items-center space-x-2 mt-2">
-                                    <Badge className={`${roleColors[selectedUser.role]} border-0`}>
-                                        {getRoleIcon(selectedUser.role)}
-                                        <span className="ml-1 capitalize">{selectedUser.role}</span>
-                                    </Badge>
-                                    <Badge className={`${statusColors[selectedUser.status]} border-0`}>
-                                        <span className="capitalize">{selectedUser.status}</span>
-                                    </Badge>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="grid grid-cols-2 gap-4">
-                            <div>
-                                <Label className="text-sm font-medium text-gray-600">Department</Label>
-                                <p className="mt-1">{selectedUser.department}</p>
-                            </div>
-                            <div>
-                                <Label className="text-sm font-medium text-gray-600">Join Date</Label>
-                                <p className="mt-1">{selectedUser.joinDate}</p>
-                            </div>
-                            <div>
-                                <Label className="text-sm font-medium text-gray-600">Last Active</Label>
-                                <p className="mt-1">{selectedUser.lastActive}</p>
-                            </div>
-                            <div>
-                                <Label className="text-sm font-medium text-gray-600">User ID</Label>
-                                <p className="mt-1">#{selectedUser.id}</p>
-                            </div>
-                        </div>
+  const getRoleIcon = (role: string) => {
+    switch (role) {
+      case "student":
+        return <IdCard className="h-3 w-3" />;
+      case "advisor":
+        return <Mail className="h-3 w-3" />;
+      case "admin":
+        return <Clock className="h-3 w-3" />;
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
+      <DialogContent className="max-w-2xl">
+        <DialogHeader>
+          <DialogTitle>User Details</DialogTitle>
+          <DialogDescription>
+            Complete information about the selected user
+          </DialogDescription>
+        </DialogHeader>
+
+        {selectedUser && (
+          <div className="space-y-6">
+            {/* Profile Card */}
+            <Card className="border-0 shadow-sm bg-gradient-to-r from-blue-50 to-indigo-50">
+              <CardContent className="p-6">
+                <div className="flex items-center space-x-4">
+                  <Avatar className="h-20 w-20 border-4 border-white shadow-md">
+                    <AvatarImage src={selectedUser.profilePic || ""} />
+                    <AvatarFallback className="text-xl bg-blue-100 font-bold text-blue-600">
+                      {selectedUser.firstName?.[0]?.toUpperCase() || "U"}
+                    </AvatarFallback>
+                  </Avatar>
+
+                  <div className="flex-1">
+                    <h2 className="text-2xl font-bold text-gray-900 capitalize">
+                      {selectedUser.firstName} {selectedUser.lastName}
+                    </h2>
+                    <p className="text-gray-600 flex items-center gap-2 mt-1">
+                      <Mail className="h-4 w-4" />
+                      {selectedUser.email}
+                    </p>
+
+                    <div className="flex items-center gap-2 mt-3 flex-wrap">
+                      <Badge
+                        className={`${roleColors[selectedUser.role]} border-0 gap-1`}
+                      >
+                        {getRoleIcon(selectedUser.role)}
+                        <span className="capitalize">{selectedUser.role}</span>
+                      </Badge>
+                      {selectedUser.studentId && (
+                        <Badge variant="outline" className="gap-1">
+                          <IdCard className="h-3 w-3" />
+                          {selectedUser.studentId}
+                        </Badge>
+                      )}
                     </div>
-                )}
-            </DialogContent>
-        </Dialog >
-    )
-}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
 
-export default ViewUserDialog
+            {/* User Info Grid */}
+            <div className="grid sm:grid-cols-2 gap-4 text-sm">
+              <div>
+                <Label className="font-medium text-gray-600">Department</Label>
+                <p className="mt-1">{selectedUser.departmentName}</p>
+              </div>
+
+            <div>
+                <Label className="font-medium text-gray-600">Member Since</Label>
+                <p className="mt-1 text-gray-800">
+                    {format(new Date(selectedUser.createdAt), "dd MMM yyyy")}
+                </p>
+            </div>
+
+            </div>
+          </div>
+        )}
+      </DialogContent>
+    </Dialog>
+  );
+}

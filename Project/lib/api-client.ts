@@ -1,5 +1,5 @@
 type FetchOptions = {
-    method?: "GET" | "POST" | "PUT" | "DELETE";
+    method?: "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
     body?: any;
     headers?: Record<string, string>
 }
@@ -101,13 +101,44 @@ class ApiClient {
 
     async getUsers(){
         return this.fetch("admin/user-management")
-    }
+    };
 
     async deleteUser(userId:string){
         return this.fetch(`admin/user-management?userId=${userId}`, {
             method: "DELETE",
         })
+    };
+
+    async getUser(userId:string){
+        return this.fetch(`admin/user-management?userId=${userId}`)
+    };
+
+
+
+    async createNotification(data:any){
+        return this.fetch("admin/notification", {
+            method: "POST",
+            body:data
+        })
     }
+
+    async getNotification(){
+        return this.fetch("admin/notification/")
+    };
+
+    async deleteNotification(notificationId:string){
+        return this.fetch(`admin/notification?notificationId=${notificationId}`, {
+            method: "DELETE"
+        })
+    };
+
+    async updateNotification(notificationId:string, data:any){
+        return this.fetch(`admin/notification?notificationId=${notificationId}`, {
+            method: "PATCH",
+            body: data
+        })
+    }
+
 
 }
 

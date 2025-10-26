@@ -31,6 +31,7 @@ export default function AdminEventsPage() {
   const [categoryFilter, setCategoryFilter] = useState<string>("all")
   const [loading, setLoading] = useState<boolean>(false);
   const [loading2, setLoading2] = useState<boolean>(false);
+  const [statsLoading, setStatsLoading] = useState(false);
   const [newPostTags, setNewPostTags] = useState("");
   const [eventStats, setEventStats] = useState({
     totalEvents: 0,
@@ -105,8 +106,10 @@ export default function AdminEventsPage() {
   };
 
   const getDepartmentsStats = async () => {
+    setStatsLoading(true);
     const respones: any = await apiClient.eventStats();
     setEventStats(respones?.data);
+    setStatsLoading(false);
   }
 
   const getEvents = async () => {
@@ -131,8 +134,8 @@ export default function AdminEventsPage() {
   })
 
 
-  const approvedEvents = events.filter((e) => e.status === "approved").length
-  const pendingEvents = events.filter((e) => e.status === "pending").length
+  // const approvedEvents = events.filter((e) => e.status === "approved").length
+  // const pendingEvents = events.filter((e) => e.status === "pending").length
 
   return (
     <div className="p-2 sm:p-6 space-y-6">
@@ -140,7 +143,7 @@ export default function AdminEventsPage() {
       <Header isCreateDialogOpen={isCreateDialogOpen} setIsCreateDialogOpen={setIsCreateDialogOpen} editEvent={editEvent} setEditEvent={setEditEvent} handleSaveEvent={handleSaveEvent} loading={loading} newPostTags={newPostTags} setNewPostTags={setNewPostTags} />
 
       {/* Stats Cards */}
-      <StatsCards eventStats={eventStats} approvedEvents={approvedEvents} pendingEvents={pendingEvents} />
+      <StatsCards eventStats={eventStats} statsLoading={statsLoading} />
 
       {/* Filters and Search */}
       <FiltersAndSearches loading2={loading2} filteredEvents={filteredEvents} searchTerm={searchTerm} setSearchTerm={setSearchTerm} statusFilter={statusFilter} setStatusFilter={setStatusFilter} categoryFilter={categoryFilter} setCategoryFilter={setCategoryFilter} setEvents={setEvents} events={events} />

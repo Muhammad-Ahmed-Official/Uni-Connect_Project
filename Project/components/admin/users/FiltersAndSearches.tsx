@@ -7,7 +7,7 @@ import { Search } from 'lucide-react'
 import React, { useState } from 'react'
 import UsersTable from './UsersTable'
 // { users: User[] }
-const FiltersAndSearches = ({ users, setUsers }: any) => {
+const FiltersAndSearches = ({ users, setUsers, loading2 }: any) => {
     const [searchTerm, setSearchTerm] = useState("")
     const [roleFilter, setRoleFilter] = useState("all")
     const [statusFilter, setStatusFilter] = useState("all")
@@ -42,7 +42,7 @@ const FiltersAndSearches = ({ users, setUsers }: any) => {
                 </div>
 
                 {/* Users Table */}
-                <UsersTable usersData={users} setUsers={setUsers} />
+                <UsersTable usersData={users} setUsers={setUsers} loading2={loading2} />
             </CardContent>
         </Card>
     )

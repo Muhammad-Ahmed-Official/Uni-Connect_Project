@@ -9,10 +9,6 @@ import departmentModel from "@/models/department.model";
 
 export const GET = asyncHandler(async (req: NextRequest): Promise<NextResponse> => {
   await connectDB();
-
-
-
-
   
     const session = await getServerSession(authOptions);
     if (!session) {

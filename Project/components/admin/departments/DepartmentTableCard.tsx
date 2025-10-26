@@ -97,11 +97,11 @@ const DepartmentTableCard = ({ department, isDropdownOpen, setIsDropdownOpen, ha
 
                 <div className="grid grid-cols-2 gap-4">
                     <div className="text-center p-3 bg-blue-50 rounded-lg">
-                        <div className="text-lg font-bold text-blue-600">{department?.totalStudents ? department?.totalStudents : 0}</div>
+                        <div className="text-lg font-bold text-blue-600">{department?.studentsCount ? department?.studentsCount : 0}</div>
                         <div className="text-xs text-gray-600">Students</div>
                     </div>
                     <div className="text-center p-3 bg-green-50 rounded-lg">
-                        <div className="text-lg font-bold text-green-600">{department?.totalAdvisors ? department?.totalAdvisors : 0}</div>
+                        <div className="text-lg font-bold text-green-600">{department?.advisorsCount ? department?.advisorsCount : 0}</div>
                         <div className="text-xs text-gray-600">Advisors</div>
                     </div>
                 </div>
@@ -113,7 +113,7 @@ const DepartmentTableCard = ({ department, isDropdownOpen, setIsDropdownOpen, ha
                     </div> */}
                     <div className="flex items-center">
                         <Calendar className="h-4 w-4 mr-1" />
-                        {department?.totalEvents ? department?.totalEvents : 0} events
+                        {department?.eventsCount ? department?.eventsCount : 0} events
                     </div>
                 </div>
 

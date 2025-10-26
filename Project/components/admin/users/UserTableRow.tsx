@@ -14,12 +14,12 @@ interface UserTableRowProps {
     isDropdownOpen: string | null
     setIsDropdownOpen: React.Dispatch<React.SetStateAction<string | null>>;
     handleViewUser: (user: User) => void;
-    handleEditUser: (user: User) => void;
+    // handleEditUser: (user: User) => void;
     setUserToDelete: (user: User) => void
     setDeleteDialogOpen: (open: boolean) => void
 }
 
-const UserTableRow = ({ user, isDropdownOpen, roleColors, statusColors, setIsDropdownOpen, handleViewUser, handleEditUser, setUserToDelete, setDeleteDialogOpen }: UserTableRowProps) => {
+const UserTableRow = ({ user, isDropdownOpen, roleColors, statusColors, setIsDropdownOpen, handleViewUser, setUserToDelete, setDeleteDialogOpen }: UserTableRowProps) => {
     return (
         <TableRow key={user?._id}>
             <TableCell>

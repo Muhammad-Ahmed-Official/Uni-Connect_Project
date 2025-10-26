@@ -185,55 +185,42 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Loader } from "lucide-react";
 
 interface CreateNotificationDialogProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
-  onCreate: (notification: Omit<Notification, 'id' | 'createdAt' | 'readCount'>) => any;
+  onCreate: (notification: any) => any;
+  loading: boolean
 }
 
 
 export interface Notification {
-  id: string;
+  _id: string;
   title: string;
-  message: string;
-  type: "message";
-  createdBy: string;
-  createdAt: string;
-  sentAt?: string;
+  content: string
+  scheduledFor: string
+  createdBy?: string;
+  createdAt?: string;
 }
 
-const CreateNotification = ({
-  isOpen,
-  onOpenChange,
-  onCreate,
-}: CreateNotificationDialogProps) => {
+const CreateNotification = ({ isOpen, onOpenChange, onCreate, loading }: CreateNotificationDialogProps) => {
   const [formData, setFormData] = useState({
     title: "",
-    message: "",
-    targetAudience: "all",
+    content: "",
     scheduledFor: "",
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onCreate({
-      title: formData.title,
-      message: formData.message,
-      type: "message",
-      createdBy: "Admin User",
+      title: formData?.title,
+      content: formData?.content,
+      scheduledFor: formData?.scheduledFor,
     });
     setFormData({
       title: "",
-      message: "",
-      targetAudience: "all",
+      content: "",
       scheduledFor: "",
     });
   };
@@ -265,51 +252,11 @@ const CreateNotification = ({
             <Textarea
               id="message"
               placeholder="Enter your message here..."
-              value={formData.message}
-              onChange={(e) => setFormData(prev => ({ ...prev, message: e.target.value }))}
-              rows={6}
+              value={formData?.content}
+              onChange={(e) => setFormData(prev => ({ ...prev, content: e.target.value }))}
+              rows={2}
               required
             />
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* <div className="space-y-2">
-              <Label htmlFor="priority">Priority</Label>
-              <Select
-                value={formData.priority}
-                onValueChange={(value: Notification["priority"]) => 
-                  setFormData(prev => ({ ...prev, priority: value }))
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="low">Low Priority</SelectItem>
-                  <SelectItem value="medium">Medium Priority</SelectItem>
-                  <SelectItem value="high">High Priority</SelectItem>
-                </SelectContent>
-              </Select>
-            </div> */}
-
-            <div className="space-y-2">
-              <Label htmlFor="audience">Target Audience</Label>
-              <Select
-                value={formData.targetAudience}
-                onValueChange={(value) => 
-                  setFormData(prev => ({ ...prev, targetAudience: value }))
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Users</SelectItem>
-                  <SelectItem value="all_students">DCS Students</SelectItem>
-                  <SelectItem value="all_faculty">All Faculty</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
           </div>
 
           <div className="space-y-2">
@@ -334,7 +281,7 @@ const CreateNotification = ({
               Cancel
             </Button>
             <Button type="submit">
-              {formData.scheduledFor ? "Schedule Message" : "Save as Draft"}
+              {loading ? <span className="flex items-center gap-2">Creating .... <Loader className="animate-spin" /> </span> : "Create Notification"}
             </Button>
           </DialogFooter>
         </form>

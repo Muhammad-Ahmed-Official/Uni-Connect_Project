@@ -36,8 +36,10 @@ declare global {
     interface User {
         _id: string
         firstName: string
+        lastName:string
         email: string
         role: string
+        studentId?:string
         departmentName: string
         status: string
         status: string
@@ -65,9 +67,9 @@ declare global {
         departmentChairman: string
         deaprtmentchairmanEmail: string
         headAvatar?: string
-        totalStudents: number
-        totalAdvisors?: number
-        totalPosts?: number
+        studentsCount: number
+        advisorsCount?: number
+        eventsCount?: number
         activeEscalations?: number
         totalDepartments?: number
         totalEvents: number

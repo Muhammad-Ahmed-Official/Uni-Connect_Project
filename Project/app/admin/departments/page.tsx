@@ -25,6 +25,7 @@ export default function DepartmentManagement() {
   const [loading, setLoading] = useState<boolean>(false);
   const [loading2, setLoading2] = useState<boolean>(false);
   const [departmentStats, setDepartmentStats] = useState('');
+  const [statsLoading, setStatsLoading] = useState(false);
   const [editForm, setEditForm] = useState<DepartmentFormValues>({
     departmentName: "",
     departmentBio: "",
@@ -41,9 +42,10 @@ export default function DepartmentManagement() {
   }
 
   const getDaprtmentStats = async() => {
+    setStatsLoading(false);
     const responese:any = await apiClient.departmentStats();
-    // console.log(responese.data);
     setDepartmentStats(responese?.data);
+    setStatsLoading(false);
   }
 
   useEffect(() => {
@@ -100,7 +102,7 @@ export default function DepartmentManagement() {
       <Header setIsAddDialogOpen={setIsAddDialogOpen} setEditForm={setEditForm} />
 
       {/* Stats Cards */}
-      <StatsCards departments={departmentStats} />
+      <StatsCards departments={departmentStats} statsLoading={statsLoading} />
 
       {/* Search and Department Grid */}
       <FiltersAndSearches departments={filteredDepartments} setDepartments={setDepartments} loading2={loading2} />

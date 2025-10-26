@@ -1,80 +1,28 @@
-// import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-// import { Card, CardContent } from "@/components/ui/card";
-// import { FileText } from "lucide-react";
-// import DocumentCard from "@/components/admin/DocumentsPage/DocumentCard";
-// import { Document } from "@/types/admin-documents";
-
-// interface DocumentsListProps {
-//     pastPapers: Document[];
-//     policyDocs: Document[];
-//     onApprove: (id: number, type: string) => void;
-//     onReject: (id: number, type: string) => void;
-//     onDelete: (id: number, type: string) => void;
-// }
-
-// export default function DocumentsList({
-//     pastPapers,
-//     policyDocs,
-//     // onApprove,
-//     onReject,
-//     onDelete,
-// }: DocumentsListProps) {
-//     const isEmpty = pastPapers.length === 0 && policyDocs.length === 0;
-
-//     if (isEmpty) {
-//         return (
-//             <Card>
-//                 <CardContent className="text-center py-12">
-//                     <FileText className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-//                     <h3 className="text-lg font-medium text-gray-900 mb-2">No documents found</h3>
-//                     <p className="text-gray-600">Try adjusting your search or filter criteria.</p>
-//                 </CardContent>
-//             </Card>
-//         );
-//     }
-
-//     return (
-//         <Tabs defaultValue="past-papers" className="space-y-4">
-//             <TabsList>
-//                 <TabsTrigger value="past-papers">Past Papers</TabsTrigger>
-//                 <TabsTrigger value="policy-docs">Policy Documents</TabsTrigger>
-//             </TabsList>
-
-//             <TabsContent value="past-papers" className="space-y-4">
-//                 <div className="grid gap-4">
-//                     {pastPapers.map((paper) => (
-//                         <DocumentCard
-//                             key={paper.id}
-//                             document={paper}
-//                             type="past-paper"
-//                             // onApprove={onApprove}
-//                             onReject={onReject}
-//                             onDelete={onDelete}
-//                         />
-//                     ))}
-//                 </div>
-//             </TabsContent>
-
-//             <TabsContent value="policy-docs" className="space-y-4">
-//                 <div className="grid gap-4">
-//                     {policyDocs.map((doc) => (
-//                         <DocumentCard
-//                             key={doc.id}
-//                             document={doc}
-//                             type="policy-doc"
-//                             onReject={onReject}
-//                             onDelete={onDelete}
-//                         />
-//                     ))}
-//                 </div>
-//             </TabsContent>
-//         </Tabs>
-//     );
-// }
-
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-
+import { useState } from "react";
+import {
+  Card,
+  CardContent,
+} from "@/components/ui/card";
+import {
+  Button
+} from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import {
+  Input
+} from "@/components/ui/input";
+import {
+  Label
+} from "@/components/ui/label";
+import {
+  Textarea
+} from "@/components/ui/textarea";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -86,46 +34,47 @@ import {
 import {
   MoreHorizontal,
   Edit,
-  Send,
-  Clock,
   Trash2,
-  Eye,
-  Calendar,
   Mail,
+  Loader2,
 } from "lucide-react";
 
-
 export interface Notification {
-  id: string;
+  _id: string;
   title: string;
-  message: string;
-  type: "message";
+  content: string;
   createdBy?: string;
-  createdAt?: string;
-  sentAt?: string;
+  targetAudience: string;
 }
-
+// Notification[]
 interface NotificationsListProps {
-  notifications: Notification[];
-  onSend: (id: string) => void;
+  notifications: any;
   onEdit: (id: string, updates: Partial<Notification>) => void;
   onDelete: (id: string) => void;
+  loading2:boolean
+  isEditModalOpen:boolean 
+  setIsEditModalOpen: (value:boolean) => void
 }
 
-const NotificationsList = ({
-  notifications,
-  onSend,
-  onEdit,
-  onDelete,
-}: NotificationsListProps) => {
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
+const NotificationsList = ({ notifications, onEdit, onDelete, loading2, isEditModalOpen, setIsEditModalOpen }: NotificationsListProps) => {
+  const [selectedNotification, setSelectedNotification] = useState<Notification | null>(null);
+  const [editData, setEditData] = useState({ title: "", content: "", targetAudience: "" });
+
+  const handleEditClick = (notification: Notification) => {
+    setSelectedNotification(notification);
+    setEditData({
+      title: notification.title,
+      content: notification.content,
+      targetAudience: notification.targetAudience,
     });
+    setIsEditModalOpen(true);
+  };
+
+  const handleSaveChanges = () => {
+    if (selectedNotification) {
+      onEdit(selectedNotification._id, editData);
+    }
+    setIsEditModalOpen(false);
   };
 
   if (notifications.length === 0) {
@@ -141,96 +90,103 @@ const NotificationsList = ({
   }
 
   return (
-    <div className="space-y-4">
-      {notifications.map((notification) => (
-        <Card key={notification.id} className="border-0 shadow-sm">
-          <CardContent className="p-6">
-            <div className="flex items-start justify-between">
-              <div className="flex-1 space-y-3">
-                <div className="flex items-start justify-between">
-                  {/* <div className="space-y-1"> */}
+    <>
+      <div className="space-y-4">
+        {notifications.map((notification:any) => (
+          <Card key={notification._id} className="border-0 shadow-sm">
+            <CardContent className="p-6">
+              <div className="flex items-start justify-between">
+                <div className="flex-1 space-y-3">
+                  <div className="flex items-start justify-between">
                     <h3 className="font-semibold text-gray-900 text-lg">
                       {notification.title}
                     </h3>
-                  
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" className="h-8 w-8 p-0">
-                        <MoreHorizontal className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                      {/* {notification.status === "draft" && (
-                        <DropdownMenuItem onClick={() => onSend(notification.id)}>
-                          <Send className="h-4 w-4 mr-2" />
-                          Send Now
+
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" className="h-8 w-8 p-0">
+                          <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                        <DropdownMenuItem onClick={() => handleEditClick(notification)}>
+                          <Edit className="h-4 w-4 mr-2" />
+                          Edit
                         </DropdownMenuItem>
-                      )} */}
-                      <DropdownMenuItem onClick={() => onEdit(notification.id, { title: notification.title + " (edited)" })}>
-                        <Edit className="h-4 w-4 mr-2" />
-                        Edit
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem 
-                        onClick={() => onDelete(notification.id)}
-                        className="text-red-600"
-                      >
-                        <Trash2 className="h-4 w-4 mr-2" />
-                        Delete
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </div>
-
-                <p className="text-gray-600 text-sm leading-relaxed">
-                  {notification.message}
-                </p>
-
-                <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500">
-                  <div className="flex items-center space-x-1">
-                    <span>By: {notification.createdBy}</span>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem
+                          onClick={() => onDelete(notification._id)}
+                          className="text-red-600"
+                        >
+                          <Trash2 className="h-4 w-4 mr-2" />
+                          Delete
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </div>
-                  <div className="flex items-center space-x-1">
-                    <Calendar className="h-3 w-3" />
-                    {/* <span>
-                      {notification.status === "sent" && notification.sentAt
-                        ? `Sent: ${formatDate(notification.sentAt)}`
-                        : notification.status === "scheduled" && notification.scheduledFor
-                        ? `Scheduled: ${formatDate(notification.scheduledFor)}`
-                        : `Created: ${formatDate(notification.createdAt)}`}
-                    </span> */}
-                  </div>
-                  <div className="flex items-center space-x-1">
-                    {/* <span>To: {notification.targetAudience.replace('_', ' ')}</span> */}
+
+                  <p className="text-gray-600 text-sm leading-relaxed">
+                    {notification.content}
+                  </p>
+
+                  <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500">
+                    <span>By: {notification.createdBy || "Admin"}</span>
+                    <span>To: {notification.targetAudience}</span>
                   </div>
                 </div>
               </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      {/* Edit Modal */}
+      <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Edit Notification</DialogTitle>
+            <DialogDescription>
+              Update the notification details below.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4">
+            <div>
+              <Label className="pb-1">Title</Label>
+              <Input
+                value={editData.title}
+                onChange={(e) => setEditData({ ...editData, title: e.target.value })}
+              />
             </div>
 
-            {/* {notification.status === "draft" && (
-              <div className="flex justify-end space-x-2 mt-4 pt-4 border-t">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => onEdit(notification.id, { status: "scheduled" })}
-                >
-                  <Clock className="h-4 w-4 mr-2" />
-                  Schedule
-                </Button>
-                <Button
-                  size="sm"
-                  onClick={() => onSend(notification.id)}
-                >
-                  <Send className="h-4 w-4 mr-2" />
-                  Send Now
-                </Button>
-              </div>
-            )} */}
-          </CardContent>
-        </Card>
-      ))}
-    </div>
+            <div>
+              <Label className="pb-1">Content</Label>
+              <Textarea
+                rows={3}
+                value={editData.content}
+                onChange={(e) => setEditData({ ...editData, content: e.target.value })}
+              />
+            </div>
+
+            <div>
+              <Label className="pb-1">Target Audience</Label>
+              <Input
+                value={editData.targetAudience}
+                onChange={(e) => setEditData({ ...editData, targetAudience: e.target.value })}
+              />
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsEditModalOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleSaveChanges}>{loading2 ? <span className="flex items-center gap-2"> <Loader2 className="animate-spin" /> Updating... </span> :  "Save Changes"}</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };
 

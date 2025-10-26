@@ -9,16 +9,22 @@ import { useEffect, useState } from "react"
 
 export default function UserManagement() {
   const [stats, setStats] = useState({ totalUsers: 0, totalStudent: 0, totalAdvisors: 0 })
-  const [users, setUsers] = useState<User[]>([])
+  const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [loading2, setLoading2] = useState<boolean>(false);
 
   const getUserStats = async () => {
+    setLoading(true);
     const response:any = await apiClient.userStats();
     setStats(response.data);
+    setLoading(false);
   }
 
   const getUsers = async() => {
+    setLoading2(true);
     const response:any = await apiClient.getUsers();
     setUsers(response.data?.users);
+    setLoading2(false)
   }
   
   useEffect(() => {
@@ -32,10 +38,10 @@ export default function UserManagement() {
       <Header />
 
       {/* Stats Cards */}
-      <StatsCards stats={stats} />
+      <StatsCards stats={stats} loading={loading} />
 
       {/* Filters and Search */}
-      <FiltersAndSearches users={users}setUsers={setUsers} />
+      <FiltersAndSearches users={users}setUsers={setUsers} loading2={loading2} />
     </div>
   )
 }
