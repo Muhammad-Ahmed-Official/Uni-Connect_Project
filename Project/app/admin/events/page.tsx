@@ -124,18 +124,12 @@ export default function AdminEventsPage() {
     getDepartmentsStats();
   }, [])
 
+
   const filteredEvents: AdminEvent[] = events.filter((event) => {
     const matchesSearch =
       event.title.toLowerCase().includes(searchTerm.toLowerCase())
-    // event.organizer.toLowerCase().includes(searchTerm.toLowerCase())
-    // const matchesStatus = statusFilter === "all" || event.status === statusFilter
-    // const matchesCategory = categoryFilter === "all" || event.category === categoryFilter
     return matchesSearch
   })
-
-
-  // const approvedEvents = events.filter((e) => e.status === "approved").length
-  // const pendingEvents = events.filter((e) => e.status === "pending").length
 
   return (
     <div className="p-2 sm:p-6 space-y-6">
@@ -146,7 +140,7 @@ export default function AdminEventsPage() {
       <StatsCards eventStats={eventStats} statsLoading={statsLoading} />
 
       {/* Filters and Search */}
-      <FiltersAndSearches loading2={loading2} filteredEvents={filteredEvents} searchTerm={searchTerm} setSearchTerm={setSearchTerm} statusFilter={statusFilter} setStatusFilter={setStatusFilter} categoryFilter={categoryFilter} setCategoryFilter={setCategoryFilter} setEvents={setEvents} events={events} />
+      <FiltersAndSearches loading2={loading2} setEventStats={setEventStats} filteredEvents={filteredEvents} searchTerm={searchTerm} setSearchTerm={setSearchTerm} statusFilter={statusFilter} setStatusFilter={setStatusFilter} categoryFilter={categoryFilter} setCategoryFilter={setCategoryFilter} setEvents={setEvents} events={events} />
     </div>
   )
 }

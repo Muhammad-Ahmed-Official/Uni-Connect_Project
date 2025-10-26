@@ -26,7 +26,7 @@ const StatsCards = ({ stats, loading } : any) => {
                     <div className="flex items-center justify-between">
                         <div>
                             <p className="text-sm font-medium text-gray-600">Students</p>
-                            <p className="text-2xl font-bold text-gray-900">{stats?.totalStudent ? stats?.totalStudent : 0}</p>
+                            <p className="text-2xl font-bold text-gray-900">{stats?.totalStudents ? stats?.totalStudents : 0}</p>
                         </div>
                         <Users className="h-8 w-8 text-green-600" />
                     </div>

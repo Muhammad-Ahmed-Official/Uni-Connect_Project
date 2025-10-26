@@ -11,9 +11,10 @@ interface FiltersAndSearchesProps {
     loading2: boolean
     setSearchTerm: (value:string) => void
     searchTerm: string
+    setDepartmentStats: (value:any) => void
 }
 
-const FiltersAndSearches = ({ departments, setDepartments, loading2, setSearchTerm, searchTerm }: FiltersAndSearchesProps) => {
+const FiltersAndSearches = ({ departments, setDepartments, loading2, setSearchTerm, searchTerm, setDepartmentStats }: FiltersAndSearchesProps) => {
     return (
         <Card className="border-0 shadow-sm">
             <CardHeader>
@@ -34,7 +35,7 @@ const FiltersAndSearches = ({ departments, setDepartments, loading2, setSearchTe
                 </div>
 
                 {/* Departments Grid */}
-                <DepartmentsTable loading2={loading2} filteredDepartments={departments} departments={departments} setDepartments={setDepartments} />
+                <DepartmentsTable loading2={loading2} filteredDepartments={departments} setDepartmentStats={setDepartmentStats} departments={departments} setDepartments={setDepartments} />
             </CardContent>
         </Card>
     )

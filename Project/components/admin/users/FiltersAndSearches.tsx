@@ -1,14 +1,12 @@
+
 "use client"
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Search } from 'lucide-react'
-import React, { useState } from 'react'
 import UsersTable from './UsersTable'
 // { users: User[] }
 const FiltersAndSearches = ({ users, setUsers, loading2, searchTerm, setSearchTerm }: any) => {
-    const [roleFilter, setRoleFilter] = useState("all")
     return (
         <Card className="border-0 shadow-sm">
             <CardHeader>
@@ -26,16 +24,6 @@ const FiltersAndSearches = ({ users, setUsers, loading2, searchTerm, setSearchTe
                             className="pl-10"
                         />
                     </div>
-                    {/* <Select value={roleFilter} onValueChange={setRoleFilter}>
-                        <SelectTrigger className="w-full md:w-48">
-                            <SelectValue placeholder="Filter by role" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="all">All Roles</SelectItem>
-                            <SelectItem value="student">Students</SelectItem>
-                            <SelectItem value="advisor">Advisors</SelectItem>
-                        </SelectContent>
-                    </Select> */}
                 </div>
 
                 {/* Users Table */}

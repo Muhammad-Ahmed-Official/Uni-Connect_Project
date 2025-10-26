@@ -13,9 +13,10 @@ interface DepartmentsTableProps {
     setDepartments: React.Dispatch<React.SetStateAction<AdminDepartment[]>>
     loading2: boolean
     departments: AdminDepartment[]
+    setDepartmentStats: (value:any) => void
 }
 
-const DepartmentsTable = ({ filteredDepartments, setDepartments, loading2, departments }: DepartmentsTableProps) => {
+const DepartmentsTable = ({ filteredDepartments, setDepartments, loading2, departments, setDepartmentStats }: DepartmentsTableProps) => {
     const [isViewDialogOpen, setIsViewDialogOpen] = useState(false)
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
@@ -43,48 +44,64 @@ const DepartmentsTable = ({ filteredDepartments, setDepartments, loading2, depar
     const handleEditDepartment = (department: AdminDepartment) => {
         setSelectedDepartment(department)
         setEditForm({
-            // departmentName: department.departmentName,
             departmentBio: department.departmentBio,
             departmentChairman: department.departmentChairman,
             deaprtmentchairmanEmail: department.deaprtmentchairmanEmail,
-            // established: department?.established,
         })
         setIsEditDialogOpen(true)
     }
 
+
     const handleDeleteDepartment = async(departmentId: string) => {
-        await apiClient.deleteDepartment(departmentId);
-        setDepartments(filteredDepartments.filter((dept:any) => dept._id !== departmentId))
-        toast({
-            title: "Department Deleted",
-            description: "Department has been successfully removed from the system.",
-            variant: "destructive",
-        })
+        try {
+            setDepartments(filteredDepartments.filter((dept:any) => dept._id !== departmentId))
+            await apiClient.deleteDepartment(departmentId);
+            toast({
+                title: "Department Deleted",
+                description: "Department has been successfully removed from the system.",
+                variant: "destructive",
+            })
+        } catch (error) {
+            toast({
+                title: "Failed to create department",
+                description: "Please try again later.",
+                variant: "destructive",
+            });
+        }
     }
 
     const handleSaveDepartment = async() => {
         setLoading(true);
-        if (selectedDepartment) {
-            // Edit existing department
-            setDepartments(
-                filteredDepartments.map((dept:any) =>
-                    dept._id === selectedDepartment._id
-                        ? {
-                            ...dept,
-                            // departmentName: editForm.departmentName,
-                            departmentBio: editForm.departmentBio,
-                            departmentChairman: editForm.departmentChairman,
-                            deaprtmentchairmanEmail: editForm.deaprtmentchairmanEmail,
-                        }
-                        : dept,
-                ),
-            )
-            await apiClient.updateDepartment(selectedDepartment._id!, editForm)
-            setIsEditDialogOpen(false)
+        try {
+            if (selectedDepartment) {
+                // Edit existing department
+                setDepartments(
+                    filteredDepartments.map((dept:any) =>
+                        dept._id === selectedDepartment._id
+                            ? {
+                                ...dept,
+                                departmentBio: editForm.departmentBio,
+                                departmentChairman: editForm.departmentChairman,
+                                deaprtmentchairmanEmail: editForm.deaprtmentchairmanEmail,
+                            }
+                            : dept,
+                    ),
+                )
+                await apiClient.updateDepartment(selectedDepartment._id!, editForm)
+                setIsEditDialogOpen(false)
+                toast({
+                    title: "Department Updated",
+                    description: "Department information has been successfully updated.",
+                });
+            }
+        } catch (error) {
             toast({
-                title: "Department Updated",
-                description: "Department information has been successfully updated.",
+                title: "Failed to create department",
+                description: "Please try again later.",
+                variant: "destructive",
             });
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -92,18 +109,18 @@ const DepartmentsTable = ({ filteredDepartments, setDepartments, loading2, depar
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
             {(filteredDepartments?.length > 0 ? filteredDepartments : departments)?.map(
-            (department:any) => (
-                <DepartmentTableCard
-                key={department._id}
-                department={department}
-                isDropdownOpen={isDropdownOpen}
-                setIsDropdownOpen={setIsDropdownOpen}
-                handleViewDepartment={handleViewDepartment}
-                handleEditDepartment={handleEditDepartment}
-                setDeleteDialogOpen={setDeleteDialogOpen}
-                setDepartmentToDelete={setDepartmentToDelete}
-                />
-            )
+                (department:any) => (
+                    <DepartmentTableCard
+                    key={department._id}
+                    department={department}
+                    isDropdownOpen={isDropdownOpen}
+                    setIsDropdownOpen={setIsDropdownOpen}
+                    handleViewDepartment={handleViewDepartment}
+                    handleEditDepartment={handleEditDepartment}
+                    setDeleteDialogOpen={setDeleteDialogOpen}
+                    setDepartmentToDelete={setDepartmentToDelete}
+                    />
+                )
             )}
 
             {/* View Department Dialog */}
@@ -113,7 +130,14 @@ const DepartmentsTable = ({ filteredDepartments, setDepartments, loading2, depar
             <EditDeparmentDialog isEditDialogOpen={isEditDialogOpen} loading={loading} setIsEditDialogOpen={setIsEditDialogOpen} editForm={editForm} setEditForm={setEditForm} handleSaveDepartment={handleSaveDepartment} />
 
             {/* Delete Department Dialog */}
-            <DeleteDepartmentDialog isOpen={deleteDialogOpen} onClose={() => { setDeleteDialogOpen(false) }} onConfirm={() => { if (departmentToDelete) { handleDeleteDepartment(departmentToDelete._id!); } setDeleteDialogOpen(false) }} />
+            <DeleteDepartmentDialog isOpen={deleteDialogOpen} onClose={() => { setDeleteDialogOpen(false) }} onConfirm={() => { if (departmentToDelete) 
+                { 
+                    handleDeleteDepartment(departmentToDelete._id!);  
+                    setDepartmentStats((prev: any) => ({
+                        ...prev,
+                        totalDepartments: (prev?.totalDepartments || 0) - 1,
+                    })); 
+                } setDeleteDialogOpen(false) }} />
         </div>
     )
 }

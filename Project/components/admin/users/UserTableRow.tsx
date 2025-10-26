@@ -45,7 +45,16 @@ const UserTableRow = ({ user, isDropdownOpen, roleColors, statusColors, setIsDro
                     <span className="ml-1 capitalize">{user?.role}</span>
                 </Badge>
             </TableCell>
-            <TableCell className="text-gray-600">{user?.departmentName}</TableCell>
+            <TableCell>
+            <Badge
+                className={`${
+                user?.departmentName ? "bg-blue-100 text-blue-700" : "bg-gray-100 text-gray-500 italic"
+                } border-0`}
+            >
+                {user?.departmentName ?? "Not Assigned"}
+            </Badge>
+            </TableCell>
+
             <TableCell className="text-right">
                 <DropdownMenu
                     open={isDropdownOpen === user?._id}

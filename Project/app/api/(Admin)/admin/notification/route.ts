@@ -86,15 +86,21 @@ export const GET = asyncHandler(async (req: NextRequest): Promise<NextResponse> 
   let notifications;
 
   if (user.role === "admin") {
-    notifications = await Notification.find().sort({ createdAt: -1 });
+    notifications = await Notification.find().populate("sender","role").sort({ createdAt: -1 });
   } else if (user.role === "department_Student_Advisor") {
-    notifications = await Notification.find({ department_id: user.department_id }).sort({ createdAt: -1 });
+    notifications = await Notification.find({ department_id: user.department_id }).populate("sender department_id","role departmentName").sort({ createdAt: -1 });
   } else {
-    notifications = await Notification.find({ recipients: user.id }).sort({ createdAt: -1 });
+    notifications = await Notification.find({ recipients: user.id }).populate("sender","role").sort({ createdAt: -1 });
   }
 
-  return nextResponse(200, "Notifications fetched successfully", notifications);
+  // let counter =0;
+  const recipients =user?.role === "admin" ? ( await User.countDocuments()):(
+    await User.countDocuments({department_id:user.department_id})
+  );
+
+  return nextResponse(200, "Notifications fetched successfully", {notifications,recipients});
 });
+
 
 /* ================================
    🔵 UPDATE (Only Admin or Advisor)

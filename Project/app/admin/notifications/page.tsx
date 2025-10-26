@@ -37,6 +37,8 @@ export default function AdminNotificationsPage() {
   const [loading, setLoading] = useState<boolean>(false)
   const [loading2, setLoading2] = useState<boolean>(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [loading3, setLoading3] = useState<boolean>(false)
+  const [rece, setRece] = useState('');
 
   const totalNotifications = notifications?.length;
   
@@ -44,27 +46,11 @@ export default function AdminNotificationsPage() {
     {
       title: "Total Notifications",
       value: totalNotifications ?? 0,
-      // description: `${sentNotifications} sent`,
       icon: BellIcon,
     },
-    // {
-    //   title: "Scheduled",
-    //   value: scheduledNotifications,
-    //   description: "Waiting to send",
-    //   icon: ClockIcon,
-    //   iconColor: "text-orange-600",
-    // },
-    // {
-    //   title: "Drafts",
-    //   value: draftNotifications,
-    //   description: "In progress",
-    //   icon: MessageSquareIcon,
-    //   iconColor: "text-blue-600",
-    // },
     {
       title: "Total Recipients",
-      value: "",
-      // description: "All notifications",
+      value: rece ?? 0,
       icon: UsersIcon,
     },
   ];
@@ -144,19 +130,22 @@ export default function AdminNotificationsPage() {
   };
 
   const getNotifications = async() => {
+    setLoading3(true);
     try {
       const response:any = await apiClient.getNotification();
-      // console.log(response?.data);
-      setNotifications(response?.data);
+      setRece(response?.data?.recipients);
+      setNotifications(response?.data?.notifications);
     } catch {
       toast({
         title: "Error",
         description: "Something went wrong",
         variant: "destructive"
-      });
+      })
+    } finally{
+      setLoading3(false);
     }
   };
-
+  
 
   useEffect(() => {
     getNotifications();
@@ -186,6 +175,7 @@ export default function AdminNotificationsPage() {
       {/* Notifications List */}
       <NotificationsList
         loading2={loading2}
+        loading3={loading3}
         isEditModalOpen={isEditModalOpen} 
         setIsEditModalOpen={setIsEditModalOpen}
         notifications={notifications}

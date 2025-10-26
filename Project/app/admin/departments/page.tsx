@@ -42,7 +42,7 @@ export default function DepartmentManagement() {
   }
 
   const getDaprtmentStats = async() => {
-    setStatsLoading(false);
+    setStatsLoading(true);
     const responese:any = await apiClient.departmentStats();
     setDepartmentStats(responese?.data);
     setStatsLoading(false);
@@ -74,7 +74,6 @@ export default function DepartmentManagement() {
       return;
     }
     setLoading(true)
-    
     
     try {
       await apiClient.createDepartment(newDepartment);
@@ -111,7 +110,7 @@ export default function DepartmentManagement() {
       <StatsCards departments={departmentStats} statsLoading={statsLoading} />
 
       {/* Search and Department Grid */}
-      <FiltersAndSearches departments={filteredDepartments.length > 0 ? filteredDepartments : departments} setDepartments={setDepartments} loading2={loading2} setSearchTerm={setSearchTerm} searchTerm={searchTerm} />
+      <FiltersAndSearches departments={filteredDepartments.length > 0 ? filteredDepartments : departments} setDepartments={setDepartments} loading2={loading2} setSearchTerm={setSearchTerm} searchTerm={searchTerm} setDepartmentStats={setDepartmentStats}  />
 
       {/* Add Department Dialog */}
       <AddDepartmentDialog isAddDialogOpen={isAddDialogOpen} loading={loading} setIsAddDialogOpen={setIsAddDialogOpen} editForm={editForm} setEditForm={setEditForm} handleSaveDepartment={handleSaveDepartment} />
