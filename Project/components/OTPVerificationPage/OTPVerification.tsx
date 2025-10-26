@@ -11,6 +11,7 @@ import { ApiErrorResponse } from "@/types/ApiErrorResponse"
 export function OTPVerification({ email }: { email: string | null }) {
     const [otp, setOtp] = useState<string[]>(["", "", "", "", "", ""])
     const [isLoading, setIsLoading] = useState(false)
+    const [isRedirecting, setIsRedirecting] = useState(false)
     const [isResending, setIsResending] = useState(false)
     const [error, setError] = useState("");
     const { toast } = useToast();
@@ -73,6 +74,7 @@ export function OTPVerification({ email }: { email: string | null }) {
 
             toast({ title: 'Verification successful!', description: 'Your account has been verified successfully.', variant: "success" });
             setError("")
+            setIsRedirecting(true);
             router.push('/login')
         } catch (error) {
             if (axios.isAxiosError(error)) {
@@ -139,7 +141,7 @@ export function OTPVerification({ email }: { email: string | null }) {
                     disabled={isLoading || otp.some((digit) => digit === "")}
                     className="w-full h-11 bg-blue-600 hover:bg-blue-700 text-white font-semibold"
                 >
-                    {isLoading ? "Verifying..." : "Verify OTP"}
+                    {isLoading ? "Verifying..." : isRedirecting ? "Redirecting..." : "Verify OTP"}
                 </Button>
 
                 {/* Resend Link */}

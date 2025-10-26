@@ -31,11 +31,17 @@ interface Department {
 const schema = z.object({
     firstName: z.string().min(1, "First name is required"),
     lastName: z.string().min(1, "Last name is required"),
-    email: z.string().email(),
+    email: z.string().email().regex(
+        /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+        'Invalid email address',
+    ),
     password: z.string().min(8, "Password must be at least 8 characters").regex(/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, "Password must contain uppercase, lowercase, and number"),
     confirmPassword: z.string(),
     department: z.string().min(1, "Please select your department"),
-    studentId: z.string().min(1, "Student ID is required"),
+    studentId: z.string().regex(
+        /^B.*$/,
+        'Student ID must start with B, followed by Department Tag and digits (e.g., B23110006102).'
+    ),
     agreeToTerms: z.boolean().refine(v => v === true, "You must agree to the terms and conditions"),
     role: z.string()
 }).refine((data) => data.password === data.confirmPassword, {
@@ -174,16 +180,16 @@ const RegistrationForm = () => {
                         value={watch('department')}
                         onValueChange={(value) => setValue('department', value, { shouldValidate: true })}
                     >
-                        <SelectTrigger className={errors.department ? "border-red-500" : ""}>
+                        <SelectTrigger className={`w-full ${errors.department ? "border-red-500" : ""}`}>
                             <SelectValue placeholder="Select department" />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent className="w-full min-w-[var(--radix-select-trigger-width)]">
                             {isFetchingDeparts ? (
                                 <SelectItem value="loading" disabled>Loading departments...</SelectItem>
                             ) : (
                                 Array.isArray(departments) && departments.length > 0 ? (
                                     departments.map((dept) => (
-                                        <SelectItem key={dept._id} value={dept.departmentName} className='w-full'>
+                                        <SelectItem key={dept._id} value={dept._id}>
                                             {dept.departmentName}
                                         </SelectItem>
                                     ))
@@ -205,7 +211,9 @@ const RegistrationForm = () => {
 
                 <div className="space-y-2">
                     <Label htmlFor="studentId">Student ID</Label>
-                    <Input id="studentId" placeholder="Student ID" className={errors.studentId ? "border-red-500" : ""} {...register('studentId')} />
+                    <Input id="studentId" placeholder="Student ID" className={errors.studentId ? "border-red-500" : ""}
+                        {...register('studentId')}
+                    />
                     {errors.studentId && (
                         <p className="text-xs text-red-500 flex items-center gap-1">
                             <AlertCircle className="w-3 h-3" />

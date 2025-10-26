@@ -9,8 +9,8 @@ import { safeSet } from "@/lib/redis";
 import departmentModel from "@/models/department.model";
 
 
-const handleStudentRegistration = async (data: any, department_id: string) => {
-  const { firstName, lastName, email, password, studentId, role } = data;
+const handleStudentRegistration = async (data: any) => {
+  const { firstName, lastName, email, password, studentId, role, department_id } = data;
   if (!firstName || !lastName || !email || !password || !studentId) {
     return nextError(400, "Missing required Fields!");
   }
@@ -57,7 +57,7 @@ const handleStudentRegistration = async (data: any, department_id: string) => {
 };
 
 
-const handle_Advisor_Registration = async (data: any, department_id: string) => {
+const handle_Advisor_Registration = async (data: any) => {
   const {
     firstName,
     lastName,
@@ -65,7 +65,8 @@ const handle_Advisor_Registration = async (data: any, department_id: string) => 
     password,
     role,
     advisor_details,
-    employeeId
+    employeeId,
+    department_id
   } = data;
 
   //* Validate required fields dynamically
@@ -160,21 +161,19 @@ export const POST = asyncHandler(async (request: NextRequest): Promise<NextRespo
 
   await connectDB();
 
-  const department_id = await departmentModel.findOne({ departmentName: data.departmentName }).select("_id")
-  if (!department_id) return nextError(400, "Department not found")
+  // const department_id = await departmentModel.findOne({ departmentName: data.departmentName }).select("_id")
+  // if (!department_id) return nextError(400, "Department not found")
 
   switch (data?.role) {
     case "student":
       return await handleStudentRegistration(
         data,
-        department_id
       );
 
     case "department_Student_Advisor":
     case "university_Student_Advisor":
       return await handle_Advisor_Registration(
-        data,
-        department_id
+        data
       )
     default:
       return nextError(400, "Invalid role");
