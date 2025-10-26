@@ -3,6 +3,7 @@ import Event from "@/models/event.model";
 import { asyncHandler } from "@/utils/asyncHandler";
 import { nextError, nextResponse } from "@/utils/Response";
 import { NextRequest, NextResponse } from "next/server";
+import DepartmentModel from "@/models/department.model";
 
 export const GET = asyncHandler(async (req: NextRequest): Promise<NextResponse> => {
   await connectDB();
@@ -13,7 +14,7 @@ export const GET = asyncHandler(async (req: NextRequest): Promise<NextResponse> 
   let events = await Event.find({
     "eventDetails.start_date": { $gte: today }
   })
-    .populate("department_id", "departmentName")
+    .populate("department._id", "departmentName")
     .sort({ "eventDetails.start_date": 1 })
     .lean();
 
