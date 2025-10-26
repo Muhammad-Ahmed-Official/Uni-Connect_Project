@@ -28,11 +28,11 @@ export const PostCard = ({ post, onLike }: PostCardProps) => {
                             post?.user_id?.profilePic ? (
                                 <AvatarImage src={post.user_id?.profilePic} alt={post.user_id.firstName} />
                             ) : (
-                                <AvatarImage src={"/student-avatar.png"} alt={post.user_id.firstName} />
+                                <AvatarImage src={"/student-avatar.png"} alt={post?.user_id?.firstName} />
                             )
                         }
                         <AvatarFallback>
-                            {post.user_id?.firstName + " " + post.user_id?.lastName
+                            {post?.user_id?.firstName + " " + post?.user_id?.lastName
                                 .split(" ")
                                 .map((n) => n[0])
                                 .join("")}
@@ -40,21 +40,21 @@ export const PostCard = ({ post, onLike }: PostCardProps) => {
                     </Avatar>
                     <div className="flex-1">
                         <div className="flex items-center space-x-2 mb-2">
-                            {post.isPinned && <Pin className="h-4 w-4 text-blue-600" />}
-                            <h3 className="font-semibold text-lg text-gray-900">{post.title}</h3>
+                            {post?.isPinned && <Pin className="h-4 w-4 text-blue-600" />}
+                            <h3 className="font-semibold text-lg text-gray-900">{post?.title}</h3>
                         </div>
                         <div className="flex items-center space-x-2 text-sm text-gray-500 mb-3">
-                            <span className="font-medium">{post.user_id?.firstName + " " + post.user_id?.lastName}</span>
-                            <span>{post.user_id?.year ?? ""}</span>
+                            <span className="font-medium">{post?.user_id?.firstName + " " + post?.user_id?.lastName}</span>
+                            <span>{post?.user_id?.year ?? ""}</span>
                             <span>•</span>
                             <span className="flex items-center space-x-1">
                                 <Clock className="h-3 w-3" />
-                                <span>{format(post.createdAt)}</span>
+                                <span>{format(post?.createdAt)}</span>
                             </span>
                         </div>
-                        <p className="text-gray-700 mb-4 leading-relaxed">{post.content}</p>
+                        <p className="text-gray-700 mb-4 leading-relaxed">{post?.content}</p>
                         <div className="flex flex-wrap gap-2 mb-4">
-                            {post.tags.map((tag) => (
+                            {post?.tags.map((tag) => (
                                 <Badge key={tag} variant="secondary" className="text-xs">
                                     {tag}
                                 </Badge>
@@ -72,13 +72,13 @@ export const PostCard = ({ post, onLike }: PostCardProps) => {
                                     >
                                         {/* <Heart className={`h-4 w-4 ${post.isLiked ? "fill-current" : ""}`} /> */}
                                         <Heart className={`h-4 w-4 fill-current`} />
-                                        <span>{post.likes_count}</span>
+                                        <span>{post?.likes_count}</span>
                                     </Button>
                                 </ComingSoonWrapper>
                                 <ComingSoonWrapper>
                                     <Button variant="ghost" size="sm" className="flex items-center space-x-1 text-gray-500">
                                         <MessageCircle className="h-4 w-4" />
-                                        <span>{post.comment_count}</span>
+                                        <span>{post?.comment_count}</span>
                                     </Button>
                                 </ComingSoonWrapper>
                                 <ComingSoonWrapper>
