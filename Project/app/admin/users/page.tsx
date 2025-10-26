@@ -16,10 +16,10 @@ export default function UserManagement() {
 
   const filteredUsers = users.filter(
     (usr) =>
-      usr?.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      usr?.lastName.toLowerCase().includes(searchTerm.toLowerCase()) || 
-      usr?.departmentName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      usr?.email.toLowerCase().includes(searchTerm.toLowerCase()), 
+      usr?.firstName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      usr?.lastName?.toLowerCase().includes(searchTerm.toLowerCase()) || 
+      usr?.departmentName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      usr?.email?.toLowerCase().includes(searchTerm.toLowerCase()), 
   )
 
 
@@ -41,6 +41,8 @@ export default function UserManagement() {
     getUsers();
     getUserStats();
   }, [])
+
+  console.log(stats)
 
   return (
     <div className="p-2 sm:p-6 space-y-6">

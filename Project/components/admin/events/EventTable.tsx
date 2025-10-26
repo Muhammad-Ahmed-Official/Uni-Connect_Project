@@ -18,6 +18,7 @@ interface EventTableProps {
     setEvents: React.Dispatch<React.SetStateAction<AdminEvent[]>>
     events: AdminEvent[]
     loading2: boolean
+    setEventStats: (value:any) => void
 }
 
 export interface EventFormValues {
@@ -31,7 +32,7 @@ export interface EventFormValues {
     }
 }
 
-const EventTable = ({ filteredEvents, setEvents, events, loading2 }: EventTableProps) => {
+const EventTable = ({ filteredEvents, setEvents, events, loading2, setEventStats }: EventTableProps) => {
     const [selectedEvent, setSelectedEvent] = useState<AdminEvent | null>(null)
     const [isEditDialogOpen, setIsEditDialogOpen] = useState<boolean>(false)
     const [loading, setLoading] = useState<boolean>(false)
@@ -46,25 +47,13 @@ const EventTable = ({ filteredEvents, setEvents, events, loading2 }: EventTableP
         },
     })
 
-    const handleApproveEvent = (eventId: string) => {
-        setEvents(events.map((event) => (event._id === eventId ? { ...event, status: "approved" } : event)))
-        toast({
-            title: "Event Approved",
-            description: "The event has been approved and is now visible to users.",
-        })
-    }
-
-    const handleRejectEvent = (eventId: string) => {
-        setEvents(events.map((event) => (event._id === eventId ? { ...event, status: "rejected" } : event)))
-        toast({
-            title: "Event Rejected",
-            description: "The event has been rejected and will not be visible to users.",
-        })
-    }
-
     const handleDeleteEvent = async (eventId: string) => {
-        setEvents(events.filter((event) => event?._id !== eventId))
         await apiClient.deleteEvent(eventId);
+        setEvents(events.filter((event) => event?._id !== eventId))
+        setEventStats((prev:any) => ({
+            ...prev,
+            totalEvents: (prev?.totalEvents ?? 0) - 1,
+        }));
         toast({
             title: "Event Deleted",
             description: "The event has been permanently deleted.",
@@ -144,16 +133,20 @@ const EventTable = ({ filteredEvents, setEvents, events, loading2 }: EventTableP
         })
     }
 
+    if (loading2) {
+        return <EventSkeleton />
+    }
+
 
     return (
         <div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
                 {filteredEvents.map((event) => (
-                    <EventTableCard loading2={loading2} key={event._id} event={event} handleEditEvent={handleEditEvent} handleApproveEvent={handleApproveEvent} handleRejectEvent={handleRejectEvent} handleDeleteEvent={handleDeleteEvent} />
+                    <EventTableCard key={event._id} event={event} handleEditEvent={handleEditEvent}  handleDeleteEvent={handleDeleteEvent} />
                 ))}
             </div>
 
-            {loading2 === false && filteredEvents.length === 0 && (
+            {filteredEvents.length === 0 && (
                 <Card>
                     <CardContent className="text-center py-12">
                         <Calendar className="w-12 h-12 text-gray-400 mx-auto mb-4" />

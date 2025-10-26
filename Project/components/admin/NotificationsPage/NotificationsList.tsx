@@ -38,6 +38,7 @@ import {
   Mail,
   Loader2,
 } from "lucide-react";
+import NotificationsSkeleton from "./Skelton";
 
 export interface Notification {
   _id: string;
@@ -52,14 +53,14 @@ interface NotificationsListProps {
   onEdit: (id: string, updates: Partial<Notification>) => void;
   onDelete: (id: string) => void;
   loading2:boolean
+  loading3:boolean
   isEditModalOpen:boolean 
   setIsEditModalOpen: (value:boolean) => void
 }
 
-const NotificationsList = ({ notifications, onEdit, onDelete, loading2, isEditModalOpen, setIsEditModalOpen }: NotificationsListProps) => {
+const NotificationsList = ({ notifications, onEdit, onDelete, loading2, isEditModalOpen, setIsEditModalOpen, loading3 }: NotificationsListProps) => {
   const [selectedNotification, setSelectedNotification] = useState<Notification | null>(null);
   const [editData, setEditData] = useState({ title: "", content: "", targetAudience: "" });
-
   const handleEditClick = (notification: Notification) => {
     setSelectedNotification(notification);
     setEditData({
@@ -77,6 +78,10 @@ const NotificationsList = ({ notifications, onEdit, onDelete, loading2, isEditMo
     setIsEditModalOpen(false);
   };
 
+  if(loading3){
+    return <NotificationsSkeleton />
+  }
+
   if (notifications.length === 0) {
     return (
       <Card>
@@ -89,10 +94,11 @@ const NotificationsList = ({ notifications, onEdit, onDelete, loading2, isEditMo
     );
   }
 
+
   return (
     <>
       <div className="space-y-4">
-        {notifications.map((notification:any) => (
+        {notifications?.map((notification:any) => (
           <Card key={notification._id} className="border-0 shadow-sm">
             <CardContent className="p-6">
               <div className="flex items-start justify-between">
@@ -127,11 +133,11 @@ const NotificationsList = ({ notifications, onEdit, onDelete, loading2, isEditMo
                   </div>
 
                   <p className="text-gray-600 text-sm leading-relaxed">
-                    {notification.content}
+                    {notification?.content}
                   </p>
 
                   <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500">
-                    <span>By: {notification.createdBy || "Admin"}</span>
+                    <span>By: {notification?.sender?.role}</span>
                     <span>To: {notification.targetAudience}</span>
                   </div>
                 </div>

@@ -36,8 +36,6 @@ export const GET = asyncHandler(async (req: NextRequest): Promise<NextResponse> 
   };
 
 
-  
-
   // Search filter (by name, email, or studentId)
   if (search) {
     filter.$or = [
@@ -55,7 +53,7 @@ export const GET = asyncHandler(async (req: NextRequest): Promise<NextResponse> 
   const users = await User.find(filter)
     .sort({ [sortBy]: sortOrder })
     .skip(skip)
-    .limit(limit)
+    // .limit(limit)
     .select("-password -isVerified -notification_preferences -social_links -privacy_settings -bio -year")
     .lean();
 

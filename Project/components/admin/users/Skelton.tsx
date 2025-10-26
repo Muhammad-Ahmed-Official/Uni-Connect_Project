@@ -58,17 +58,6 @@ const TableSkeleton = () => {
           </TableBody>
         </Table>
       </div>
-
-      {/* Pagination Skeleton */}
-      <div className="flex justify-center">
-        <div className="flex items-center space-x-2">
-          <Skeleton className="h-9 w-9 rounded-md" />
-          <Skeleton className="h-9 w-9 rounded-md" />
-          <Skeleton className="h-4 w-20" />
-          <Skeleton className="h-9 w-9 rounded-md" />
-          <Skeleton className="h-9 w-9 rounded-md" />
-        </div>
-      </div>
     </div>
   )
 }
