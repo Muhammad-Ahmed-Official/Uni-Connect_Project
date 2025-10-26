@@ -57,9 +57,9 @@ export default function DepartmentManagement() {
   const filteredDepartments = departments.filter(
     (dept) =>
       dept.departmentName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      dept.departmentChairman.toLowerCase().includes(searchTerm.toLowerCase()),
+    dept.departmentChairman.toLowerCase().includes(searchTerm.toLowerCase()),
   )
-
+  
   const handleSaveDepartment = async() => {
     const newDepartment = {
       ...editForm,
@@ -74,16 +74,21 @@ export default function DepartmentManagement() {
       return;
     }
     setLoading(true)
-
+    
+    
     try {
-      const response = await apiClient.createDepartment(newDepartment);
+      await apiClient.createDepartment(newDepartment);
       setDepartments([...filteredDepartments as any, newDepartment])
-      
+      setDepartmentStats((prev: any) => ({
+        ...prev,
+        totalDepartments: (prev?.totalDepartments || 0) + 1,
+      }));
+
       toast({
         title: "Department Added",
         description: "New department has been successfully created.",
       })
-
+      
       setIsAddDialogOpen(false)
     } catch (error) {
       toast({
