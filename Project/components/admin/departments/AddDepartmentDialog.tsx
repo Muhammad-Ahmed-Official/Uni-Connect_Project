@@ -56,9 +56,9 @@ const AddDepartmentDialog = ({ isAddDialogOpen, setIsAddDialogOpen, editForm, se
                                     Mass Communication
                                     </SelectItem>
                                     <SelectItem
-                                    value="LAW"
+                                    value="Law"
                                     className="cursor-pointer hover:bg-blue-100 transition-colors">
-                                    LAW
+                                    Law
                                     </SelectItem>
                                     <SelectItem
                                     value="Pharmacy"

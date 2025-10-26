@@ -8,14 +8,12 @@ import DepartmentModel from "@/models/department.model";
 export const GET = asyncHandler(async (req: NextRequest): Promise<NextResponse> => {
   await connectDB();
 
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  // const today = new Date();
+  // today.setHours(0, 0, 0, 0);
 
-  let events = await Event.find({
-    "eventDetails.start_date": { $gte: today }
-  })
-    .populate("department._id", "departmentName")
-    .sort({ "eventDetails.start_date": 1 })
+  let events = await Event.find()
+    .populate("department_id", "departmentName")
+    .sort({ "eventDetails?.start_date": 1 })
     .lean();
 
   if (!events || events.length === 0) {
