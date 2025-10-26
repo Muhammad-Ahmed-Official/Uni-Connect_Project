@@ -37,7 +37,7 @@ const schema = z.object({
     ),
     password: z.string().min(8, "Password must be at least 8 characters").regex(/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, "Password must contain uppercase, lowercase, and number"),
     confirmPassword: z.string(),
-    department: z.string().min(1, "Please select your department"),
+    department_id: z.string().min(1, "Please select your department"),
     studentId: z.string().regex(
         /^B.*$/,
         'Student ID must start with B, followed by Department Tag and digits (e.g., B23110006102).'
@@ -59,7 +59,7 @@ const RegistrationForm = () => {
             email: "",
             password: "",
             confirmPassword: "",
-            department: "",
+            department_id: "",
             studentId: "",
             agreeToTerms: false,
             role: "student"
@@ -175,12 +175,12 @@ const RegistrationForm = () => {
             {/* Department and Student ID */}
             <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-2">
-                    <Label htmlFor="department">Department</Label>
+                    <Label htmlFor="department_id">Department</Label>
                     <Select
-                        value={watch('department')}
-                        onValueChange={(value) => setValue('department', value, { shouldValidate: true })}
+                        value={watch('department_id')}
+                        onValueChange={(value) => setValue('department_id', value, { shouldValidate: true })}
                     >
-                        <SelectTrigger className={`w-full ${errors.department ? "border-red-500" : ""}`}>
+                        <SelectTrigger className={`w-full ${errors.department_id ? "border-red-500" : ""}`}>
                             <SelectValue placeholder="Select department" />
                         </SelectTrigger>
                         <SelectContent className="w-full min-w-[var(--radix-select-trigger-width)]">
@@ -201,10 +201,10 @@ const RegistrationForm = () => {
                             )}
                         </SelectContent>
                     </Select>
-                    {errors.department && (
+                    {errors.department_id && (
                         <p className="text-xs text-red-500 flex items-center gap-1">
                             <AlertCircle className="w-3 h-3" />
-                            {errors.department.message as string}
+                            {errors.department_id.message as string}
                         </p>
                     )}
                 </div>

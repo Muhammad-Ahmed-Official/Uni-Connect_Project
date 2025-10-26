@@ -11,6 +11,9 @@ import departmentModel from "@/models/department.model";
 
 const handleStudentRegistration = async (data: any) => {
   const { firstName, lastName, email, password, studentId, role, department_id } = data;
+
+  console.log("data in handleStudentRegistration ==>", data);
+
   if (!firstName || !lastName || !email || !password || !studentId) {
     return nextError(400, "Missing required Fields!");
   }
@@ -49,10 +52,7 @@ const handleStudentRegistration = async (data: any) => {
     return nextError(500, "Failed to save OTP. Please try again.", error);
   }
 
-  const emailResponse = await sendEmailOTP(email, verifyCode);
-  if (!emailResponse.success) {
-    return nextError(500, emailResponse.message);
-  }
+  sendEmailOTP(email, verifyCode);
   return nextResponse(200, `OTP sent to ${email}`);
 };
 

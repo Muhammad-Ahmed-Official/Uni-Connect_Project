@@ -1,6 +1,5 @@
 "use client"
-
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { useParams } from "next/navigation"
 import { DepartmentHeader, DepartmentHeaderSkeleton } from "@/components/dashboard/DepartmentsPage/DepartmentHeader"
 import { ActionsBar, ActionsBarSkeleton } from "@/components/dashboard/DepartmentsPage/ActionsBar"
@@ -42,27 +41,29 @@ export default function DepartmentForumPage() {
   const session = useSession();
   const user = session.data?.user;
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true)
-      try {
-        const res = await axios.get("/api/posts/read/get-dept-post", {
-          params: { departmentId },
-        });
-        setDepartment(res.data.data.department || null)
-        setPosts(res.data.data.posts || []);
-      } catch (error) {
-        toast({
-          title: "Error",
-          description: "Failed to load department data. Please try again later.",
-          variant: "destructive",
-        })
-      } finally {
-        setIsLoading(false)
-      }
+  // useCallback se fetchData ko wrap karein
+  const fetchData = useCallback(async () => {
+    setIsLoading(true)
+    try {
+      const res = await axios.get("/api/posts/read/get-dept-post", {
+        params: { departmentId },
+      });
+      setDepartment(res.data.data.department || null)
+      setPosts(res.data.data.posts || []);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to load department data. Please try again later.",
+        variant: "destructive",
+      })
+    } finally {
+      setIsLoading(false)
     }
+  }, [departmentId, toast])
+
+  useEffect(() => {
     fetchData()
-  }, [departmentId])
+  }, [fetchData])
 
   const filteredPosts = posts.filter(
     (post) =>
@@ -79,7 +80,7 @@ export default function DepartmentForumPage() {
         return Number(b.createdAt) - Number(a.createdAt)
       case "popular":
         return b.likes_count - a.likes_count
-      case "comments":
+      case "replies":
         return b.comment_count - a.comment_count
       default:
         return 0
@@ -94,6 +95,7 @@ export default function DepartmentForumPage() {
       user_id: user?.id ?? null,
       department_id: departmentId,
     }
+
     try {
       const res = await axios.post("/api/posts/create", newPost);
       toast({
@@ -101,27 +103,39 @@ export default function DepartmentForumPage() {
         description: res.data.message || "Post created successfully",
         variant: "success",
       })
+
+      fetchData();
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const serverError = error.response?.data as ApiErrorResponse;
-        toast({ title: 'Registration failed', description: serverError?.message || "Failed to create post. Please try again later.", variant: 'destructive' })
+        toast({
+          title: 'Registration failed',
+          description: serverError?.message || "Failed to create post. Please try again later.",
+          variant: 'destructive'
+        })
       }
     }
   }
 
-  const handleLikePost = (postId: number) => {
-    // setPosts(
-    //   posts.map((post) => {
-    //     if (post.id === postId) {
-    //       return {
-    //         ...post,
-    //         isLiked: !post.isLiked,
-    //         likes: post.isLiked ? post.likes - 1 : post.likes + 1,
-    //       }
-    //     }
-    //     return post
-    //   }),
-    // )
+  const handleLikePost = async (postId: string) => {
+    try {
+      // Optimistic update
+      setPosts(prev => prev.map(post =>
+        post._id === postId
+          ? {
+            ...post,
+            likes_count: post.likes_count + 1,
+            // Add actual like logic here
+          }
+          : post
+      ));
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to like post",
+        variant: "destructive",
+      })
+    }
   }
 
   if (!department && !isLoading) {
@@ -147,6 +161,8 @@ export default function DepartmentForumPage() {
           sortBy={sortBy}
           onSortChange={setSortBy}
           onCreatePost={handleCreatePost}
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
         />
       ) : null}
 
@@ -160,7 +176,7 @@ export default function DepartmentForumPage() {
       ) : sortedPosts.length > 0 ? (
         <div className="space-y-4">
           {sortedPosts.map((post) => (
-            <PostCard key={post._id} post={post} onLike={handleLikePost} />
+            <PostCard key={post._id} post={post} onLike={() => handleLikePost(post._id)} />
           ))}
         </div>
       ) : department ? (

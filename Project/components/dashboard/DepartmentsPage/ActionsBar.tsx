@@ -14,9 +14,11 @@ interface ActionsBarProps {
     sortBy: string
     onSortChange: (sort: string) => void
     onCreatePost: (title: string, content: string, tags: string) => void
+    searchQuery: string
+    onSearchChange: (query: string) => void
 }
 
-export const ActionsBar = ({ departmentName, postCount, sortBy, onSortChange, onCreatePost }: ActionsBarProps) => {
+export const ActionsBar = ({ departmentName, postCount, sortBy, onSortChange, onCreatePost, searchQuery,  }: ActionsBarProps) => {
     return (
         <div className="flex items-center justify-between mb-6">
             <div className="flex items-center space-x-4">

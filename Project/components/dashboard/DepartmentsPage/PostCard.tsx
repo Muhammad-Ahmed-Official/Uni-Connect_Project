@@ -24,9 +24,15 @@ export const PostCard = ({ post, onLike }: PostCardProps) => {
             <CardContent className="p-6">
                 <div className="flex items-start space-x-4">
                     <Avatar className="w-10 h-10">
-                        <AvatarImage src={post.user_id.profilePic || "/student-avatar.png"} alt={post.user_id.firstName} />
+                        {
+                            post?.user_id?.profilePic ? (
+                                <AvatarImage src={post.user_id?.profilePic} alt={post.user_id.firstName} />
+                            ) : (
+                                <AvatarImage src={"/student-avatar.png"} alt={post.user_id.firstName} />
+                            )
+                        }
                         <AvatarFallback>
-                            {post.user_id.firstName + " " + post.user_id.lastName
+                            {post.user_id?.firstName + " " + post.user_id?.lastName
                                 .split(" ")
                                 .map((n) => n[0])
                                 .join("")}
@@ -38,8 +44,8 @@ export const PostCard = ({ post, onLike }: PostCardProps) => {
                             <h3 className="font-semibold text-lg text-gray-900">{post.title}</h3>
                         </div>
                         <div className="flex items-center space-x-2 text-sm text-gray-500 mb-3">
-                            <span className="font-medium">{post.user_id.firstName + " " + post.user_id.lastName}</span>
-                            <span>{post.user_id.year ?? ""}</span>
+                            <span className="font-medium">{post.user_id?.firstName + " " + post.user_id?.lastName}</span>
+                            <span>{post.user_id?.year ?? ""}</span>
                             <span>•</span>
                             <span className="flex items-center space-x-1">
                                 <Clock className="h-3 w-3" />
