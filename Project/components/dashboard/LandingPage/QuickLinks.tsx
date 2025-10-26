@@ -9,28 +9,28 @@ const quickLinks = [
         title: "Department Forums",
         description: "Connect with students in your department",
         icon: Users,
-        href: "/dashbaord/departments",
+        href: "/dashboard/departments",
         color: "bg-blue-100 text-blue-600",
     },
     {
         title: "Upcoming Events",
         description: "View and RSVP to university events",
         icon: Calendar,
-        href: "/dashbaord/events",
+        href: "/dashboard/events",
         color: "bg-green-100 text-green-600",
     },
     {
         title: "Ask an Advisor",
         description: "Get guidance from academic advisors",
         icon: MessageSquare,
-        href: "/dashbaord/advisors",
+        href: "/dashboard/advisors",
         color: "bg-purple-100 text-purple-600",
     },
     {
         title: "Study Materials",
         description: "Access study materials",
         icon: FileText,
-        href: "/dashbaord/study-materials",
+        href: "/dashboard/study-materials",
         color: "bg-orange-100 text-orange-600",
     },
 ]
@@ -46,7 +46,7 @@ const QuickLinks = () => {
                 <CardContent>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {quickLinks.map((link, index) => (
-                            link.href === "/dashbaord/advisors" ? (
+                            link.href === "/dashboard/advisors" ? (
                                 <ComingSoonWrapper key={index}>
                                     <Link key={index} href={link.href}>
                                         <div className="flex items-center space-x-3 p-4 rounded-lg border hover:bg-gray-50 transition-colors cursor-pointer">

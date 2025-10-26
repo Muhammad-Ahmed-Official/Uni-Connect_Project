@@ -122,7 +122,7 @@ const Userlayout = ({
                             ? pathname === "/dashboard"
                             : pathname === item.href || pathname.startsWith(item.href + "/")
                         return (
-                            item.label === "Advisors" || item.label === "Docs" ? (
+                            item.label === "Advisors" || item.label === "Docs" || item.label === "Settings" ? (
                                 <ComingSoonWrapper key={item.href}>
                                     <Link
                                         key={item.href}
