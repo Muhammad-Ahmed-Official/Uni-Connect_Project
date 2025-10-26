@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { toast } from "@/hooks/use-toast";
 import Header from "@/components/dashboard/common/Header";
 import SearchFilters from "@/components/dashboard/PastPapersPage/SearchFilters";
@@ -16,12 +16,11 @@ export default function PastPapersPage() {
   const [documents, setDocuments] = useState<PastPaper[]>([]);
   const [loading, setLoading] = useState(true);
   const [departments, setDepartments] = useState<string[]>([]);
-
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedDepartment, setSelectedDepartment] = useState("All Departments");
   const [selectedExamType, setSelectedExamType] = useState("All Types");
 
-  const fetchDocuments = async () => {
+  const fetchDocuments = useCallback(async () => {
     try {
       setLoading(true);
       const response = await axios.get('/api/documents/get-all-documents');
@@ -42,12 +41,12 @@ export default function PastPapersPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchDocuments();
-  }, []);
-  
+  }, [fetchDocuments]);
+
   const filteredPapers = documents.filter((paper) => {
     const matchesSearch = paper.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       paper.subject_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -81,7 +80,7 @@ export default function PastPapersPage() {
       {
         loading ? (
           <ResultsHeaderSkeleton />
-        ) : (      
+        ) : (
           <SearchFilters
             searchTerm={searchTerm}
             onSearchChange={setSearchTerm}

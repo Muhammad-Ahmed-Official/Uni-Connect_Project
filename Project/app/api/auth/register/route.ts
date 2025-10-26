@@ -161,9 +161,6 @@ export const POST = asyncHandler(async (request: NextRequest): Promise<NextRespo
 
   await connectDB();
 
-  // const department_id = await departmentModel.findOne({ departmentName: data.departmentName }).select("_id")
-  // if (!department_id) return nextError(400, "Department not found")
-
   switch (data?.role) {
     case "student":
       return await handleStudentRegistration(
