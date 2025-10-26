@@ -50,7 +50,7 @@ const handleStudentRegistration = async (data: any) => {
     return nextError(500, "Failed to save OTP. Please try again.", error);
   }
 
-  sendEmailOTP(email, verifyCode);
+  await sendEmailOTP(email, verifyCode);
   return nextResponse(200, `OTP sent to ${email}`);
 };
 
