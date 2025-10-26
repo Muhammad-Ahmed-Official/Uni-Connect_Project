@@ -1,4 +1,5 @@
 import { connectDB } from "@/lib/mongodb";
+import departmentModel from "@/models/department.model";
 import Event from "@/models/event.model";
 import { asyncHandler } from "@/utils/asyncHandler";
 import { nextError, nextResponse } from "@/utils/Response";
@@ -6,6 +7,8 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const GET = asyncHandler(async (req: NextRequest): Promise<NextResponse> => {
   await connectDB();
+
+  const Department = departmentModel;
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);

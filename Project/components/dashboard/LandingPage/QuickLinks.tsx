@@ -30,7 +30,7 @@ const quickLinks = [
         title: "Study Materials",
         description: "Access study materials",
         icon: FileText,
-        href: "/study-materials",
+        href: "/dashbaord/study-materials",
         color: "bg-orange-100 text-orange-600",
     },
 ]

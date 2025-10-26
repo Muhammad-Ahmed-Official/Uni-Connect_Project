@@ -4,6 +4,7 @@ import axios from "axios"
 import { ArrowRight, Clock } from "lucide-react"
 import { useEffect, useState } from "react"
 import RecentActivitySkeleton from "./RecentActivitySkeleton"
+import { format } from "timeago.js"
 
 interface Activity {
     title: string;
@@ -50,7 +51,7 @@ const RecentActivity = () => {
                                 <div className="flex-1 min-w-0">
                                     <p className="text-sm font-medium text-gray-900 truncate">{activity.title}</p>
                                     <p className="text-sm text-gray-500 truncate">{activity.description}</p>
-                                    <p className="text-xs text-gray-400 mt-1">{activity.time}</p>
+                                    <p className="text-xs text-gray-400 mt-1">{format(activity.time)}</p>
                                 </div>
                             </div>
                         ))}

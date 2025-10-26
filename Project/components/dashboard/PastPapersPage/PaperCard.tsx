@@ -111,7 +111,7 @@ export default function PaperCard({ paper }: PaperCardProps) {
                             <span>{views} views</span>
                         </div>
 
-                        <div className="flex gap-2">
+                        <div className="flex gap-2 flex-wrap">
                             <Button
                                 onClick={handlePreviewOpen}
                                 variant="outline"
@@ -144,4 +144,5 @@ export default function PaperCard({ paper }: PaperCardProps) {
             />
         </>
     );
-}   
+}
+
