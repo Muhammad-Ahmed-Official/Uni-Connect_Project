@@ -43,15 +43,15 @@ const AddDepartmentDialog = ({ isAddDialogOpen, setIsAddDialogOpen, editForm, se
                                 </SelectTrigger>
 
                                 <SelectContent className="rounded-lg shadow-lg border border-gray-200">
-                                    <SelectItem value="CS" className="cursor-pointer hover:bg-blue-100 transition-colors">Computer Science
+                                    <SelectItem value="Computer Science" className="cursor-pointer hover:bg-blue-100 transition-colors">Computer Science
                                     </SelectItem>
                                     <SelectItem
-                                    value="POL"
+                                    value="Political Science"
                                     className="cursor-pointer hover:bg-blue-100 transition-colors">
                                     Political Science
                                     </SelectItem>
                                     <SelectItem
-                                    value="MC"
+                                    value="Mass Communication"
                                     className="cursor-pointer hover:bg-blue-100 transition-colors">
                                     Mass Communication
                                     </SelectItem>
@@ -61,7 +61,7 @@ const AddDepartmentDialog = ({ isAddDialogOpen, setIsAddDialogOpen, editForm, se
                                     Law
                                     </SelectItem>
                                     <SelectItem
-                                    value="PHAR"
+                                    value="Pharmacy"
                                     className="cursor-pointer hover:bg-blue-100 transition-colors">
                                     Pharmacy
                                     </SelectItem>
