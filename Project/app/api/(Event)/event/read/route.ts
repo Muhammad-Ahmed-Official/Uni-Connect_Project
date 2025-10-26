@@ -4,6 +4,7 @@ import Event from "@/models/event.model";
 import { asyncHandler } from "@/utils/asyncHandler";
 import { nextError, nextResponse } from "@/utils/Response";
 import { NextRequest, NextResponse } from "next/server";
+import DepartmentModel from "@/models/department.model";
 
 export const GET = asyncHandler(async (req: NextRequest): Promise<NextResponse> => {
   await connectDB();
@@ -13,11 +14,9 @@ export const GET = asyncHandler(async (req: NextRequest): Promise<NextResponse> 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  let events = await Event.find({
-    "eventDetails.start_date": { $gte: today }
-  })
+  let events = await Event.find()
     .populate("department_id", "departmentName")
-    .sort({ "eventDetails.start_date": 1 })
+    .sort({ "eventDetails?.start_date": 1 })
     .lean();
 
   if (!events || events.length === 0) {

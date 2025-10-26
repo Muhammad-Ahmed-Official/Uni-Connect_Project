@@ -43,25 +43,19 @@ const ViewDeparmentDialog = ({ isViewDialogOpen, setIsViewDialogOpen, selectedDe
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <Card className="border-0 bg-blue-50">
                                 <CardContent className="p-4 text-center">
-                                    <div className="text-2xl font-bold text-blue-600">{selectedDepartment?.totalStudents ? selectedDepartment?.totalStudents : 0}</div>
+                                    <div className="text-2xl font-bold text-blue-600">{selectedDepartment?.studentsCount ? selectedDepartment?.studentsCount : 0}</div>
                                     <div className="text-sm text-gray-600">Students</div>
                                 </CardContent>
                             </Card>
                             <Card className="border-0 bg-green-50">
                                 <CardContent className="p-4 text-center">
-                                    <div className="text-2xl font-bold text-green-600">{selectedDepartment?.totalAdvisors ? selectedDepartment?.totalAdvisors : 0}</div>
+                                    <div className="text-2xl font-bold text-green-600">{selectedDepartment?.advisorsCount ? selectedDepartment?.advisorsCount : 0}</div>
                                     <div className="text-sm text-gray-600">Advisors</div>
                                 </CardContent>
                             </Card>
-                            {/* <Card className="border-0 bg-orange-50">
-                                <CardContent className="p-4 text-center">
-                                    <div className="text-2xl font-bold text-orange-600">{selectedDepartment?.activeEscalations}</div>
-                                    <div className="text-sm text-gray-600">Active Cases</div>
-                                </CardContent>
-                            </Card> */}
                             <Card className="border-0 bg-purple-50">
                                 <CardContent className="p-4 text-center">
-                                    <div className="text-2xl font-bold text-purple-600">{selectedDepartment?.totalEvents ? selectedDepartment?.totalEvents : 0}</div>
+                                    <div className="text-2xl font-bold text-purple-600">{selectedDepartment?.eventsCount ? selectedDepartment?.eventsCount : 0}</div>
                                     <div className="text-sm text-gray-600">Events</div>
                                 </CardContent>
                             </Card>

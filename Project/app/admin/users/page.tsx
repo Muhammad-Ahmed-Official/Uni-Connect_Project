@@ -12,6 +12,16 @@ export default function UserManagement() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [loading2, setLoading2] = useState<boolean>(false);
+  const [searchTerm, setSearchTerm] = useState("")
+
+  const filteredUsers = users.filter(
+    (usr) =>
+      usr?.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      usr?.lastName.toLowerCase().includes(searchTerm.toLowerCase()) || 
+      usr?.departmentName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      usr?.email.toLowerCase().includes(searchTerm.toLowerCase()), 
+  )
+
 
   const getUserStats = async () => {
     setLoading(true);
@@ -41,7 +51,7 @@ export default function UserManagement() {
       <StatsCards stats={stats} loading={loading} />
 
       {/* Filters and Search */}
-      <FiltersAndSearches users={users}setUsers={setUsers} loading2={loading2} />
+      <FiltersAndSearches users={filteredUsers?.length > 0 ? filteredUsers : users} setUsers={setUsers} searchTerm={searchTerm} setSearchTerm={setSearchTerm} loading2={loading2} />
     </div>
   )
 }
