@@ -2,6 +2,8 @@
 
 import { useEffect } from "react";
 import OfflineIndicator from "./OfflineIndicator";
+import { configs } from "@/configs/configs";
+import { initGA } from "@/lib/analytics";
 
 interface AppShellProps {
   children: React.ReactNode;
@@ -32,6 +34,10 @@ export default function AppShell({ children }: AppShellProps) {
             console.error("Service Worker setup failed:", error);
           });
       }
+    }
+
+    if (configs.gaMeasurementId) {
+      initGA();
     }
   }, []);
 

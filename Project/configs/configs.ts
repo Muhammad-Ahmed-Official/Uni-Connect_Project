@@ -6,4 +6,5 @@ export const configs = {
     redisPort: process.env.REDIS_PORT!,
     portalEmail: process.env.PORTAL_EMAIL!,
     portalPassword: process.env.PORTAL_PASSWORD!,
+    gaMeasurementId: process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID!
 }
