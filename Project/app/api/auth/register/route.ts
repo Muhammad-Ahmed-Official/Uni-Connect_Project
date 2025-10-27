@@ -50,8 +50,16 @@ const handleStudentRegistration = async (data: any) => {
     return nextError(500, "Failed to save OTP. Please try again.", error);
   }
 
-  await sendEmailOTP(email, verifyCode);
-  return nextResponse(200, `OTP sent to ${email}`);
+  try {
+    const emailResponse = await sendEmailOTP(email, verifyCode);
+    if (!emailResponse.success) {
+      return nextError(500, emailResponse.message);
+    }
+    return nextResponse(200, `OTP sent to ${email}`);
+  } catch (err) {
+    console.log(err)
+    return nextError(500, "Internal Server Error");
+  }
 };
 
 
